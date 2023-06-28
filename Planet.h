@@ -15,22 +15,21 @@ using namespace std;
 
 class Planet {
 public:
-    Planet(string nom, string description);
+    Planet(string nom, string description, vector<Character*>);
     Planet(istringstream&);
     string getName() const;
     string getDescription() const;
-    vector<Character>& getResident();
+    vector<Character*> getResident();
 
-    void setResident(const Character &resident);
-    void addNewPlanetResident(const Character&);
+    void setResident(Character* resident);
+    void addNewPlanetResident(Character*);
 
     virtual ~Planet();
 
 private:
     string name;
     string description;
-    vector<Character> resident;
-
+    vector<Character*> resident;
 };
 
 

@@ -5,8 +5,9 @@
 #include "Spaceship.h"
 #include "Character.h"
 
-Spaceship::Spaceship(string nom) {
+Spaceship::Spaceship(string nom, vector<Character*> crew) {
     this->name = nom;
+    this->crew = crew;
 }
 
 Spaceship::Spaceship(istringstream& iss){
@@ -16,11 +17,11 @@ Spaceship::Spaceship(istringstream& iss){
 string Spaceship::getName() const {
     return this->name;
 }
-vector<Character>& Spaceship::getCrew() {
+vector<Character*> Spaceship::getCrew() {
     return this->crew;
 }
 
-void Spaceship::addCrewMember(const Character &member) {
+void Spaceship::addCrewMember(Character *member) {
     crew.push_back(member);
 }
 

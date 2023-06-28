@@ -14,19 +14,19 @@
 Controller::Controller(string& filepath) : filepath(filepath){
 }
 
-vector<Mission> &Controller::getMission(){
+vector<Mission*> Controller::getMission(){
     return mission;
 }
 
-vector<Character> &Controller::getCharacter(){
+vector<Character*> Controller::getCharacter(){
     return character;
 }
 
-vector<Planet> &Controller::getPlanet(){
+vector<Planet*> Controller::getPlanet(){
     return planet;
 }
 
-vector<Spaceship> &Controller::getSpaceship() {
+vector<Spaceship*> Controller::getSpaceship() {
     return spaceship;
 }
 
@@ -38,6 +38,8 @@ void Controller::loadGame() {
         cout << "Le fichier ne s'est pas ouvert" << endl;
     }
     string line;
+    vector<Character*> crew;
+    vector<Character*> resident;
 
     //On parcourt les lignes du fichier
     while(getline(file, line)){
@@ -66,13 +68,29 @@ void Controller::loadGame() {
             string place;
             getline(iss, place);
 
-            character.push_back(Character(name, poste, stoi(health), stoi(attackPower), placeType, place));
+            character.push_back(new Character(name, poste, stoi(health), stoi(attackPower), placeType, place));
+
+            //Ajout du personnage à l'équipage du vaisseau auquel il est associé
+            for(auto& ship : spaceship)
+            {
+                if(place==ship->getName()){
+                    ship->addCrewMember(character.back());
+                    break;
+                }
+            }
+            for(auto& pla : planet)
+            {
+                if(place==pla->getName()){
+                    pla->addNewPlanetResident(character.back());
+                    break;
+                }
+            }
         }
         else if (type == "Spaceship") //Si la ligne commence par spaceship, on récupère les informations associées et on les stocke
         {
             string name;
             getline(iss, name, ';');
-            spaceship.push_back(Spaceship(name));
+            spaceship.push_back(new Spaceship(name, crew));
         }
         else if (type == "Planet") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
         {
@@ -81,9 +99,8 @@ void Controller::loadGame() {
 
             string description;
             getline(iss, description, '\n');
-            iss >> description;
 
-            planet.push_back(Planet(name, description));
+            planet.push_back(new Planet(name, description, resident));
         }
         else if (type == "Mission")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
         {
@@ -94,7 +111,7 @@ void Controller::loadGame() {
             getline(iss, description, '\n');
             iss >> description;
 
-            mission.push_back(Mission(name, description));
+            mission.push_back(new Mission(name, description));
         }
     }
 }

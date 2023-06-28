@@ -17,20 +17,20 @@ class Spaceship {
 
 public:
     //Constructeur/Destructeur
-    Spaceship(string);
+    Spaceship(string, vector<Character*>);
     Spaceship(istringstream&);
     virtual ~Spaceship();
 
     //Accesseurs et mutateurs
     string getName() const;
-    vector<Character>& getCrew();
+    vector<Character*> getCrew();
 
     //Methodes
-    void addCrewMember(const Character &);
+    void addCrewMember(Character*);
 
 private:
     string name;
-    vector<Character> crew;
+    vector<Character*> crew;
 };
 
 #endif //JEU_PERSONNAGES_SPACESHIP_H

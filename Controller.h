@@ -18,10 +18,10 @@ public:
     Controller(string& filepath);
 
     //Getters et Setters
-    vector<Mission> &getMission();
-    vector<Character> &getCharacter();
-    vector<Planet> &getPlanet();
-    vector<Spaceship> &getSpaceship();
+    vector<Mission*> getMission();
+    vector<Character*> getCharacter();
+    vector<Planet*> getPlanet();
+    vector<Spaceship*> getSpaceship();
 
     //Méthodes
     void loadGame();
@@ -30,10 +30,10 @@ public:
 
 private :
     //Attributs
-    vector<Mission> mission;
-    vector<Character> character;
-    vector<Planet> planet;
-    vector<Spaceship> spaceship;
+    vector<Mission*> mission;
+    vector<Character*> character;
+    vector<Planet*> planet;
+    vector<Spaceship*> spaceship;
     string filepath;
 };
 

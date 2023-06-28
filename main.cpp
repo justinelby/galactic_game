@@ -8,10 +8,28 @@ using namespace std;
 
 //Code contenant l'execution du menu et le jeu
 int main() {
-    string filepath = "data.txt";
+
+    string filepath= "data.txt";
     Controller controller(filepath);
     controller.loadGame();
 
+    cout << controller.getCharacter()[0]->getName() << endl;
+    cout << controller.getCharacter()[0]->getHealth() << endl;
+    controller.getCharacter()[0]->setHealth(22);
+    cout << controller.getCharacter()[0]->getHealth() << endl;
+
+    cout << controller.getSpaceship()[0]->getCrew()[0]->getName() << endl;
+    cout << controller.getSpaceship()[0]->getCrew()[0]->getHealth() << endl;
+    //cout << controller.getPlanet()[0]->getResident()[0].getName() << endl;
+
+    cout << controller.getCharacter()[2]->getName() << endl;
+    cout << controller.getCharacter()[2]->getHealth() << endl;
+    controller.getCharacter()[2]->setHealth(55);
+    cout << controller.getCharacter()[2]->getHealth() << endl;
+    cout << controller.getPlanet()[1]->getResident()[0]->getName() << endl;
+    cout << controller.getPlanet()[1]->getResident()[0]->getHealth() << endl;
+
+/*
     //Boucle de jeu
     bool isRunning = true;
 
@@ -75,5 +93,7 @@ int main() {
             }
         }
     }
+*/
+
     return 0;
 }

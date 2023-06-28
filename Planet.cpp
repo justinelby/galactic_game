@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Planet::Planet(string nom, string description): name(nom), description(description)
+Planet::Planet(string nom, string description, vector<Character*> resident): name(nom), description(description)
 {
 }
 
@@ -25,15 +25,15 @@ string Planet::getDescription() const {
     return description;
 }
 
-void Planet::addNewPlanetResident(const Character &character) {
+void Planet::addNewPlanetResident(Character *character) {
     resident.push_back(character);
 }
 
-vector<Character> &Planet::getResident() {
+vector<Character*> Planet::getResident() {
     return resident;
 }
 
-void Planet::setResident(const Character &resident) {
+void Planet::setResident(Character* resident) {
     this->resident.push_back(resident);
 }
 
