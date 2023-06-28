@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "jeu_personnages::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-jeu_personnages-Debug-d3687d444749dcb1a2df.json",
+					"jsonFile" : "target-jeu_personnages-Debug-2901f5900e65283792f9.json",
 					"name" : "jeu_personnages",
 					"projectIndex" : 0
 				}
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/justi/CLionProjects/jeu-personnages/cmake-build-debug",
-		"source" : "C:/Users/justi/CLionProjects/jeu-personnages"
+		"build" : "D:/mathieu/Grind/PostEtudes/POEI AKKODIS/8 - Prog CPP/game_repo/cmake-build-debug",
+		"source" : "D:/mathieu/Grind/PostEtudes/POEI AKKODIS/8 - Prog CPP/game_repo"
 	},
 	"version" : 
 	{
