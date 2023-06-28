@@ -55,20 +55,20 @@ build CMakeFiles/jeu_personnages.dir/main.cpp.obj: CXX_COMPILER__jeu_personnages
   OBJECT_DIR = CMakeFiles\jeu_personnages.dir
   OBJECT_FILE_DIR = CMakeFiles\jeu_personnages.dir
 
-build CMakeFiles/jeu_personnages.dir/Personnage.cpp.obj: CXX_COMPILER__jeu_personnages_Debug C$:/Users/justi/CLionProjects/jeu-personnages/Personnage.cpp || cmake_object_order_depends_target_jeu_personnages
-  DEP_FILE = CMakeFiles\jeu_personnages.dir\Personnage.cpp.obj.d
+build CMakeFiles/jeu_personnages.dir/Character.cpp.obj: CXX_COMPILER__jeu_personnages_Debug C$:/Users/justi/CLionProjects/jeu-personnages/Character.cpp || cmake_object_order_depends_target_jeu_personnages
+  DEP_FILE = CMakeFiles\jeu_personnages.dir\Character.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\jeu_personnages.dir
   OBJECT_FILE_DIR = CMakeFiles\jeu_personnages.dir
 
-build CMakeFiles/jeu_personnages.dir/Vaisseau.cpp.obj: CXX_COMPILER__jeu_personnages_Debug C$:/Users/justi/CLionProjects/jeu-personnages/Vaisseau.cpp || cmake_object_order_depends_target_jeu_personnages
-  DEP_FILE = CMakeFiles\jeu_personnages.dir\Vaisseau.cpp.obj.d
+build CMakeFiles/jeu_personnages.dir/Spaceship.cpp.obj: CXX_COMPILER__jeu_personnages_Debug C$:/Users/justi/CLionProjects/jeu-personnages/Spaceship.cpp || cmake_object_order_depends_target_jeu_personnages
+  DEP_FILE = CMakeFiles\jeu_personnages.dir\Spaceship.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\jeu_personnages.dir
   OBJECT_FILE_DIR = CMakeFiles\jeu_personnages.dir
 
-build CMakeFiles/jeu_personnages.dir/Planete.cpp.obj: CXX_COMPILER__jeu_personnages_Debug C$:/Users/justi/CLionProjects/jeu-personnages/Planete.cpp || cmake_object_order_depends_target_jeu_personnages
-  DEP_FILE = CMakeFiles\jeu_personnages.dir\Planete.cpp.obj.d
+build CMakeFiles/jeu_personnages.dir/Planet.cpp.obj: CXX_COMPILER__jeu_personnages_Debug C$:/Users/justi/CLionProjects/jeu-personnages/Planet.cpp || cmake_object_order_depends_target_jeu_personnages
+  DEP_FILE = CMakeFiles\jeu_personnages.dir\Planet.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\jeu_personnages.dir
   OBJECT_FILE_DIR = CMakeFiles\jeu_personnages.dir
@@ -79,8 +79,8 @@ build CMakeFiles/jeu_personnages.dir/Mission.cpp.obj: CXX_COMPILER__jeu_personna
   OBJECT_DIR = CMakeFiles\jeu_personnages.dir
   OBJECT_FILE_DIR = CMakeFiles\jeu_personnages.dir
 
-build CMakeFiles/jeu_personnages.dir/Controleur.cpp.obj: CXX_COMPILER__jeu_personnages_Debug C$:/Users/justi/CLionProjects/jeu-personnages/Controleur.cpp || cmake_object_order_depends_target_jeu_personnages
-  DEP_FILE = CMakeFiles\jeu_personnages.dir\Controleur.cpp.obj.d
+build CMakeFiles/jeu_personnages.dir/Controller.cpp.obj: CXX_COMPILER__jeu_personnages_Debug C$:/Users/justi/CLionProjects/jeu-personnages/Controller.cpp || cmake_object_order_depends_target_jeu_personnages
+  DEP_FILE = CMakeFiles\jeu_personnages.dir\Controller.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\jeu_personnages.dir
   OBJECT_FILE_DIR = CMakeFiles\jeu_personnages.dir
@@ -93,7 +93,7 @@ build CMakeFiles/jeu_personnages.dir/Controleur.cpp.obj: CXX_COMPILER__jeu_perso
 #############################################
 # Link the executable jeu_personnages.exe
 
-build jeu_personnages.exe: CXX_EXECUTABLE_LINKER__jeu_personnages_Debug CMakeFiles/jeu_personnages.dir/main.cpp.obj CMakeFiles/jeu_personnages.dir/Personnage.cpp.obj CMakeFiles/jeu_personnages.dir/Vaisseau.cpp.obj CMakeFiles/jeu_personnages.dir/Planete.cpp.obj CMakeFiles/jeu_personnages.dir/Mission.cpp.obj CMakeFiles/jeu_personnages.dir/Controleur.cpp.obj
+build jeu_personnages.exe: CXX_EXECUTABLE_LINKER__jeu_personnages_Debug CMakeFiles/jeu_personnages.dir/main.cpp.obj CMakeFiles/jeu_personnages.dir/Character.cpp.obj CMakeFiles/jeu_personnages.dir/Spaceship.cpp.obj CMakeFiles/jeu_personnages.dir/Planet.cpp.obj CMakeFiles/jeu_personnages.dir/Mission.cpp.obj CMakeFiles/jeu_personnages.dir/Controller.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\jeu_personnages.dir

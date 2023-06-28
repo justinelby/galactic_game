@@ -4,14 +4,14 @@
 
 #include "Mission.h"
 
-Mission::Mission(string nom, string description) : nom(nom), description(description), isCompleted(false){}
+Mission::Mission(string nom, string description) : name(nom), description(description), isCompleted(false){}
 
 Mission::Mission(istringstream& iss){
-    iss >> nom >> description;
+    iss >> name >> description;
 }
 
-string Mission::getNom() const {
-    return nom;
+string Mission::getName() const {
+    return name;
 }
 
 string Mission::getDescription() const {

@@ -11,7 +11,7 @@ void displayMenu(){
     cout << "Menu principal :" << endl;
     cout << "1. Consulter tous les elements du jeu (Personnages, vaisseaux, planetes, missions...)" << endl;
     cout << "2. Parler aux personnages" << endl;
-    cout << "3. Voyager vers une autre planete" << endl;
+    cout << "3. Voyager vers une autre planet" << endl;
     cout << "0. Quitter le jeu" << endl;
 }
 

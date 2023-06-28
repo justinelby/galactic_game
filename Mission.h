@@ -22,7 +22,7 @@ public:
     virtual ~Mission();
 
     //Accesseurs et mutateurs
-    string getNom() const;
+    string getName() const;
     string getDescription() const;
     bool getIsCompleted() const;
 
@@ -31,7 +31,7 @@ public:
 
 private:
     //Attributs
-    string nom;
+    string name;
     string description;
     bool isCompleted;
 };
