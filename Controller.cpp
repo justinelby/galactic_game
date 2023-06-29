@@ -14,19 +14,19 @@
 Controller::Controller(string& filepath) : filepath(filepath){
 }
 
-vector<Mission*> Controller::getMission(){
+vector<shared_ptr<Mission>> Controller::getMission(){
     return mission;
 }
 
-vector<Character*> Controller::getCharacter(){
+vector<shared_ptr<Character>> Controller::getCharacter(){
     return character;
 }
 
-vector<Planet*> Controller::getPlanet(){
+vector<shared_ptr<Planet>> Controller::getPlanet(){
     return planet;
 }
 
-vector<Spaceship*> Controller::getSpaceship() {
+vector<shared_ptr<Spaceship>> Controller::getSpaceship() {
     return spaceship;
 }
 
@@ -38,8 +38,7 @@ void Controller::loadGame() {
         cout << "Le fichier ne s'est pas ouvert" << endl;
     }
     string line;
-    vector<Character*> crew;
-    vector<Character*> resident;
+    vector<shared_ptr<Character>> crew, resident;
 
     //On parcourt les lignes du fichier
     while(getline(file, line)){
@@ -68,7 +67,8 @@ void Controller::loadGame() {
             string place;
             getline(iss, place);
 
-            character.push_back(new Character(name, poste, stoi(health), stoi(attackPower), placeType, place));
+            auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), placeType, place);
+            character.push_back(newCharacter);
 
             //Ajout du personnage à l'équipage du vaisseau auquel il est associé
             for(auto& ship : spaceship)
@@ -90,7 +90,9 @@ void Controller::loadGame() {
         {
             string name;
             getline(iss, name, ';');
-            spaceship.push_back(new Spaceship(name, crew));
+
+            auto newSpaceship = make_shared<Spaceship>(name);
+            spaceship.push_back(newSpaceship);
         }
         else if (type == "Planet") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
         {
@@ -100,7 +102,8 @@ void Controller::loadGame() {
             string description;
             getline(iss, description, '\n');
 
-            planet.push_back(new Planet(name, description, resident));
+            auto newPlanet = make_shared<Planet>(name, description);
+            planet.push_back(newPlanet);
         }
         else if (type == "Mission")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
         {
@@ -111,7 +114,8 @@ void Controller::loadGame() {
             getline(iss, description, '\n');
             iss >> description;
 
-            mission.push_back(new Mission(name, description));
+            auto newMission = make_shared<Mission>(name, description);
+            mission.push_back(newMission);
         }
     }
 }

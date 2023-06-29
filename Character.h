@@ -30,7 +30,7 @@ public:
     void setPlace(const string &place);
 
     //Methodes
-    void attaque(Character &);
+    void attaque(Character&);
 
 private:
     string name;

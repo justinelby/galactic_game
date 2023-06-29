@@ -9,27 +9,28 @@
 #include "Character.h"
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 using namespace std;
 
 
 class Planet {
 public:
-    Planet(string nom, string description, vector<Character*>);
+    Planet(string nom, string description);
     Planet(istringstream&);
     string getName() const;
     string getDescription() const;
-    vector<Character*> getResident();
+    vector<weak_ptr<Character>> getResident();
 
-    void setResident(Character* resident);
-    void addNewPlanetResident(Character*);
+    void setResident(shared_ptr<Character>&);
+    void addNewPlanetResident(shared_ptr<Character>&);
 
     virtual ~Planet();
 
 private:
     string name;
     string description;
-    vector<Character*> resident;
+    vector<weak_ptr<Character>> resident;
 };
 
 

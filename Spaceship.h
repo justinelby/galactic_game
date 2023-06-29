@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include "Character.h"
+#include <memory>
 
 using namespace std;
 
@@ -17,20 +18,20 @@ class Spaceship {
 
 public:
     //Constructeur/Destructeur
-    Spaceship(string, vector<Character*>);
+    Spaceship(string);
     Spaceship(istringstream&);
     virtual ~Spaceship();
 
     //Accesseurs et mutateurs
     string getName() const;
-    vector<Character*> getCrew();
+    vector<weak_ptr<Character>> getCrew();
 
     //Methodes
-    void addCrewMember(Character*);
+    void addCrewMember(shared_ptr<Character>&);
 
 private:
     string name;
-    vector<Character*> crew;
+    vector<weak_ptr<Character>> crew;
 };
 
 #endif //JEU_PERSONNAGES_SPACESHIP_H

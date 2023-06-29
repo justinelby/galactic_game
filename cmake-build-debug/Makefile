@@ -56,10 +56,10 @@ RM = "D:\Program Files\CLion 2023.1.4\bin\cmake\win\x64\bin\cmake.exe" -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\game_repo"
+CMAKE_SOURCE_DIR = "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\galactic_game"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\game_repo\cmake-build-debug"
+CMAKE_BINARY_DIR = "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\galactic_game\cmake-build-debug"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -86,9 +86,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\game_repo\cmake-build-debug\CMakeFiles" "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\game_repo\cmake-build-debug\\CMakeFiles\progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\galactic_game\cmake-build-debug\CMakeFiles" "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\galactic_game\cmake-build-debug\\CMakeFiles\progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\game_repo\cmake-build-debug\CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "D:\mathieu\Grind\PostEtudes\POEI AKKODIS\8 - Prog CPP\galactic_game\cmake-build-debug\CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -175,30 +175,6 @@ Controller.s: Controller.cpp.s
 Controller.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\jeu_personnages.dir\build.make CMakeFiles/jeu_personnages.dir/Controller.cpp.s
 .PHONY : Controller.cpp.s
-
-Food.obj: Food.cpp.obj
-.PHONY : Food.obj
-
-# target to build an object file
-Food.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\jeu_personnages.dir\build.make CMakeFiles/jeu_personnages.dir/Food.cpp.obj
-.PHONY : Food.cpp.obj
-
-Food.i: Food.cpp.i
-.PHONY : Food.i
-
-# target to preprocess a source file
-Food.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\jeu_personnages.dir\build.make CMakeFiles/jeu_personnages.dir/Food.cpp.i
-.PHONY : Food.cpp.i
-
-Food.s: Food.cpp.s
-.PHONY : Food.s
-
-# target to generate assembly for a file
-Food.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\jeu_personnages.dir\build.make CMakeFiles/jeu_personnages.dir/Food.cpp.s
-.PHONY : Food.cpp.s
 
 Mission.obj: Mission.cpp.obj
 .PHONY : Mission.obj
@@ -311,9 +287,6 @@ help:
 	@echo ... Controller.obj
 	@echo ... Controller.i
 	@echo ... Controller.s
-	@echo ... Food.obj
-	@echo ... Food.i
-	@echo ... Food.s
 	@echo ... Mission.obj
 	@echo ... Mission.i
 	@echo ... Mission.s
