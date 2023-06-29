@@ -11,7 +11,7 @@
 #include "Spaceship.h"
 #include "Planet.h"
 
-Controller::Controller(string& filepath) : filepath(filepath){
+Controller::Controller(string& loadedFile, string& savedFile) : loadedFile(loadedFile), savedFile(savedFile){
 }
 
 vector<shared_ptr<Mission>> Controller::getMission(){
@@ -31,7 +31,7 @@ vector<shared_ptr<Spaceship>> Controller::getSpaceship() {
 }
 
 void Controller::loadGame() {
-    ifstream file(filepath);
+    ifstream file(loadedFile);
 
     if(!file.is_open())
     {
@@ -119,6 +119,22 @@ void Controller::loadGame() {
         }
     }
 }
+
+string Controller::characterToString(){
+    ostringstream oss;
+    for (const auto& c : character) {
+        oss << c->getName()<<";"<<c->getPoste()<<";"<<c->getHealth()<<";"<<c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<";"<< endl;
+    }
+    return oss.str();
+}
+
+void Controller::saveGame(){
+    //Ecriture du fichier de sauvegarde
+    ofstream file(savedFile);
+    file << "Character" << characterToString()<< endl;
+
+}
+
 
 Controller::~Controller()
 {

@@ -15,7 +15,7 @@ using namespace std;
 
 class Controller {
 public:
-    Controller(string& filepath);
+    Controller(string& loadedFile, string& savedFile);
 
     //Getters et Setters
     vector<shared_ptr<Mission>> getMission();
@@ -25,7 +25,8 @@ public:
 
     //Méthodes
     void loadGame();
-
+    void saveGame();
+    string characterToString();
     virtual ~Controller();
 
 private :
@@ -34,7 +35,8 @@ private :
     vector<shared_ptr<Character>> character;
     vector<shared_ptr<Planet>> planet;
     vector<shared_ptr<Spaceship>> spaceship;
-    string filepath;
+    string loadedFile;
+    string savedFile;
 };
 
 

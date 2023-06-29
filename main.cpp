@@ -23,9 +23,11 @@ using namespace std;
 //Code contenant l'execution du menu et le jeu
 int main() {
 
-    string filepath= "data.txt";
-    Controller controller(filepath);
+    string savedFile= "save.txt";
+    string loadedFile= "data.txt";
+    Controller controller(loadedFile, savedFile);
     controller.loadGame();
+    controller.saveGame();
 
     cout << controller.getCharacter()[0]->getName() << endl;
     cout << controller.getCharacter()[0]->getHealth() << endl;

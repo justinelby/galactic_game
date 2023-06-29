@@ -1,0 +1,5 @@
+CharacterAlex Starborn;Personnage principal;100;50;Vaisseau;USS Enterprise;
+Capitaine Anderson;Superieur d'Alex;150;100;Vaisseau;USS Enterprise;
+Docteur Liara;Medecin de bord;100;30;Planet;Earth;
+Ingenieur Scott;Responsable des reparations et des ameliorations du vaisseau;120;30;Vaisseau;USS Enterprise;
+
