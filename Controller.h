@@ -27,6 +27,9 @@ public:
     void loadGame();
     void saveGame();
     string characterToString();
+    string spaceshipToString();
+    string planetToString();
+    string missionToString();
     virtual ~Controller();
 
 private :

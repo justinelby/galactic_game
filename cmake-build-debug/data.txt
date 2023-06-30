@@ -1,5 +1,5 @@
 Planet;Z-23;Une planete situee dans la galaxy Euclid ou l'or et l'argent se trouvent en grande quantite.
-Planet;Earth;Une planete bleue.
+Planet;Earth;Une planete bleue
 Spaceship;USS Enterprise
 Spaceship;Millenium Falcon
 Character;Alex Starborn;Personnage principal;100;50;Vaisseau;USS Enterprise

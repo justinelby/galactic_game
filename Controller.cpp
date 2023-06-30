@@ -120,10 +120,33 @@ void Controller::loadGame() {
     }
 }
 
+string Controller::planetToString(){
+    ostringstream oss;
+    for (const auto& p : planet) {
+        oss << "Planet;" << p->getName()<<";"<<p->getDescription()<<"\n";
+    }
+    return oss.str();
+}
+string Controller::spaceshipToString(){
+    ostringstream oss;
+    for (const auto& s : spaceship) {
+        oss << "Spaceship;" << s->getName()<<"\n";
+    }
+    return oss.str();
+}
+
 string Controller::characterToString(){
     ostringstream oss;
     for (const auto& c : character) {
-        oss << c->getName()<<";"<<c->getPoste()<<";"<<c->getHealth()<<";"<<c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<";"<< endl;
+        oss << "Character;" << c->getName()<<";"<<c->getPoste()<<";"<<c->getHealth()<<";"<<c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
+    }
+    return oss.str();
+}
+
+string Controller::missionToString(){
+    ostringstream oss;
+    for (const auto& m : mission) {
+        oss << "Mission;" << m->getName()<<";"<<m->getDescription()<<"\n";
     }
     return oss.str();
 }
@@ -131,8 +154,7 @@ string Controller::characterToString(){
 void Controller::saveGame(){
     //Ecriture du fichier de sauvegarde
     ofstream file(savedFile);
-    file << "Character" << characterToString()<< endl;
-
+    file << planetToString()<< spaceshipToString() << characterToString() << missionToString() << endl;
 }
 
 
