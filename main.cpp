@@ -49,13 +49,32 @@ int main() {
     cout << "1" << endl;
     auto newChar = make_shared<Character>("Mathieu", "Commandant de bord", 200, 100, "Spaceship","USS Enterprise");
     controller.addCharacter(newChar);
+    auto newShip1 = make_shared<Spaceship>("Black Pearl");
+    auto newShip2 = make_shared<Spaceship>("Flying Dutch");
+    controller.addSpaceship(newShip1);
+    controller.addSpaceship(newShip2);
 
+    // affiche Equipage de USS Enterprise
+    cout << "entre là " << endl;
     controller.getSpaceship()[0]->showCrew();
-    cout << "2" << endl;
-    controller.deleteCharacter(1);
+    cout << "et là " << endl;
+    controller.deleteCharacter(1);  // supprime le Capitaine Anderson
+
+    cout << controller.getSpaceship()[0]->getName() << endl;
+    cout << controller.getSpaceship()[1]->getName() << endl;
+    cout << controller.getSpaceship()[2]->getName() << endl;
+    cout << controller.getSpaceship()[3]->getName() << endl;
+
+    controller.deleteSpaceship(3);
+
+    cout << controller.getSpaceship()[0]->getName() << endl;
+    cout << controller.getSpaceship()[1]->getName() << endl;
+    cout << controller.getSpaceship()[2]->getName() << endl;
+
 
     cout << "3" << endl;
     controller.getSpaceship()[0]->showCrew();
+
     //controller.getSpaceship()[0]->showCrew();
 
 

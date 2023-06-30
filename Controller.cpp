@@ -68,7 +68,7 @@ void Controller::loadGame() {
             getline(iss, place);
 
             auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), placeType, place);
-            character.push_back(newCharacter);
+            addCharacter(newCharacter);
 
             //Ajout du personnage à l'équipage du vaisseau auquel il est associé
             for(auto& ship : spaceship)
@@ -92,7 +92,7 @@ void Controller::loadGame() {
             getline(iss, name, ';');
 
             auto newSpaceship = make_shared<Spaceship>(name);
-            spaceship.push_back(newSpaceship);
+            addSpaceship(newSpaceship);
         }
         else if (type == "Planet") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
         {
@@ -162,6 +162,15 @@ void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
 
 void Controller::deleteCharacter(int index) {
     character.erase(character.begin() + index);
+}
+
+
+void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
+    spaceship.push_back(newSpaceship);
+}
+
+void Controller::deleteSpaceship(int index) {
+    spaceship.erase(spaceship.begin() + index);
 }
 
 

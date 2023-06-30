@@ -29,6 +29,9 @@ public:
 
     void addCharacter(const shared_ptr<Character>&);
     void deleteCharacter(int);
+    void addSpaceship(const shared_ptr<Spaceship>&);
+    void deleteSpaceship(int);
+
     string characterToString();
     string spaceshipToString();
     string planetToString();
