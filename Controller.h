@@ -26,6 +26,9 @@ public:
     //Méthodes
     void loadGame();
     void saveGame();
+
+    void addCharacter(const shared_ptr<Character>&);
+    void deleteCharacter(int);
     string characterToString();
     string spaceshipToString();
     string planetToString();

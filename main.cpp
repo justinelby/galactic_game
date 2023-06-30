@@ -45,6 +45,19 @@ int main() {
     cout << controller.getPlanet()[1]->getResident()[0].lock()->getName() << endl;
     cout << controller.getPlanet()[1]->getResident()[0].lock()->getHealth() << endl;
 
+    // print crew 1
+    cout << "1" << endl;
+    auto newChar = make_shared<Character>("Mathieu", "Commandant de bord", 200, 100, "Spaceship","USS Enterprise");
+    controller.addCharacter(newChar);
+
+    controller.getSpaceship()[0]->showCrew();
+    cout << "2" << endl;
+    controller.deleteCharacter(1);
+
+    cout << "3" << endl;
+    controller.getSpaceship()[0]->showCrew();
+    //controller.getSpaceship()[0]->showCrew();
+
 
     //Boucle de jeu
 //    bool isRunning = true;
@@ -109,9 +122,6 @@ int main() {
 //            }
 //        }
 //    }
-
-
-
 
 
 

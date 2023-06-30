@@ -25,9 +25,11 @@ public:
     //Accesseurs et mutateurs
     string getName() const;
     vector<weak_ptr<Character>> getCrew();
+    void showCrew();
 
     //Methodes
     void addCrewMember(shared_ptr<Character>&);
+    void killCrewMember(shared_ptr<Character>&);
 
 private:
     string name;

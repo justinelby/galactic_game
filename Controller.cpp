@@ -156,6 +156,13 @@ void Controller::saveGame(){
     ofstream file(savedFile);
     file << planetToString()<< spaceshipToString() << characterToString() << missionToString() << endl;
 }
+void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
+    character.push_back(newCharacter);
+}
+
+void Controller::deleteCharacter(int index) {
+    character.erase(character.begin() + index);
+}
 
 
 Controller::~Controller()
