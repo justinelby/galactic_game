@@ -29,53 +29,42 @@ int main() {
     controller.loadGame();
     controller.saveGame();
 
-    cout << controller.getCharacter()[0]->getName() << endl;
-    cout << controller.getCharacter()[0]->getHealth() << endl;
+    //Testing first character
+    cout << "------Testing first character------" << endl;
+    cout << "Nom : " << controller.getCharacter()[0]->getName() << endl;
+    cout << "Sante : " <<  controller.getCharacter()[0]->getHealth() << endl;
     controller.getCharacter()[0]->setHealth(22);
-    cout << controller.getCharacter()[0]->getHealth() << endl;
+    cout << "Sante modifiee : " <<  controller.getCharacter()[0]->getHealth() << endl;
 
-    cout << controller.getSpaceship()[0]->getCrew()[0].lock()->getName() << endl;
-    cout << controller.getSpaceship()[0]->getCrew()[0].lock()->getHealth() << endl;
-    //cout << controller.getPlanet()[0]->getResident()[0].getName() << endl;
+    //Testing first spaceship
+    cout << "\n------Testing first spaceship crew------" << endl;
+    cout << "Nom crew1 : " << controller.getSpaceship()[0]->getCrew()[0].lock()->getName() << endl;
+    cout << "Sante crew1 : "  << controller.getSpaceship()[0]->getCrew()[0].lock()->getHealth() << endl;
 
-    cout << controller.getCharacter()[2]->getName() << endl;
-    cout << controller.getCharacter()[2]->getHealth() << endl;
-    controller.getCharacter()[2]->setHealth(55);
-    cout << controller.getCharacter()[2]->getHealth() << endl;
-    cout << controller.getPlanet()[1]->getResident()[0].lock()->getName() << endl;
-    cout << controller.getPlanet()[1]->getResident()[0].lock()->getHealth() << endl;
+    //Testing first planet
+    cout << "\n------Testing first planet residents------" << endl;
+    cout << "Nom resident1 : " << controller.getPlanet()[1]->getResident()[0].lock()->getName() << endl;
+    cout << "Sante resident1 : " << controller.getPlanet()[1]->getResident()[0].lock()->getHealth() << endl;
 
-    // print crew 1
-    cout << "1" << endl;
-    auto newChar = make_shared<Character>("Mathieu", "Commandant de bord", 200, 100, "Spaceship","USS Enterprise");
-    controller.addCharacter(newChar);
-    auto newShip1 = make_shared<Spaceship>("Black Pearl");
-    auto newShip2 = make_shared<Spaceship>("Flying Dutch");
-    controller.addSpaceship(newShip1);
-    controller.addSpaceship(newShip2);
-
-    // affiche Equipage de USS Enterprise
-    cout << "entre là " << endl;
+    // Testing character deletion
+    cout << "\n------Testing character deletion------" << endl;
+    cout << "---Equipage de USS Enterprise crew before character deletion :" << endl;
     controller.getSpaceship()[0]->showCrew();
-    cout << "et là " << endl;
-    controller.deleteCharacter(1);  // supprime le Capitaine Anderson
-
-    cout << controller.getSpaceship()[0]->getName() << endl;
-    cout << controller.getSpaceship()[1]->getName() << endl;
-    cout << controller.getSpaceship()[2]->getName() << endl;
-    cout << controller.getSpaceship()[3]->getName() << endl;
-
-    controller.deleteSpaceship(3);
-
-    cout << controller.getSpaceship()[0]->getName() << endl;
-    cout << controller.getSpaceship()[1]->getName() << endl;
-    cout << controller.getSpaceship()[2]->getName() << endl;
-
-
-    cout << "3" << endl;
+    controller.deleteCharacter(1);  // supprime le Capitaine Anderson dans le vaisseau USS Enterprise
+    cout << "---Equipage de USS Enterprise crew after character deletion :" << endl;
     controller.getSpaceship()[0]->showCrew();
 
-    //controller.getSpaceship()[0]->showCrew();
+    // Testing spaceship deletion
+    cout << "\n------Testing spaceship deletion------" << endl;
+    cout << "---Character list before spaceship deletion :" << endl;
+    for(auto& c : controller.getCharacter()){
+        cout << c->getName() <<endl;
+    }
+    controller.deleteSpaceship(0);//on supprime USS Enterprise
+    cout << "---Character list after spaceship deletion :" << endl;
+    for(auto& c : controller.getCharacter()){
+        cout << c->getName() <<endl;
+    }
 
 
     //Boucle de jeu
