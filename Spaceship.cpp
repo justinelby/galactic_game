@@ -28,7 +28,6 @@ void Spaceship::showCrew(){
     }
 }
 
-
 void Spaceship::addCrewMember(shared_ptr<Character>& member) {
     crew.push_back(member);
 }

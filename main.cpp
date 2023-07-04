@@ -28,13 +28,19 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
     controller.saveGame();
+    auto characterMap = controller.getCharacter();
+
 
     //Testing first character
-    cout << "------Testing first character------" << endl;
-    cout << "Nom : " << controller.getCharacter()[0]->getName() << endl;
-    cout << "Sante : " <<  controller.getCharacter()[0]->getHealth() << endl;
-    controller.getCharacter()[0]->setHealth(22);
-    cout << "Sante modifiee : " <<  controller.getCharacter()[0]->getHealth() << endl;
+    if (!controller.getCharacter().empty()) {
+        auto firstCharacter = controller.getCharacter().begin()->second;
+        cout << "Nom : " << firstCharacter->getName() << endl;
+        cout << "Sante : " << firstCharacter->getHealth() << endl;
+        firstCharacter->setHealth(22);
+        cout << "Sante modifiee : " << firstCharacter->getHealth() << endl;
+    } else {
+        cout << "Il n'y a pas de personnage disponible." << endl;
+    }
 
     //Testing first spaceship
     cout << "\n------Testing first spaceship crew------" << endl;
@@ -50,19 +56,29 @@ int main() {
     cout << "\n------Testing character deletion------" << endl;
     cout << "---Equipage de USS Enterprise crew before character deletion :" << endl;
     controller.getSpaceship()[0]->showCrew();
-    controller.deleteCharacter(1);  // supprime le Capitaine Anderson dans le vaisseau USS Enterprise
+    controller.deleteCharacter("Capitaine Anderson");  // supprime le Capitaine Anderson dans le vaisseau USS Enterprise
     cout << "---Equipage de USS Enterprise crew after character deletion :" << endl;
     controller.getSpaceship()[0]->showCrew();
 
     // Testing spaceship deletion
     cout << "\n------Testing spaceship deletion------" << endl;
     cout << "---Character list before spaceship deletion :" << endl;
-    for(auto& c : controller.getCharacter()){
+    for(auto& pair : characterMap){
+        auto c = pair.second;
         cout << c->getName() <<endl;
     }
+    cout << "---Initial list of spaceships:" << endl;
+    for(auto& s : controller.getSpaceship()){
+        cout << s->getName() <<endl;
+    }
     controller.deleteSpaceship(0);//on supprime USS Enterprise
+    cout << "---New list of spaceships:" << endl;
+    for(auto& s : controller.getSpaceship()){
+        cout << s->getName() <<endl;
+    }
     cout << "---Character list after spaceship deletion :" << endl;
-    for(auto& c : controller.getCharacter()){
+    for(auto& pair : characterMap){
+        auto c = pair.second;
         cout << c->getName() <<endl;
     }
 

@@ -18,8 +18,8 @@ vector<shared_ptr<Mission>> Controller::getMission(){
     return mission;
 }
 
-vector<shared_ptr<Character>> Controller::getCharacter(){
-    return character;
+map<string, shared_ptr<Character>> Controller::getCharacter(){
+    return characterMap;
 }
 
 vector<shared_ptr<Planet>> Controller::getPlanet(){
@@ -74,14 +74,14 @@ void Controller::loadGame() {
             for(auto& ship : spaceship)
             {
                 if(place==ship->getName()){
-                    ship->addCrewMember(character.back());
+                    ship->addCrewMember(characterMap[name]);
                     break;
                 }
             }
             for(auto& pla : planet)
             {
                 if(place==pla->getName()){
-                    pla->addNewPlanetResident(character.back());
+                    pla->addNewPlanetResident(characterMap[name]);
                     break;
                 }
             }
@@ -137,7 +137,8 @@ string Controller::spaceshipToString(){
 
 string Controller::characterToString(){
     ostringstream oss;
-    for (const auto& c : character) {
+    for (const auto& pair : characterMap) {
+        auto c = pair.second;
         oss << "Character;" << c->getName()<<";"<<c->getPoste()<<";"<<c->getHealth()<<";"<<c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
     }
     return oss.str();
@@ -157,11 +158,13 @@ void Controller::saveGame(){
     file << planetToString()<< spaceshipToString() << characterToString() << missionToString() << endl;
 }
 void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
-    character.push_back(newCharacter);
+    characterMap[newCharacter->getName()] = newCharacter;
 }
 
-void Controller::deleteCharacter(int index) {
-    character.erase(character.begin() + index);
+
+void Controller::deleteCharacter(string name) {
+ auto it = characterMap.find(name);
+    characterMap.erase(it);
 }
 
 
