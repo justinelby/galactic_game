@@ -162,9 +162,14 @@ void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
 }
 
 
-void Controller::deleteCharacter(string name) {
- auto it = characterMap.find(name);
-    characterMap.erase(it);
+void Controller::deleteCharacter(const std::shared_ptr<Character>& character) {
+    auto it = characterMap.find(character->getName());
+    if (it != characterMap.end()) {
+        characterMap.erase(it);
+        cout << "Personnage supprimé : " << character->getName() << endl;
+    } else {
+        cout << "Personnage non trouvé : " << character->getName() << endl;
+    }
 }
 
 

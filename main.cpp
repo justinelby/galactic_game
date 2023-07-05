@@ -2,8 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include <memory>
-#include "GamePlay.h"
 #include "Controller.h"
 
 using namespace std;
@@ -32,12 +30,18 @@ int main() {
 
 
     //Testing first character
-    if (!controller.getCharacter().empty()) {
-        auto firstCharacter = controller.getCharacter().begin()->second;
-        cout << "Nom : " << firstCharacter->getName() << endl;
-        cout << "Sante : " << firstCharacter->getHealth() << endl;
-        firstCharacter->setHealth(22);
-        cout << "Sante modifiee : " << firstCharacter->getHealth() << endl;
+    if (!characterMap.empty()) {
+        string characterName = "Alex Starborn";
+        auto it = characterMap.find(characterName);
+        if (it != characterMap.end()) {
+            auto character = it->second;
+            cout << "Nom : " << character->getName() << endl;
+            cout << "Sante : " << character->getHealth() << endl;
+            character->setHealth(22);
+            cout << "Sante modifiee : " << character->getHealth() << endl;
+        } else {
+            cout << "Personnage non trouvé : " << characterName << endl;
+        }
     } else {
         cout << "Il n'y a pas de personnage disponible." << endl;
     }
@@ -54,11 +58,21 @@ int main() {
 
     // Testing character deletion
     cout << "\n------Testing character deletion------" << endl;
-    cout << "---Equipage de USS Enterprise crew before character deletion :" << endl;
     controller.getSpaceship()[0]->showCrew();
-    controller.deleteCharacter("Capitaine Anderson");  // supprime le Capitaine Anderson dans le vaisseau USS Enterprise
+    cout << "---Equipage de USS Enterprise crew before character deletion :" << endl;
+
+    string characterName = "Alex Starborn";
+    auto it = characterMap.find(characterName);
+    auto character = it->second;
+    controller.deleteCharacter(character);
     cout << "---Equipage de USS Enterprise crew after character deletion :" << endl;
     controller.getSpaceship()[0]->showCrew();
+    cout << "---Character list after character deletion :" << endl;
+    for (auto& pair : characterMap){
+        auto& character = pair.second;
+        cout << "Nom : " << character->getName() << endl;
+    }
+
 
     // Testing spaceship deletion
     cout << "\n------Testing spaceship deletion------" << endl;
