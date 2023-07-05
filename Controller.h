@@ -28,7 +28,7 @@ public:
     void saveGame();
 
     void addCharacter(const shared_ptr<Character>&);
-    void deleteCharacter(const std::shared_ptr<Character>& character);
+    void deleteCharacter(const string& name);
     void addSpaceship(const shared_ptr<Spaceship>&);
     void deleteSpaceship(int);
 

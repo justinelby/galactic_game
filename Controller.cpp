@@ -157,11 +157,13 @@ void Controller::saveGame(){
     ofstream file(savedFile);
     file << planetToString()<< spaceshipToString() << characterToString() << missionToString() << endl;
 }
+
 void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
     characterMap[newCharacter->getName()] = newCharacter;
 }
 
 
+/*
 void Controller::deleteCharacter(const std::shared_ptr<Character>& character) {
     auto it = characterMap.find(character->getName());
     if (it != characterMap.end()) {
@@ -171,7 +173,14 @@ void Controller::deleteCharacter(const std::shared_ptr<Character>& character) {
         cout << "Personnage non trouvé : " << character->getName() << endl;
     }
 }
+*/
 
+void Controller::deleteCharacter(const string& name) {
+    auto it = characterMap.find(name);
+    if (it != characterMap.end()) {
+        characterMap.erase(it);
+    }
+}
 
 void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
     spaceship.push_back(newSpaceship);

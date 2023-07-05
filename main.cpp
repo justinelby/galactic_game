@@ -3,20 +3,10 @@
 #include <iostream>
 #include <string>
 #include "Controller.h"
+#define DEBUG
 
 using namespace std;
 
-
-//class Testp {
-//
-//public:
-//    Testp(const string& nom) : _nom(nom) {
-//        cout << "Personnage " << _nom << " cree." << endl;
-//    }
-//    string _nom;
-//private:
-//
-//};
 
 //Code contenant l'execution du menu et le jeu
 int main() {
@@ -35,9 +25,12 @@ int main() {
         auto it = characterMap.find(characterName);
         if (it != characterMap.end()) {
             auto character = it->second;
+#ifdef DEBUG
             cout << "Nom : " << character->getName() << endl;
             cout << "Sante : " << character->getHealth() << endl;
+#endif
             character->setHealth(22);
+#ifdef DEBUG
             cout << "Sante modifiee : " << character->getHealth() << endl;
         } else {
             cout << "Personnage non trouvé : " << characterName << endl;
@@ -45,6 +38,7 @@ int main() {
     } else {
         cout << "Il n'y a pas de personnage disponible." << endl;
     }
+
 
     //Testing first spaceship
     cout << "\n------Testing first spaceship crew------" << endl;
@@ -58,21 +52,28 @@ int main() {
 
     // Testing character deletion
     cout << "\n------Testing character deletion------" << endl;
-    controller.getSpaceship()[0]->showCrew();
     cout << "---Equipage de USS Enterprise crew before character deletion :" << endl;
-
-    string characterName = "Alex Starborn";
-    auto it = characterMap.find(characterName);
-    auto character = it->second;
-    controller.deleteCharacter(character);
-    cout << "---Equipage de USS Enterprise crew after character deletion :" << endl;
+#endif
     controller.getSpaceship()[0]->showCrew();
+
+    string characterName = "Capitaine Anderson";
+    controller.deleteCharacter(characterName);
+/*    auto it = characterMap.find(characterName);
+    auto character = it->second;
+    controller.deleteCharacter(character);*/
+
+#ifdef DEBUG
     cout << "---Character list after character deletion :" << endl;
+#endif
     for (auto& pair : characterMap){
         auto& character = pair.second;
+#ifdef DEBUG
         cout << "Nom : " << character->getName() << endl;
-    }
+#endif
 
+    }
+/*    cout << "---Equipage de USS Enterprise crew after character deletion :" << endl;
+    controller.getSpaceship()[0]->showCrew();
 
     // Testing spaceship deletion
     cout << "\n------Testing spaceship deletion------" << endl;
@@ -94,7 +95,7 @@ int main() {
     for(auto& pair : characterMap){
         auto c = pair.second;
         cout << c->getName() <<endl;
-    }
+    }*/
 
 
     //Boucle de jeu
