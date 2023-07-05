@@ -193,13 +193,22 @@ void Controller::deleteCharacter(const std::shared_ptr<Character>& character) {
 }
 */
 
-void Controller::deleteCharacter(const string& name) {
+bool Controller::deleteCharacter(const string& name) {
     auto it = characterMap.find(name);
-    if (it != characterMap.end()) {
+    if (it == characterMap.end()) {
+#ifdef DEBUG
+        cout << "Non trouve, retourne false" << endl;
+#endif
+        return false;
+    } else {
         string temp = it->first;
         characterMap.erase(temp);
+#ifdef DEBUG
+        cout << "Trouve, retourne true" << endl;
+#endif
+        return true;
     }
-}
+    }
 
 void Controller::deleteSpaceship(const string& name) {
     auto it = spaceshipMap.find(name);

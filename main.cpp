@@ -15,23 +15,55 @@ int main() {
     string loadedFile= "data.txt";
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
-    controller.saveGame();
 
-
-    controller.deleteCharacter("Capitaine Anderson");
-
-    cout << "---Character list after character deletion :" << endl;
-    for (auto& pair : controller.getCharacter()){
-        auto& character = pair.second;
-        cout << "Nom : " << character->getName() << endl;
-    }
-    cout << "\n\n Liste des vaisseaux" <<endl;
-    for (auto& pair : controller.getSpaceship()){
-        auto& ship = pair.second;
-        ship->showCrew();
+    for( auto it : controller.getCharacter()){
+           cout << it.second->getName() << endl;
     }
 
+    string line;
+    bool result;
+    do {
+        getline(cin, line);
+        result = controller.deleteCharacter(line);
+    } while (result == false);
 
+    cout << "------Controller" <<endl;
+    for( auto it : controller.getCharacter()){
+        cout << it.second->getName() << endl;
+    }
+
+    cout << "------Spaceships" <<endl;
+    for( auto it : controller.getSpaceship()){
+        for (auto character : it.second->getCrew()){
+            if(character.lock()) cout << character.lock()->getName() << endl;
+        }
+    }
+
+    cout << "------Planets" <<endl;
+    for( auto it : controller.getPlanet()){
+        for (auto character : it.second->getResident()){
+            if(character.lock()) cout << character.lock()->getName() << endl;
+        }
+    }
+
+
+
+//
+//
+//    controller.deleteCharacter("Capitaine Anderson");
+//
+//    cout << "---Character list after character deletion :" << endl;
+//    for (auto& pair : controller.getCharacter()){
+//        auto& character = pair.second;
+//        cout << "Nom : " << character->getName() << endl;
+//    }
+//    cout << "\n\n Liste des vaisseaux" <<endl;
+//    for (auto& pair : controller.getSpaceship()){
+//        auto& ship = pair.second;
+//        ship->showCrew();
+//    }
+//
+//
 
 
 

@@ -21,7 +21,9 @@ Character::Character(istringstream& iss) {
 
 string Character::getName() const
 {
-    return name;
+    if(name.lock){
+        return name;
+    }
 }
 
 int Character::getHealth() const

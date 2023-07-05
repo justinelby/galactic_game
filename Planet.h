@@ -21,10 +21,9 @@ public:
     string getName() const;
     string getDescription() const;
     vector<weak_ptr<Character>> getResident();
-
     void setResident(shared_ptr<Character>&);
-    void addNewPlanetResident(shared_ptr<Character>&);
 
+    void addNewPlanetResident(shared_ptr<Character>&);
     virtual ~Planet();
 
 private:

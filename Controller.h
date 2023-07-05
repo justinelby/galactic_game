@@ -31,7 +31,7 @@ public:
     void addSpaceship(const shared_ptr<Spaceship>&);
     void addPlanet(const shared_ptr<Planet>&);
     void addMission(const shared_ptr<Mission>&);
-    void deleteCharacter(const string& name);
+    bool deleteCharacter(const string& name);
     void deleteSpaceship(const string& name);
     void deletePlanet(const string& name);
     void deleteMission(const string& name);
