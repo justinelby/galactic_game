@@ -18,18 +18,24 @@ public:
     Controller(string& loadedFile, string& savedFile);
 
     //Getters et Setters
-    vector<shared_ptr<Mission>> getMission();
+    map<string, shared_ptr<Mission>> getMission();
     map<string, shared_ptr<Character>> getCharacter();
-    vector<shared_ptr<Planet>> getPlanet();
-    vector<shared_ptr<Spaceship>> getSpaceship();
+    map<string, shared_ptr<Planet>> getPlanet();
+    map<string, shared_ptr<Spaceship>> getSpaceship();
 
     //Méthodes
     void loadGame();
     void saveGame();
 
     void addCharacter(const shared_ptr<Character>&);
-    void deleteCharacter(const string& name);
     void addSpaceship(const shared_ptr<Spaceship>&);
+    void addPlanet(const shared_ptr<Planet>&);
+    void addMission(const shared_ptr<Mission>&);
+    void deleteCharacter(const string& name);
+    void deleteSpaceship(const string& name);
+    void deletePlanet(const string& name);
+    void deleteMission(const string& name);
+
     void deleteSpaceship(int);
 
     string characterToString();
@@ -40,11 +46,10 @@ public:
 
 private :
     //Attributs
-    vector<shared_ptr<Mission>> mission;
-    //vector<shared_ptr<Character>> character;
     map<string, shared_ptr<Character>> characterMap;
-    vector<shared_ptr<Planet>> planet;
-    vector<shared_ptr<Spaceship>> spaceship;
+    map<string, shared_ptr<Spaceship>> spaceshipMap;
+    map<string, shared_ptr<Planet>> planetMap;
+    map<string, shared_ptr<Mission>> missionMap;
     string loadedFile;
     string savedFile;
 };

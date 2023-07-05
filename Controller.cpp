@@ -16,20 +16,20 @@ using namespace std;
 Controller::Controller(string& loadedFile, string& savedFile) : loadedFile(loadedFile), savedFile(savedFile){
 }
 
-vector<shared_ptr<Mission>> Controller::getMission(){
-    return mission;
+map<string, shared_ptr<Mission>> Controller::getMission(){
+    return missionMap;
 }
 
 map<string, shared_ptr<Character>> Controller::getCharacter(){
     return characterMap;
 }
 
-vector<shared_ptr<Planet>> Controller::getPlanet(){
-    return planet;
+map<string, shared_ptr<Planet>> Controller::getPlanet(){
+    return planetMap;
 }
 
-vector<shared_ptr<Spaceship>> Controller::getSpaceship() {
-    return spaceship;
+map<string, shared_ptr<Spaceship>> Controller::getSpaceship() {
+    return spaceshipMap;
 }
 
 void Controller::loadGame() {
@@ -72,21 +72,7 @@ void Controller::loadGame() {
             auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), placeType, place);
             addCharacter(newCharacter);
 
-            //Ajout du personnage à l'équipage du vaisseau auquel il est associé
-            for(auto& ship : spaceship)
-            {
-                if(place==ship->getName()){
-                    ship->addCrewMember(characterMap[name]);
-                    break;
-                }
-            }
-            for(auto& pla : planet)
-            {
-                if(place==pla->getName()){
-                    pla->addNewPlanetResident(characterMap[name]);
-                    break;
-                }
-            }
+
         }
         else if (type == "Spaceship") //Si la ligne commence par spaceship, on récupère les informations associées et on les stocke
         {
@@ -105,7 +91,7 @@ void Controller::loadGame() {
             getline(iss, description, '\n');
 
             auto newPlanet = make_shared<Planet>(name, description);
-            planet.push_back(newPlanet);
+            addPlanet(newPlanet);
         }
         else if (type == "Mission")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
         {
@@ -117,39 +103,42 @@ void Controller::loadGame() {
             iss >> description;
 
             auto newMission = make_shared<Mission>(name, description);
-            mission.push_back(newMission);
+            addMission(newMission);
         }
     }
-}
-
-string Controller::planetToString(){
-    ostringstream oss;
-    for (const auto& p : planet) {
-        oss << "Planet;" << p->getName()<<";"<<p->getDescription()<<"\n";
-    }
-    return oss.str();
-}
-string Controller::spaceshipToString(){
-    ostringstream oss;
-    for (const auto& s : spaceship) {
-        oss << "Spaceship;" << s->getName()<<"\n";
-    }
-    return oss.str();
 }
 
 string Controller::characterToString(){
     ostringstream oss;
     for (const auto& pair : characterMap) {
         auto c = pair.second;
-        oss << "Character;" << c->getName()<<";"<<c->getPoste()<<";"<<c->getHealth()<<";"<<c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
+        oss << "Character;" << c->getName()<<";"<< c->getPoste()<<";"<< c->getHealth()<<";"<< c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
+    }
+    return oss.str();
+}
+
+string Controller::planetToString(){
+    ostringstream oss;
+    for (const auto& pair : planetMap) {
+        auto p = pair.second;
+        oss << "Planet;" << p->getName()<<";"<<p->getDescription()<<"\n";
+    }
+    return oss.str();
+}
+string Controller::spaceshipToString(){
+    ostringstream oss;
+    for (const auto& pair : spaceshipMap) {
+        auto p = pair.second;
+        oss << "Spaceship;" << p->getName()<< endl;
     }
     return oss.str();
 }
 
 string Controller::missionToString(){
     ostringstream oss;
-    for (const auto& m : mission) {
-        oss << "Mission;" << m->getName()<<";"<<m->getDescription()<<"\n";
+    for (const auto& pair : missionMap) {
+        auto m = pair.second;
+        oss << "Mission;" << m->getName()<<";"<< m->getDescription()<<"\n";
     }
     return oss.str();
 }
@@ -162,8 +151,35 @@ void Controller::saveGame(){
 
 void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
     characterMap[newCharacter->getName()] = newCharacter;
-}
+    // Ajout du personnage à l'équipage du vaisseau auquel il est associé
+    for(auto& ship : spaceshipMap)
+    {
+        if(newCharacter->getPlace() == ship.second->getName()){
+            ship.second->addCrewMember(characterMap[newCharacter->getName()]);
+            break;
+        }
+    }
 
+
+    // Ajout du personnage aux habitants de la planete auquel il est associé
+    for(auto& pla : planetMap)
+    {
+        if(newCharacter->getPlace() == pla.second->getName()){
+            pla.second->addNewPlanetResident(characterMap[newCharacter->getName()]);
+            break;
+        }
+    }
+
+}
+void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
+    spaceshipMap[newSpaceship->getName()] = newSpaceship;
+}
+void Controller::addPlanet(const shared_ptr<Planet>& newPlanet) {
+    planetMap[newPlanet->getName()] = newPlanet;
+}
+void Controller::addMission(const shared_ptr<Mission>& newMission) {
+    missionMap[newMission->getName()] = newMission;
+}
 
 /*
 void Controller::deleteCharacter(const std::shared_ptr<Character>& character) {
@@ -180,28 +196,52 @@ void Controller::deleteCharacter(const std::shared_ptr<Character>& character) {
 void Controller::deleteCharacter(const string& name) {
     auto it = characterMap.find(name);
     if (it != characterMap.end()) {
-        //cout << "Affichage de la clé string: " << it->first << endl;
         string temp = it->first;
         characterMap.erase(temp);
     }
+}
+
+void Controller::deleteSpaceship(const string& name) {
+    auto it = spaceshipMap.find(name);
+    if (it != spaceshipMap.end()) {
+        string temp = it->first;
+        spaceshipMap.erase(temp);
+    }
 #ifdef DEBUG
-    cout << "---Character list from deleteCharacter():" << endl;
-    for (auto& pair : characterMap){
-        auto& character = pair.second;
-        cout << "Nom : " << character->getName() << endl;
+    for (auto& pair : spaceshipMap){
+        auto& ship = pair.second;
+        cout << "Nom : " << ship->getName() << endl;
     }
 #endif
 }
 
-
-void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
-    spaceship.push_back(newSpaceship);
+void Controller::deletePlanet(const string& name) {
+    auto it = planetMap.find(name);
+    if (it != planetMap.end()) {
+        string temp = it->first;
+        planetMap.erase(temp);
+    }
+#ifdef DEBUG
+    for (auto& pair : planetMap){
+        auto& pla = pair.second;
+        cout << "Nom : " << pla->getName() << endl;
+    }
+#endif
 }
 
-void Controller::deleteSpaceship(int index) {
-    spaceship.erase(spaceship.begin() + index);
+void Controller::deleteMission(const std::string &name) {
+    auto it = missionMap.find(name);
+    if (it != missionMap.end()) {
+        string temp = it->first;
+        missionMap.erase(temp);
+    }
+#ifdef DEBUG
+    for (auto& pair : missionMap){
+        auto& mi = pair.second;
+        cout << "Nom : " << mi->getName() << endl;
+    }
+#endif
 }
-
 
 Controller::~Controller()
 {
