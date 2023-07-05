@@ -1,7 +1,7 @@
 //
 // Created by justi on 27/06/2023.
 //
-
+#define DEBUG
 #include "Controller.h"
 #include <fstream>
 #include <sstream>
@@ -10,6 +10,8 @@
 #include "Character.h"
 #include "Spaceship.h"
 #include "Planet.h"
+
+using namespace std;
 
 Controller::Controller(string& loadedFile, string& savedFile) : loadedFile(loadedFile), savedFile(savedFile){
 }
@@ -178,9 +180,19 @@ void Controller::deleteCharacter(const std::shared_ptr<Character>& character) {
 void Controller::deleteCharacter(const string& name) {
     auto it = characterMap.find(name);
     if (it != characterMap.end()) {
-        characterMap.erase(it);
+        //cout << "Affichage de la clé string: " << it->first << endl;
+        string temp = it->first;
+        characterMap.erase(temp);
     }
+#ifdef DEBUG
+    cout << "---Character list from deleteCharacter():" << endl;
+    for (auto& pair : characterMap){
+        auto& character = pair.second;
+        cout << "Nom : " << character->getName() << endl;
+    }
+#endif
 }
+
 
 void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
     spaceship.push_back(newSpaceship);

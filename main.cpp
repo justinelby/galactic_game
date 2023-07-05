@@ -16,9 +16,19 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
     controller.saveGame();
-    auto characterMap = controller.getCharacter();
+    //auto characterMap = controller.getCharacter();
 
 
+    string characterName = "Capitaine Anderson";
+    controller.deleteCharacter(characterName);
+
+    cout << "---Character list after character deletion :" << endl;
+    for (auto& pair : controller.getCharacter()){
+        auto& character = pair.second;
+        cout << "Nom : " << character->getName() << endl;
+    }
+
+/*
     //Testing first character
     if (!characterMap.empty()) {
         string characterName = "Alex Starborn";
@@ -30,7 +40,7 @@ int main() {
             cout << "Sante : " << character->getHealth() << endl;
 #endif
             character->setHealth(22);
-#ifdef DEBUG
+
             cout << "Sante modifiee : " << character->getHealth() << endl;
         } else {
             cout << "Personnage non trouvé : " << characterName << endl;
@@ -53,25 +63,10 @@ int main() {
     // Testing character deletion
     cout << "\n------Testing character deletion------" << endl;
     cout << "---Equipage de USS Enterprise crew before character deletion :" << endl;
-#endif
-    controller.getSpaceship()[0]->showCrew();
 
-    string characterName = "Capitaine Anderson";
-    controller.deleteCharacter(characterName);
-/*    auto it = characterMap.find(characterName);
-    auto character = it->second;
-    controller.deleteCharacter(character);*/
+    controller.getSpaceship()[0]->showCrew();*/
 
-#ifdef DEBUG
-    cout << "---Character list after character deletion :" << endl;
-#endif
-    for (auto& pair : characterMap){
-        auto& character = pair.second;
-#ifdef DEBUG
-        cout << "Nom : " << character->getName() << endl;
-#endif
 
-    }
 /*    cout << "---Equipage de USS Enterprise crew after character deletion :" << endl;
     controller.getSpaceship()[0]->showCrew();
 
