@@ -72,7 +72,6 @@ int main() {
     }
 
 
-
 //
 //
 //    controller.deleteCharacter("Capitaine Anderson");

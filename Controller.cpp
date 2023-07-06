@@ -193,6 +193,7 @@ void Controller::cleanWeakPtr(vector<weak_ptr<Character>>& vec) {
             ++it;
         }
     }
+    vec.clear();
 }
 
 bool Controller::deleteCharacter(const string& name) {
@@ -203,13 +204,34 @@ bool Controller::deleteCharacter(const string& name) {
         string characterName = it->first;
         // Vérifier si le pointeur de personnage est nul
         if (characterMap[characterName]) {
-            // Obtenir la planète associée au personnage
-            string place = characterMap[characterName]->getPlace();
-            auto planetIt = planetMap.find(place);
-            if (planetIt != planetMap.end()) {
-                auto planet = planetIt->second;
-                // Supprimer le personnage de la liste des résidents de la planète
-                cleanWeakPtr(planet->getResident());
+            //Obtenir le type de lieu où se situe le personnage
+            string typePlace = characterMap[characterName]->getPlaceType();
+            //Si le personnage est sur une planete
+            if(typePlace == "Planet")
+            {
+                // Obtenir la planète associée au personnage
+                string place = characterMap[characterName]->getPlace();
+                auto planetIt = planetMap.find(place);
+                if (planetIt != planetMap.end())
+                {
+                    auto planet = planetIt->second;
+                    // Supprimer le personnage de la liste des résidents de la planète
+                    cleanWeakPtr(planet->getResident());
+                }
+            }
+            //Si le personnage est sur un vaisseau
+            else if (typePlace == "Spaceship"){
+                string place = characterMap[characterName]->getPlace();
+                auto spaceshipIt = spaceshipMap.find(place);
+                if (spaceshipIt != spaceshipMap.end())
+                {
+                    auto spaceship = spaceshipIt->second;
+                    cleanWeakPtr(spaceship->getCrew());
+                }
+            }
+            //Si le personnage a une mission
+            else if (typePlace == "Mission"){
+            //Il faut developper d'abord un getMissions() dans character
             }
         }
         characterMap.erase(characterName);

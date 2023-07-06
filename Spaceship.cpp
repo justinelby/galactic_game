@@ -16,7 +16,7 @@ Spaceship::Spaceship(istringstream& iss){
 string Spaceship::getName() const {
     return this->name;
 }
-vector<weak_ptr<Character>> Spaceship::getCrew() {
+vector<weak_ptr<Character>>& Spaceship::getCrew() {
     return this->crew;
 }
 
