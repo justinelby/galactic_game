@@ -5,7 +5,7 @@
 #ifndef JEU_PERSONNAGES_CONTROLLER_H
 #define JEU_PERSONNAGES_CONTROLLER_H
 #include <map>
-#include "Mission.h"
+#include "Quest.h"
 #include "Character.h"
 #include "Planet.h"
 #include "Spaceship.h"
@@ -18,7 +18,7 @@ public:
     Controller(string& loadedFile, string& savedFile);
 
     //Getters et Setters
-    map<string, shared_ptr<Mission>> getMission();
+    map<string, shared_ptr<Quest>> getMission();
     map<string, shared_ptr<Character>> getCharacter();
     map<string, shared_ptr<Planet>> getPlanet();
     map<string, shared_ptr<Spaceship>> getSpaceship();
@@ -30,11 +30,11 @@ public:
     void addCharacter(const shared_ptr<Character>&);
     void addSpaceship(const shared_ptr<Spaceship>&);
     void addPlanet(const shared_ptr<Planet>&);
-    void addMission(const shared_ptr<Mission>&);
+    void addQuest(const shared_ptr<Quest>&);
     bool deleteCharacter(const string& name);
     void deleteSpaceship(const string& name);
     void deletePlanet(const string& name);
-    void deleteMission(const string& name);
+    void deleteQuest(const string& name);
 
     void deleteSpaceship(int);
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
@@ -50,7 +50,7 @@ private :
     map<string, shared_ptr<Character>> characterMap;
     map<string, shared_ptr<Spaceship>> spaceshipMap;
     map<string, shared_ptr<Planet>> planetMap;
-    map<string, shared_ptr<Mission>> missionMap;
+    map<string, shared_ptr<Quest>> questMap;
     string loadedFile;
     string savedFile;
 };

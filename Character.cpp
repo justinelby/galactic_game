@@ -8,7 +8,7 @@
 Character::Character(string name, string poste, int sante, int attackPower, string placeType, string place)
 {
     this->name = name;
-    this->poste = poste;
+    this->descr = poste;
     this->health=sante;
     this->attackPower = attackPower;
     this->placeType = placeType;
@@ -16,7 +16,7 @@ Character::Character(string name, string poste, int sante, int attackPower, stri
 }
 
 Character::Character(istringstream& iss) {
-    iss >> name >> poste >> health >> attackPower >> placeType >> place;
+    iss >> name >> descr >> health >> attackPower >> placeType >> place;
 }
 
 string Character::getName() const
@@ -51,8 +51,8 @@ Character::~Character()
     //dtor
 }
 
-string Character::getPoste() const {
-    return poste;
+string Character::getDescr() const {
+    return descr;
 }
 
 string Character::getPlaceType() const {

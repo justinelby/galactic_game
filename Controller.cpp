@@ -16,8 +16,8 @@ using namespace std;
 Controller::Controller(string& loadedFile, string& savedFile) : loadedFile(loadedFile), savedFile(savedFile){
 }
 
-map<string, shared_ptr<Mission>> Controller::getMission(){
-    return missionMap;
+map<string, shared_ptr<Quest>> Controller::getMission(){
+    return questMap;
 }
 
 map<string, shared_ptr<Character>> Controller::getCharacter(){
@@ -102,8 +102,8 @@ void Controller::loadGame() {
             getline(iss, description, '\n');
             iss >> description;
 
-            auto newMission = make_shared<Mission>(name, description);
-            addMission(newMission);
+            auto newMission = make_shared<Quest>(name, description);
+            addQuest(newMission);
         }
     }
 }
@@ -112,7 +112,7 @@ string Controller::characterToString(){
     ostringstream oss;
     for (const auto& pair : characterMap) {
         auto c = pair.second;
-        oss << "Character;" << c->getName()<<";"<< c->getPoste()<<";"<< c->getHealth()<<";"<< c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
+        oss << "Character;" << c->getName()<<";"<< c->getDescr()<<";"<< c->getHealth()<<";"<< c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
     }
     return oss.str();
 }
@@ -136,7 +136,7 @@ string Controller::spaceshipToString(){
 
 string Controller::missionToString(){
     ostringstream oss;
-    for (const auto& pair : missionMap) {
+    for (const auto& pair : questMap) {
         auto m = pair.second;
         oss << "Mission;" << m->getName()<<";"<< m->getDescription()<<"\n";
     }
@@ -177,8 +177,8 @@ void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
 void Controller::addPlanet(const shared_ptr<Planet>& newPlanet) {
     planetMap[newPlanet->getName()] = newPlanet;
 }
-void Controller::addMission(const shared_ptr<Mission>& newMission) {
-    missionMap[newMission->getName()] = newMission;
+void Controller::addQuest(const shared_ptr<Quest>& newMission) {
+    questMap[newMission->getName()] = newMission;
 }
 
 
@@ -268,14 +268,14 @@ void Controller::deletePlanet(const string& name) {
 #endif
 }
 
-void Controller::deleteMission(const std::string &name) {
-    auto it = missionMap.find(name);
-    if (it != missionMap.end()) {
+void Controller::deleteQuest(const std::string &name) {
+    auto it = questMap.find(name);
+    if (it != questMap.end()) {
         string temp = it->first;
-        missionMap.erase(temp);
+        questMap.erase(temp);
     }
 #ifdef DEBUG
-    for (auto& pair : missionMap){
+    for (auto& pair : questMap){
         auto& mi = pair.second;
         cout << "Nom : " << mi->getName() << endl;
     }

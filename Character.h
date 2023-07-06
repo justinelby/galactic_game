@@ -23,7 +23,7 @@ public:
     string getName() const;
     int getAttackPower() const ;
     int getHealth() const;
-    string getPoste() const;
+    string getDescr() const;
     string getPlaceType() const;
     int setHealth(int);
     string getPlace() const;
@@ -34,7 +34,7 @@ public:
 
 private:
     string name;
-    string poste;
+    string descr;
     int health;
     int attackPower;
     string placeType;

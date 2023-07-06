@@ -6,20 +6,20 @@
 #define JEU_PERSONNAGES_MISSION_H
 #include <string>
 #include <vector>
-#include "Mission.h"
+#include "Quest.h"
 #include <fstream>
 #include <sstream>
 
 using namespace std;
 
 //Affichage du menu principal
-class Mission {
+class Quest {
 
 public:
     //Constructeur
-    Mission(string nom, string description);
-    Mission(istringstream&);
-    virtual ~Mission();
+    Quest(string nom, string description);
+    Quest(istringstream&);
+    virtual ~Quest();
 
     //Accesseurs et mutateurs
     string getName() const;
