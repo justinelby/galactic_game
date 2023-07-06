@@ -16,11 +16,100 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
+    ///TEST SUPPRESSION MISSION
+/*    cout << "Liste des missions : " <<endl;
+    for( auto it : controller.getQuest()){
+        cout << it.second->getName() << endl;
+    }
+
+    string line4;
+    bool result4;
+    do {
+        cout << "Nom de la mission a supprimer : "<< endl;
+        getline(cin, line4);
+        result4 = controller.deleteQuest(line4);
+    } while (result4 == false);
+
+    cout << "Liste des missions : " <<endl;
+    for( auto it : controller.getQuest()){
+        cout << it.second->getName() << endl;
+    }*/
+
+
+    ///TEST SUPPRESSION PLANET
+/*
+    cout << "Liste des personnages : " <<endl;
     for( auto it : controller.getCharacter()){
            cout << it.second->getName() << endl;
     }
+    cout << "Liste des planetes : " <<endl;
+    for( auto it : controller.getPlanet()){
+        cout << it.second->getName() << endl;
+    }
+    string line3;
+    bool result3;
+    do {
+        cout << "Nom de la planete a supprimer : "<< endl;
+        getline(cin, line3);
+        result3 = controller.deletePlanet(line3);
+    } while (result3 == false);
 
-    cout << "------Nb weak" <<endl;
+    cout << "Liste des planet : " <<endl;
+    for( auto it : controller.getPlanet()){
+        cout << it.second->getName() << endl;
+    }
+
+    cout << "Liste des personnages : " <<endl;
+    for( auto it : controller.getCharacter()){
+        cout << it.second->getName() << endl;
+    }
+
+    cout << "------Planets" <<endl;
+    for( auto it : controller.getPlanet()){
+        for (auto character : it.second->getResident()){
+            cout << character.lock()->getName() << endl;
+        }
+    }
+*/
+
+
+
+    ///TEST SUPPRESSION VAISSEAU
+/*    cout << "Liste des personnages : " <<endl;
+    for( auto it : controller.getCharacter()){
+           cout << it.second->getName() << endl;
+    }
+    cout << "Liste des vaisseaux : " <<endl;
+    for( auto it : controller.getSpaceship()){
+        cout << it.second->getName() << endl;
+    }
+    string line2;
+    bool result2;
+    do {
+        cout << "Nom du vaisseau a supprimer : "<< endl;
+        getline(cin, line2);
+        result2 = controller.deleteSpaceship(line2);
+    } while (result2 == false);
+
+    cout << "Liste des vaisseaux : " <<endl;
+    for( auto it : controller.getSpaceship()){
+        cout << it.second->getName() << endl;
+    }
+
+    cout << "Liste des personnages : " <<endl;
+    for( auto it : controller.getCharacter()){
+        cout << it.second->getName() << endl;
+    }
+
+    cout << "------Spaceships" <<endl;
+    for( auto it : controller.getSpaceship()){
+        for (auto character : it.second->getCrew()){
+            cout << character.lock()->getName() << endl;
+        }
+    }*/
+
+
+/*    cout << "------Nb weak" <<endl;
     int count = 0;
     for( auto it : controller.getPlanet()){
         for (auto character : it.second->getResident()){
@@ -29,47 +118,9 @@ int main() {
             }
         }
     }
-    cout << count << endl;
-
-    string line;
-    bool result;
-    do {
-        getline(cin, line);
-        result = controller.deleteCharacter(line);
-    } while (result == false);
-
-    cout << "------Nb weak" <<endl;
-    count = 0;
-    for( auto it : controller.getPlanet()){
-        for (auto character : it.second->getResident()){
-            if (!character.expired()){
-                count ++;
-            }
-        }
-    }
-    cout << count << endl;
-
-    cout << "------Controller" <<endl;
-    for( auto it : controller.getCharacter()){
-        cout << it.second->getName() << endl;
-    }
+    cout << count << endl;*/
 
 
-
-/*    cout << "------Spaceships" <<endl;
-    for( auto it : controller.getSpaceship()){
-        for (auto character : it.second->getCrew()){
-            cout << character.lock()->getName() << endl;
-        }
-    }*/
-
-
-    cout << "------Planets" <<endl;
-    for( auto it : controller.getPlanet()){
-        for (auto character : it.second->getResident()){
-            cout << character.lock()->getName() << endl;
-        }
-    }
 
 
 //
@@ -117,7 +168,7 @@ int main() {
 //                auto character = controller.getCharacter();
 //                auto spaceship = controller.getSpaceship();
 //                auto planet = controller.getPlanet();
-//                auto mission = controller.getMission();
+//                auto mission = controller.getQuest();
 //
 //                // Afficher les personnages
 //                if (character.empty()) {

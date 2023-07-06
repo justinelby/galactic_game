@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "Quest.h"
 #include <iostream>
 #include <string>
 #include <fstream>

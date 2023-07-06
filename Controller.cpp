@@ -16,7 +16,7 @@ using namespace std;
 Controller::Controller(string& loadedFile, string& savedFile) : loadedFile(loadedFile), savedFile(savedFile){
 }
 
-map<string, shared_ptr<Quest>> Controller::getMission(){
+map<string, shared_ptr<Quest>> Controller::getQuest(){
     return questMap;
 }
 
@@ -30,6 +30,42 @@ map<string, shared_ptr<Planet>> Controller::getPlanet(){
 
 map<string, shared_ptr<Spaceship>> Controller::getSpaceship() {
     return spaceshipMap;
+}
+
+string Controller::characterToString(){
+    ostringstream oss;
+    for (const auto& pair : characterMap) {
+        auto c = pair.second;
+        oss << "Character;" << c->getName()<<";"<< c->getDescr()<<";"<< c->getHealth()<<";"<< c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
+    }
+    return oss.str();
+}
+
+string Controller::planetToString(){
+    ostringstream oss;
+    for (const auto& pair : planetMap) {
+        auto p = pair.second;
+        oss << "Planet;" << p->getName()<<";"<<p->getDescription()<<"\n";
+    }
+    return oss.str();
+}
+
+string Controller::spaceshipToString(){
+    ostringstream oss;
+    for (const auto& pair : spaceshipMap) {
+        auto p = pair.second;
+        oss << "Spaceship;" << p->getName()<< endl;
+    }
+    return oss.str();
+}
+
+string Controller::questToString(){
+    ostringstream oss;
+    for (const auto& pair : questMap) {
+        auto m = pair.second;
+        oss << "Mission;" << m->getName()<<";"<< m->getDescription()<<"\n";
+    }
+    return oss.str();
 }
 
 void Controller::loadGame() {
@@ -93,7 +129,7 @@ void Controller::loadGame() {
             auto newPlanet = make_shared<Planet>(name, description);
             addPlanet(newPlanet);
         }
-        else if (type == "Mission")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
+        else if (type == "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
         {
             string name;
             getline(iss, name, ';');
@@ -108,45 +144,10 @@ void Controller::loadGame() {
     }
 }
 
-string Controller::characterToString(){
-    ostringstream oss;
-    for (const auto& pair : characterMap) {
-        auto c = pair.second;
-        oss << "Character;" << c->getName()<<";"<< c->getDescr()<<";"<< c->getHealth()<<";"<< c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
-    }
-    return oss.str();
-}
-
-string Controller::planetToString(){
-    ostringstream oss;
-    for (const auto& pair : planetMap) {
-        auto p = pair.second;
-        oss << "Planet;" << p->getName()<<";"<<p->getDescription()<<"\n";
-    }
-    return oss.str();
-}
-string Controller::spaceshipToString(){
-    ostringstream oss;
-    for (const auto& pair : spaceshipMap) {
-        auto p = pair.second;
-        oss << "Spaceship;" << p->getName()<< endl;
-    }
-    return oss.str();
-}
-
-string Controller::missionToString(){
-    ostringstream oss;
-    for (const auto& pair : questMap) {
-        auto m = pair.second;
-        oss << "Mission;" << m->getName()<<";"<< m->getDescription()<<"\n";
-    }
-    return oss.str();
-}
-
 void Controller::saveGame(){
     //Ecriture du fichier de sauvegarde
     ofstream file(savedFile);
-    file << planetToString()<< spaceshipToString() << characterToString() << missionToString() << endl;
+    file << planetToString() << spaceshipToString() << characterToString() << questToString() << endl;
 }
 
 void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
@@ -160,7 +161,6 @@ void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
         }
     }
 
-
     // Ajout du personnage aux habitants de la planete auquel il est associé
     for(auto& pla : planetMap)
     {
@@ -171,6 +171,7 @@ void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
     }
 
 }
+
 void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
     spaceshipMap[newSpaceship->getName()] = newSpaceship;
 }
@@ -181,9 +182,8 @@ void Controller::addQuest(const shared_ptr<Quest>& newMission) {
     questMap[newMission->getName()] = newMission;
 }
 
-
-//Nettoyer les weak ptr qui n'ont plus de share ptr vers lesquels pointer
-void Controller::cleanWeakPtr(vector<weak_ptr<Character>>& vec) {
+void Controller::cleanWeakPtr(vector<weak_ptr<Character>>& vec) { //Nettoyer les weak ptr qui n'ont plus de share ptr vers lesquels pointer
+    //on parcourt les weak ptr du vecteur
     for (auto it = vec.begin(); it != vec.end(); ) {
         if (it->lock()== 0) {
             // Le weakptr a expiré, on le supprime de la liste
@@ -197,6 +197,7 @@ void Controller::cleanWeakPtr(vector<weak_ptr<Character>>& vec) {
 }
 
 bool Controller::deleteCharacter(const string& name) {
+    //Rechercher le personnage dans la map
     auto it = characterMap.find(name);
     if (it == characterMap.end()) {
         return false;
@@ -230,7 +231,7 @@ bool Controller::deleteCharacter(const string& name) {
                 }
             }
             //Si le personnage a une mission
-            else if (typePlace == "Mission"){
+            else if (typePlace == "Quest"){
             //Il faut developper d'abord un getMissions() dans character
             }
         }
@@ -239,12 +240,26 @@ bool Controller::deleteCharacter(const string& name) {
     }
 }
 
-
-void Controller::deleteSpaceship(const string& name) {
+bool Controller::deleteSpaceship(const string& name) {
+    //Rechercher le vaisseau dans la map
     auto it = spaceshipMap.find(name);
-    if (it != spaceshipMap.end()) {
-        string temp = it->first;
-        spaceshipMap.erase(temp);
+    if (it == spaceshipMap.end()) {
+        return false;
+    } else {
+        string spaceshipName = it->first;
+        if(spaceshipMap[spaceshipName])
+        {
+            // Parcourir les membres de l'équipage du vaisseau
+            for(auto member : it->second->getCrew()){
+                if(member.lock()){
+                    // Supprimer le personnage de la map characterMap
+                    characterMap.erase(member.lock()->getName());
+                }
+                // Supprimer le vaisseau de la map spaceshipMap
+                spaceshipMap.erase(spaceshipName);
+            }
+        }
+        return true;
     }
 #ifdef DEBUG
     for (auto& pair : spaceshipMap){
@@ -254,11 +269,26 @@ void Controller::deleteSpaceship(const string& name) {
 #endif
 }
 
-void Controller::deletePlanet(const string& name) {
+bool Controller::deletePlanet(const string& name) {
+    //Rechercher la planete dans la map
     auto it = planetMap.find(name);
-    if (it != planetMap.end()) {
-        string temp = it->first;
-        planetMap.erase(temp);
+    if (it == planetMap.end()) {
+        return false;
+    } else {
+        string planetName = it->first;
+        if(planetMap[planetName]){
+            // Parcourir les residents de la planete
+            for (auto resident : it->second->getResident()){
+                if(resident.lock())
+                {
+                    // Supprimer le personnage de la map characterMap
+                    characterMap.erase(resident.lock()->getName());
+                }
+                // Supprimer le vaisseau de la map spaceshipMap
+                planetMap.erase(planetName);
+            }
+        }
+        return true;
     }
 #ifdef DEBUG
     for (auto& pair : planetMap){
@@ -268,11 +298,16 @@ void Controller::deletePlanet(const string& name) {
 #endif
 }
 
-void Controller::deleteQuest(const std::string &name) {
+bool Controller::deleteQuest(const std::string &name) {
+    //Rechercher la mission dans la map
     auto it = questMap.find(name);
-    if (it != questMap.end()) {
-        string temp = it->first;
-        questMap.erase(temp);
+    if (it == questMap.end()) {
+        return false;
+    } else {
+        string questName = it->first;
+        // Supprimer la mission de la map
+        questMap.erase(questName);
+        return true;
     }
 #ifdef DEBUG
     for (auto& pair : questMap){
@@ -281,6 +316,7 @@ void Controller::deleteQuest(const std::string &name) {
     }
 #endif
 }
+
 
 Controller::~Controller()
 {

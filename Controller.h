@@ -18,7 +18,7 @@ public:
     Controller(string& loadedFile, string& savedFile);
 
     //Getters et Setters
-    map<string, shared_ptr<Quest>> getMission();
+    map<string, shared_ptr<Quest>> getQuest();
     map<string, shared_ptr<Character>> getCharacter();
     map<string, shared_ptr<Planet>> getPlanet();
     map<string, shared_ptr<Spaceship>> getSpaceship();
@@ -32,17 +32,15 @@ public:
     void addPlanet(const shared_ptr<Planet>&);
     void addQuest(const shared_ptr<Quest>&);
     bool deleteCharacter(const string& name);
-    void deleteSpaceship(const string& name);
-    void deletePlanet(const string& name);
-    void deleteQuest(const string& name);
-
-    void deleteSpaceship(int);
+    bool deleteSpaceship(const string& name);
+    bool deletePlanet(const string& name);
+    bool deleteQuest(const string& name);
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
 
     string characterToString();
     string spaceshipToString();
     string planetToString();
-    string missionToString();
+    string questToString();
     virtual ~Controller();
 
 private :
