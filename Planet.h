@@ -20,8 +20,9 @@ public:
     Planet(istringstream&);
     string getName() const;
     string getDescription() const;
-    vector<weak_ptr<Character>> getResident();
+    vector<weak_ptr<Character>>& getResident();
     void setResident(shared_ptr<Character>&);
+    void cleanPlanetResidentWeakPtr();
 
     void addNewPlanetResident(shared_ptr<Character>&);
     virtual ~Planet();

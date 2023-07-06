@@ -37,6 +37,7 @@ public:
     void deleteMission(const string& name);
 
     void deleteSpaceship(int);
+    void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
 
     string characterToString();
     string spaceshipToString();

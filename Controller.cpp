@@ -181,34 +181,42 @@ void Controller::addMission(const shared_ptr<Mission>& newMission) {
     missionMap[newMission->getName()] = newMission;
 }
 
-/*
-void Controller::deleteCharacter(const std::shared_ptr<Character>& character) {
-    auto it = characterMap.find(character->getName());
-    if (it != characterMap.end()) {
-        characterMap.erase(it);
-        cout << "Personnage supprimé : " << character->getName() << endl;
-    } else {
-        cout << "Personnage non trouvé : " << character->getName() << endl;
+
+//Nettoyer les weak ptr qui n'ont plus de share ptr vers lesquels pointer
+void Controller::cleanWeakPtr(vector<weak_ptr<Character>>& vec) {
+    for (auto it = vec.begin(); it != vec.end(); ) {
+        if (it->lock()== 0) {
+            // Le weakptr a expiré, on le supprime de la liste
+            it = vec.erase(it);
+        } else {
+            // Le weakptr est toujours valide, on passe au suivant
+            ++it;
+        }
     }
 }
-*/
 
 bool Controller::deleteCharacter(const string& name) {
     auto it = characterMap.find(name);
     if (it == characterMap.end()) {
-#ifdef DEBUG
-        cout << "Non trouve, retourne false" << endl;
-#endif
         return false;
     } else {
-        string temp = it->first;
-        characterMap.erase(temp);
-#ifdef DEBUG
-        cout << "Trouve, retourne true" << endl;
-#endif
+        string characterName = it->first;
+        // Vérifier si le pointeur de personnage est nul
+        if (characterMap[characterName]) {
+            // Obtenir la planète associée au personnage
+            string place = characterMap[characterName]->getPlace();
+            auto planetIt = planetMap.find(place);
+            if (planetIt != planetMap.end()) {
+                auto planet = planetIt->second;
+                // Supprimer le personnage de la liste des résidents de la planète
+                cleanWeakPtr(planet->getResident());
+            }
+        }
+        characterMap.erase(characterName);
         return true;
     }
-    }
+}
+
 
 void Controller::deleteSpaceship(const string& name) {
     auto it = spaceshipMap.find(name);

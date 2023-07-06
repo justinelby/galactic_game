@@ -2,8 +2,8 @@
 // Created by justi on 26/06/2023.
 //
 
-#include <fstream>
 #include <sstream>
+#include <algorithm>
 #include "Planet.h"
 #include "Character.h"
 
@@ -26,7 +26,7 @@ void Planet::addNewPlanetResident(shared_ptr<Character>& character) {
     resident.push_back(character);
 }
 
-vector<weak_ptr<Character>> Planet::getResident() {
+vector<weak_ptr<Character>>& Planet::getResident() {
     return resident;
 }
 

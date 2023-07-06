@@ -20,6 +20,17 @@ int main() {
            cout << it.second->getName() << endl;
     }
 
+    cout << "------Nb weak" <<endl;
+    int count = 0;
+    for( auto it : controller.getPlanet()){
+        for (auto character : it.second->getResident()){
+            if (!character.expired()){
+                count ++;
+            }
+        }
+    }
+    cout << count << endl;
+
     string line;
     bool result;
     do {
@@ -27,22 +38,36 @@ int main() {
         result = controller.deleteCharacter(line);
     } while (result == false);
 
+    cout << "------Nb weak" <<endl;
+    count = 0;
+    for( auto it : controller.getPlanet()){
+        for (auto character : it.second->getResident()){
+            if (!character.expired()){
+                count ++;
+            }
+        }
+    }
+    cout << count << endl;
+
     cout << "------Controller" <<endl;
     for( auto it : controller.getCharacter()){
         cout << it.second->getName() << endl;
     }
 
-    cout << "------Spaceships" <<endl;
+
+
+/*    cout << "------Spaceships" <<endl;
     for( auto it : controller.getSpaceship()){
         for (auto character : it.second->getCrew()){
-            if(character.lock()) cout << character.lock()->getName() << endl;
+            cout << character.lock()->getName() << endl;
         }
-    }
+    }*/
+
 
     cout << "------Planets" <<endl;
     for( auto it : controller.getPlanet()){
         for (auto character : it.second->getResident()){
-            if(character.lock()) cout << character.lock()->getName() << endl;
+            cout << character.lock()->getName() << endl;
         }
     }
 
