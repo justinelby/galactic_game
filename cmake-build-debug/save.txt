@@ -1,8 +1,13 @@
 Planet;Earth;Une planete bleue
+Planet;Mars;Une planete rouge
 Planet;Z-23;Une planete situee dans la galaxy Euclid ou l'or et l'argent se trouvent en grande quantite.
 Spaceship;Millenium Falcon
 Spaceship;USS Enterprise
+Spaceship;WWW
 Character;Alex Starborn;Personnage principal;100;50;20;Spaceship;USS Enterprise
+Character;Alien 1;Mechant;101;18;5;Spaceship;WWW
+Character;Alien 2;MechantMechant;102;17;10;Spaceship;USS Enterprise
+Character;Alien 3;MechantMechantMechant;103;5;15;Planet;Earth
 Character;Capitaine Anderson;Superieur d'Alex;150;100;50;Spaceship;USS Enterprise
 Character;Docteur Liara;Medecin de bord;100;30;10;Planet;Earth
 Character;Ingenieur Scott;Responsable des reparations et des ameliorations du vaisseau;120;30;20;Spaceship;USS Enterprise

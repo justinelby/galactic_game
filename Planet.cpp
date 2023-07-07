@@ -25,6 +25,9 @@ string Planet::getDescription() const {
 void Planet::addNewPlanetResident(shared_ptr<Character>& character) {
     resident.push_back(character);
 }
+void Planet::addNewPlanetEnemyResident(shared_ptr<Enemy>& enemy) {
+    resident.push_back(enemy);
+}
 
 vector<weak_ptr<Character>>& Planet::getResident() {
     return resident;

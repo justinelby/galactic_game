@@ -31,6 +31,9 @@ void Spaceship::showCrew(){
 void Spaceship::addCrewMember(shared_ptr<Character>& member) {
     crew.push_back(member);
 }
+void Spaceship::addEnemyCrewMember(shared_ptr<Enemy>& member) {
+    crew.push_back(member);
+}
 
 //void Spaceship::killCrewMember(shared_ptr<Character>& corpse) {
 //    crew.erase(corpse);

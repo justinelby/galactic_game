@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include "Character.h"
+#include "Enemy.h"
 #include <fstream>
 #include <sstream>
 #include <memory>
@@ -25,6 +26,7 @@ public:
     void cleanPlanetResidentWeakPtr();
 
     void addNewPlanetResident(shared_ptr<Character>&);
+    void addNewPlanetEnemyResident(shared_ptr<Enemy>&);
     virtual ~Planet();
 
 private:

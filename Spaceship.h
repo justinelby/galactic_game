@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include "Character.h"
+#include "Enemy.h"
 #include <memory>
 
 using namespace std;
@@ -29,6 +30,7 @@ public:
 
     //Methodes
     void addCrewMember(shared_ptr<Character>&);
+    void addEnemyCrewMember(shared_ptr<Enemy>&);
     void killCrewMember(shared_ptr<Character>&);
 
 private:

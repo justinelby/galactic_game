@@ -36,9 +36,12 @@ int main() {
     }*/
 
 
-    ///TEST SUPPRESSION PLANET
 
-    cout << "Liste des personnages : " <<endl;
+    /// AFFICHAGE GENERAL
+
+    cout << "Liste des personnages par vaisseau et par planete : " <<endl;
+
+    cout << "Affichage des Characters : " << endl;
     for( auto it : controller.getCharacter()){
         cout << it.second->getName() << " ";
         cout << it.second->getHealth() << " ";
@@ -47,6 +50,36 @@ int main() {
         cout << it.second->getPlaceType() << " " ;
         cout << it.second->getPlace() << endl;
     }
+    cout << "Affichage des Enemies : " << endl;
+    for( auto it : controller.getEnemy()){
+        cout << it.second->getName() << " ";
+        cout << it.second->getHealth() << " ";
+        cout << it.second->getAttackPower() << " " ;
+        cout << it.second->getArmorPower() << " " ;
+        cout << it.second->getPlaceType() << " " ;
+        cout << it.second->getPlace() << endl;
+    }
+    cout << "Affichage des résidents par Planet : " << endl;
+    for( auto it : controller.getPlanet()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getResident()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower() << " ";
+            cout << i.lock()->getArmorPower() << endl;
+        }
+    }
+    cout << "Affichage des crewmates par Spaceship : " << endl;
+    for( auto it : controller.getSpaceship()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getCrew()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower();
+            cout << i.lock()->getArmorPower() << endl;
+        }
+    }
+
 
     controller.saveGame();
 /*    cout << "Liste des planetes : " <<endl;
@@ -55,6 +88,9 @@ int main() {
     }
     string line3;
     bool result3;
+*/
+    ///TEST SUPPRESSION PLANET
+/*
     do {
         cout << "Nom de la planete a supprimer : "<< endl;
         getline(cin, line3);

@@ -24,6 +24,10 @@ map<string, shared_ptr<Character>> Controller::getCharacter(){
     return characterMap;
 }
 
+map<string, shared_ptr<Enemy>> Controller::getEnemy(){
+    return enemyMap;
+}
+
 map<string, shared_ptr<Planet>> Controller::getPlanet(){
     return planetMap;
 }
@@ -69,6 +73,7 @@ string Controller::questToString(){
 }
 
 void Controller::loadGame() {
+    srand(static_cast <unsigned int> (time(NULL)));     // generating new random seed
     ifstream file(loadedFile);
 
     if(!file.is_open())
@@ -85,7 +90,7 @@ void Controller::loadGame() {
         getline(iss, type, ';');
 
         //Si la ligne commence par character, on récupère les informations associées
-        if (type == "Character")
+        if (type == "Character" || type == "Enemy")
         {
             string name;
             getline(iss, name, ';');
@@ -108,8 +113,13 @@ void Controller::loadGame() {
             string place;
             getline(iss, place);
 
-            auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), stoi(armorPower), placeType, place);
-            addCharacter(newCharacter);
+            if (type == "Character") {
+                auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), stoi(armorPower), placeType, place);
+                addCharacter(newCharacter);
+            } else {    // if Enemy
+                auto newEnemy = make_shared<Enemy>(name, poste, stoi(health), stoi(attackPower), stoi(armorPower), placeType, place);
+                addEnemy(newEnemy);
+            }
 
 
         }
@@ -172,7 +182,28 @@ void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
             break;
         }
     }
+}
 
+// redundancy
+void Controller::addEnemy(const shared_ptr<Enemy>& newEnemy) {
+    enemyMap[newEnemy->getName()] = newEnemy;
+    // Ajout du personnage à l'équipage du vaisseau auquel il est associé
+    for(auto& ship : spaceshipMap)
+    {
+        if(newEnemy->getPlace() == ship.second->getName()){
+            ship.second->addEnemyCrewMember(enemyMap[newEnemy->getName()]);
+            break;
+        }
+    }
+
+    // Ajout de l'enemy aux habitants de la planete auquel il est associé
+    for(auto& pla : planetMap)
+    {
+        if(newEnemy->getPlace() == pla.second->getName()){
+            pla.second->addNewPlanetEnemyResident(enemyMap[newEnemy->getName()]);
+            break;
+        }
+    }
 }
 
 void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
