@@ -229,10 +229,6 @@ bool Controller::deleteCharacter(const string& name) {
                     cleanWeakPtr(spaceship->getCrew());
                 }
             }
-            //Si le personnage a une mission
-            else if (typePlace == "Mission"){
-            //Il faut developper d'abord un getMissions() dans character
-            }
         }
         characterMap.erase(characterName);
         return true;

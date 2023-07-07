@@ -4,6 +4,7 @@
 
 #ifndef JEU_PERSONNAGES_CHARACTER_H
 #define JEU_PERSONNAGES_CHARACTER_H
+#include <ctime>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -14,29 +15,36 @@ using namespace std;
 class Character
 {
 public:
-    //Constructeur/Destructeur
-    Character(string, string, int, int, string, string);
+    // Constructor / Destructor
+    Character(string, string, int, int,int, string, string);
     Character(istringstream&);
     ~Character();
 
-    //Accesseurs et mutateurs
+    // Getters & setters
     string getName() const;
-    int getAttackPower() const ;
-    int getHealth() const;
     string getDescr() const;
+    int getHealth() const;
+    void setHealth(int);
+    int getAttackPower() const;
+    virtual void setAttackPower(int);  // different for Enemy
+    int getArmorPower() const;
+    void setArmorPower(int);
+
     string getPlaceType() const;
-    int setHealth(int);
+    void setPlaceType(const string &place);
     string getPlace() const;
     void setPlace(const string &place);
 
-    //Methodes
-    void attaque(Character&);
+    // Methods
+    void attack(Character&);
 
+protected:
+    int attackPower;
+    int armorPower;
 private:
     string name;
     string descr;
     int health;
-    int attackPower;
     string placeType;
     string place;
 };
