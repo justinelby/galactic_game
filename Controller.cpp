@@ -347,19 +347,13 @@ bool Controller::deletePlanet(const string& name) {
             for (auto resident : it->second->getResident()){
                 if(resident.lock())
                 {
-                    // Affichage des types avant test
-                    cout << typeid(resident.lock()).name() << endl;
-                    cout << typeid(map<string,shared_ptr<Character>>).name() << endl;
-
-                    if(typeid(resident.lock()).name() == typeid(map<string,shared_ptr<Character>>).name() ){
+                    if (auto character = dynamic_pointer_cast<Character>(resident.lock())) {
                         cout << "ça paaaaasse pour character" << endl;
-                        // Supprimer le personnage de la map characterMap
-                        characterMap.erase(resident.lock()->getName());
+                        characterMap.erase(character->getName());
                     }
-
-                    else if (typeid(resident.lock()).name() == typeid(map<string,shared_ptr<Enemy>>).name()){
+                    if (auto enemy = dynamic_pointer_cast<Enemy>(resident.lock())) {
                         cout << "ça paaaaasse pour enemy" << endl;
-                        enemyMap.erase(resident.lock()->getName());
+                        enemyMap.erase(enemy->getName());
                     }
                 }
                 // Supprimer le vaisseau de la map spaceshipMap

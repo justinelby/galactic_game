@@ -5,7 +5,6 @@ Spaceship;USS Enterprise
 Spaceship;WWW
 Character;Alex Starborn;Personnage principal;100;50;20;Spaceship;USS Enterprise
 Character;Capitaine Anderson;Superieur d'Alex;150;100;50;Spaceship;USS Enterprise
-Character;Docteur Liara;Medecin de bord;100;30;10;Planet;Earth
 Character;Ingenieur Scott;Responsable des reparations et des ameliorations du vaisseau;120;30;20;Spaceship;USS Enterprise
 Character;Toto;PNJ;1000;200;400;Planet;Z-23
 Mission;Des pirates de l'espace !!;Avec votre equipage, defendez votre vaisseau et combattez les pirates de l'espace
