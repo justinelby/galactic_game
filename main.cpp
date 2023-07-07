@@ -37,12 +37,19 @@ int main() {
 
 
     ///TEST SUPPRESSION PLANET
-/*
+
     cout << "Liste des personnages : " <<endl;
     for( auto it : controller.getCharacter()){
-           cout << it.second->getName() << endl;
+        cout << it.second->getName() << " ";
+        cout << it.second->getHealth() << " ";
+        cout << it.second->getAttackPower() << " " ;
+        cout << it.second->getArmorPower() << " " ;
+        cout << it.second->getPlaceType() << " " ;
+        cout << it.second->getPlace() << endl;
     }
-    cout << "Liste des planetes : " <<endl;
+
+    controller.saveGame();
+/*    cout << "Liste des planetes : " <<endl;
     for( auto it : controller.getPlanet()){
         cout << it.second->getName() << endl;
     }

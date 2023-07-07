@@ -36,7 +36,7 @@ string Controller::characterToString(){
     ostringstream oss;
     for (const auto& pair : characterMap) {
         auto c = pair.second;
-        oss << "Character;" << c->getName()<<";"<< c->getDescr()<<";"<< c->getHealth()<<";"<< c->getAttackPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
+        oss << "Character;" << c->getName()<<";"<< c->getDescr()<<";"<< c->getHealth()<<";"<< c->getAttackPower() << ";" <<c->getArmorPower()<<";"<<c->getPlaceType()<<";"<<c->getPlace()<<"\n";
     }
     return oss.str();
 }

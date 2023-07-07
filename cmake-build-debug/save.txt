@@ -2,10 +2,11 @@ Planet;Earth;Une planete bleue
 Planet;Z-23;Une planete situee dans la galaxy Euclid ou l'or et l'argent se trouvent en grande quantite.
 Spaceship;Millenium Falcon
 Spaceship;USS Enterprise
-Character;Alex Starborn;Personnage principal;100;50;Vaisseau;USS Enterprise
-Character;Capitaine Anderson;Superieur d'Alex;150;100;Vaisseau;USS Enterprise
-Character;Docteur Liara;Medecin de bord;100;30;Planet;Earth
-Character;Ingenieur Scott;Responsable des reparations et des ameliorations du vaisseau;120;30;Vaisseau;USS Enterprise
+Character;Alex Starborn;Personnage principal;100;50;20;Spaceship;USS Enterprise
+Character;Capitaine Anderson;Superieur d'Alex;150;100;50;Spaceship;USS Enterprise
+Character;Docteur Liara;Medecin de bord;100;30;10;Planet;Earth
+Character;Ingenieur Scott;Responsable des reparations et des ameliorations du vaisseau;120;30;20;Spaceship;USS Enterprise
+Character;Toto;PNJ;1000;200;400;Planet;Z-23
 Mission;Des pirates de l'espace !!;Avec votre equipage, defendez votre vaisseau et combattez les pirates de l'espace
 Mission;Explorer une planète mysterieuse;A l'aide de votre radar, retrouvez et explorez la planete Z-23
 Mission;Faire la paix;Négocier un traité de paix entre deux factions rivales

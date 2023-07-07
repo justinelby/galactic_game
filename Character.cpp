@@ -17,7 +17,7 @@ Character::Character(string name, string desc, int hp, int ap, int dp, string pl
 }
 
 Character::Character(istringstream& iss) {
-    iss >> name >> descr >> health >> attackPower >> placeType >> place;
+    iss >> name >> descr >> health >> attackPower >> armorPower >> placeType >> place;
 }
 
 string Character::getName() const { return name; }
