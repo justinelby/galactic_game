@@ -99,13 +99,16 @@ void Controller::loadGame() {
             string attackPower;
             getline(iss, attackPower, ';');
 
+            string armorPower;
+            getline(iss, armorPower, ';');
+
             string placeType;
             getline(iss, placeType, ';');
 
             string place;
             getline(iss, place);
 
-            auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), placeType, place);
+            auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), stoi(armorPower), placeType, place);
             addCharacter(newCharacter);
 
 

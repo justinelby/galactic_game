@@ -7,6 +7,7 @@
 #include <map>
 #include "Quest.h"
 #include "Character.h"
+#include "Enemy.h"
 #include "Planet.h"
 #include "Spaceship.h"
 
@@ -46,6 +47,7 @@ public:
 private :
     //Attributs
     map<string, shared_ptr<Character>> characterMap;
+    map<string, shared_ptr<Enemy>> enemyMap;
     map<string, shared_ptr<Spaceship>> spaceshipMap;
     map<string, shared_ptr<Planet>> planetMap;
     map<string, shared_ptr<Quest>> questMap;
