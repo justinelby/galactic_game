@@ -40,6 +40,8 @@ public:
     bool deletePlanet(const string& name);
     bool deleteQuest(const string& name);
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
+    void characterAttackEnemy(Character& character, Enemy& enemy);
+    void enemyAttackCharacter(Enemy& enemy, Character& character);
 
     string characterToString();
     string spaceshipToString();

@@ -55,17 +55,6 @@ void displayAllInfo(Controller controller){
     }
 }
 
-///TEST SUPPRESSION PLANET
-void testDeletePlanet(Controller controller) {
-    string line;
-    bool result;
-    do {
-        cout << "Nom de la planete a supprimer : "<< endl;
-        getline(cin, line);
-        result = controller.deletePlanet(line);
-    } while (result == false);
-}
-
 //Code contenant l'execution du menu et le jeu
 int main() {
 
@@ -74,7 +63,10 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
+///----------------------------------------------------------------------------
+///TEST SUPPRESSION PLANET
 
+/*
     string line;
     bool result;
     do {
@@ -82,11 +74,30 @@ int main() {
         getline(cin, line);
         result = controller.deletePlanet(line);
     } while (result == false);
+    */
 
-    controller.getPlanet();
-    displayAllInfo(controller);
 
-    ///TEST SUPPRESSION MISSION
+///----------------------------------------------------------------------------
+///TEST ATTACK FUNCTION
+
+/* Test attack function */
+/*    Character& firstCharacter = *(controller.getCharacter().begin()->second);
+    Enemy& firstEnemy = *(controller.getEnemy().begin()->second);*/
+
+    /*character attack -> Enemy */
+/*    cout << firstEnemy.getName() << " " << firstEnemy.getHealth() << endl;
+    controller.characterAttackEnemy(firstCharacter, firstEnemy);
+    cout << firstEnemy.getName() << " " << firstEnemy.getHealth() << endl;*/
+
+    /*character attack -> Enemy */
+/*
+    cout << firstCharacter.getName() << " " << firstCharacter.getHealth() << endl;
+    //controller.enemyAttackCharacter(firstEnemy, firstCharacter);
+    cout << firstCharacter.getName() << " " << firstCharacter.getHealth() << endl;
+*/
+
+///----------------------------------------------------------------------------
+///TEST SUPPRESSION MISSION
 /*   cout << "Liste des missions : " <<endl;
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << endl;
@@ -104,13 +115,6 @@ int main() {
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << endl;
     }*/
-
-
-
-
-
-
-
 
     controller.saveGame();
 /*  cout << "Liste des planetes : " << endl;
