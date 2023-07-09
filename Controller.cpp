@@ -261,7 +261,6 @@ bool Controller::deleteCharacter(const string& name) {
                     cleanWeakPtr(spaceship->getCrew());
                 }
             }
-
         }
         characterMap.erase(characterName);
         return true;
@@ -336,29 +335,31 @@ bool Controller::deleteSpaceship(const string& name) {
 }
 
 bool Controller::deletePlanet(const string& name) {
-    //Rechercher la planete dans la map
+    // Rechercher la planète dans la map
     auto it = planetMap.find(name);
     if (it == planetMap.end()) {
         return false;
     } else {
         string planetName = it->first;
-        if(planetMap[planetName]){
-            // Parcourir les residents de la planete
-            for (auto resident : it->second->getResident()){
-                if(resident.lock())
-                {
+        if (planetMap[planetName]) {
+            // Parcourir les résidents de la planète
+            for (auto resident : it->second->getResident()) {
+                if (resident.lock()) {
                     if (auto character = dynamic_pointer_cast<Character>(resident.lock())) {
-                        cout << "ça paaaaasse pour character" << endl;
-                        characterMap.erase(character->getName());
-                    }
-                    if (auto enemy = dynamic_pointer_cast<Enemy>(resident.lock())) {
-                        cout << "ça paaaaasse pour enemy" << endl;
-                        enemyMap.erase(enemy->getName());
+                        // Vérifier si c'est un ennemi
+                        if (auto enemy = dynamic_pointer_cast<Enemy>(character)) {
+                            cout << "Suppression de l'ennemi : " << enemy->getName() << endl;
+                            enemyMap.erase(enemy->getName());
+                        } else {
+                            // Supprimer le personnage de la map characterMap
+                            cout << "Suppression du personnage: " << character->getName() << endl;
+                            characterMap.erase(character->getName());
+                        }
                     }
                 }
-                // Supprimer le vaisseau de la map spaceshipMap
-                planetMap.erase(planetName);
             }
+            // Supprimer la planète de la map planetMap
+            planetMap.erase(planetName);
         }
         return true;
     }

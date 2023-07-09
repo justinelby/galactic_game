@@ -74,7 +74,6 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
-    //displayAllInfo(controller);
 
     string line;
     bool result;
@@ -84,10 +83,11 @@ int main() {
         result = controller.deletePlanet(line);
     } while (result == false);
 
+    controller.getPlanet();
     displayAllInfo(controller);
 
     ///TEST SUPPRESSION MISSION
-/*    cout << "Liste des missions : " <<endl;
+/*   cout << "Liste des missions : " <<endl;
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << endl;
     }
@@ -98,9 +98,9 @@ int main() {
         cout << "Nom de la mission a supprimer : "<< endl;
         getline(cin, line4);
         result4 = controller.deleteQuest(line4);
-    } while (result4 == false);
+    } while (result4 == false);*/
 
-    cout << "Liste des missions : " <<endl;
+    /*cout << "Liste des missions : " <<endl;
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << endl;
     }*/
@@ -157,8 +157,9 @@ int main() {
         }
     }*/
 
+/*
 
-/*    cout << "------Nb weak" <<endl;
+    cout << "------Nb weak" <<endl;
     int count = 0;
     for( auto it : controller.getPlanet()){
         for (auto character : it.second->getResident()){
@@ -167,7 +168,8 @@ int main() {
             }
         }
     }
-    cout << count << endl;*/
+    cout << count << endl;
+*/
 
 
 
