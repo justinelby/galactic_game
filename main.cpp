@@ -8,6 +8,64 @@
 using namespace std;
 
 
+/// AFFICHAGE GENERAL
+void displayAllInfo(Controller controller){
+    cout << "Affichage des Characters : " << endl;
+    for( auto it : controller.getCharacter()){
+        cout << it.second->getName() << " ";
+        cout << it.second->getHealth() << " ";
+        cout << it.second->getAttackPower() << " " ;
+        cout << it.second->getArmorPower() << " " ;
+        cout << it.second->getPlaceType() << " " ;
+        cout << it.second->getPlace() << endl;
+    }
+    cout << "---------------------" << endl;
+    cout << "Affichage des Enemies : " << endl;
+    for( auto it : controller.getEnemy()){
+        cout << it.second->getName() << " ";
+        cout << it.second->getHealth() << " ";
+        cout << it.second->getAttackPower() << " " ;
+        cout << it.second->getArmorPower() << " " ;
+        cout << it.second->getPlaceType() << " " ;
+        cout << it.second->getPlace() << endl;
+    }
+    cout << "---------------------" << endl;
+    cout << "Affichage des résidents par Planet : " << endl;
+    for( auto it : controller.getPlanet()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getResident()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower() << " ";
+            cout << i.lock()->getArmorPower() << endl;
+        }
+        cout << "--------" << endl;
+    }
+    cout << "---------------------" << endl;
+    cout << "Affichage des crewmates par Spaceship : " << endl;
+    for( auto it : controller.getSpaceship()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getCrew()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower();
+            cout << i.lock()->getArmorPower() << endl;
+        }
+        cout << "--------" << endl;
+    }
+}
+
+///TEST SUPPRESSION PLANET
+void testDeletePlanet(Controller controller) {
+    string line;
+    bool result;
+    do {
+        cout << "Nom de la planete a supprimer : "<< endl;
+        getline(cin, line);
+        result = controller.deletePlanet(line);
+    } while (result == false);
+}
+
 //Code contenant l'execution du menu et le jeu
 int main() {
 
@@ -16,8 +74,20 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
+
+    string line;
+    bool result;
+    do {
+        cout << "Nom de la planete a supprimer : "<< endl;
+        getline(cin, line);
+        result = controller.deletePlanet(line);
+    } while (result == false);
+
+    controller.getPlanet();
+    displayAllInfo(controller);
+
     ///TEST SUPPRESSION MISSION
-/*    cout << "Liste des missions : " <<endl;
+/*   cout << "Liste des missions : " <<endl;
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << endl;
     }
@@ -28,56 +98,28 @@ int main() {
         cout << "Nom de la mission a supprimer : "<< endl;
         getline(cin, line4);
         result4 = controller.deleteQuest(line4);
-    } while (result4 == false);
+    } while (result4 == false);*/
 
-    cout << "Liste des missions : " <<endl;
+    /*cout << "Liste des missions : " <<endl;
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << endl;
     }*/
 
 
-    ///TEST SUPPRESSION PLANET
 
-    cout << "Liste des personnages : " <<endl;
-    for( auto it : controller.getCharacter()){
-        cout << it.second->getName() << " ";
-        cout << it.second->getHealth() << " ";
-        cout << it.second->getAttackPower() << " " ;
-        cout << it.second->getArmorPower() << " " ;
-        cout << it.second->getPlaceType() << " " ;
-        cout << it.second->getPlace() << endl;
-    }
+
+
+
+
 
     controller.saveGame();
-/*    cout << "Liste des planetes : " <<endl;
-    for( auto it : controller.getPlanet()){
-        cout << it.second->getName() << endl;
-    }
-    string line3;
-    bool result3;
-    do {
-        cout << "Nom de la planete a supprimer : "<< endl;
-        getline(cin, line3);
-        result3 = controller.deletePlanet(line3);
-    } while (result3 == false);
-
-    cout << "Liste des planet : " <<endl;
+/*  cout << "Liste des planetes : " << endl;
     for( auto it : controller.getPlanet()){
         cout << it.second->getName() << endl;
     }
 
-    cout << "Liste des personnages : " <<endl;
-    for( auto it : controller.getCharacter()){
-        cout << it.second->getName() << endl;
-    }
-
-    cout << "------Planets" <<endl;
-    for( auto it : controller.getPlanet()){
-        for (auto character : it.second->getResident()){
-            cout << character.lock()->getName() << endl;
-        }
-    }
 */
+
 
 
 
@@ -115,8 +157,9 @@ int main() {
         }
     }*/
 
+/*
 
-/*    cout << "------Nb weak" <<endl;
+    cout << "------Nb weak" <<endl;
     int count = 0;
     for( auto it : controller.getPlanet()){
         for (auto character : it.second->getResident()){
@@ -125,7 +168,8 @@ int main() {
             }
         }
     }
-    cout << count << endl;*/
+    cout << count << endl;
+*/
 
 
 

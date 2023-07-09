@@ -24,6 +24,10 @@ map<string, shared_ptr<Character>> Controller::getCharacter(){
     return characterMap;
 }
 
+map<string, shared_ptr<Enemy>> Controller::getEnemy(){
+    return enemyMap;
+}
+
 map<string, shared_ptr<Planet>> Controller::getPlanet(){
     return planetMap;
 }
@@ -69,6 +73,7 @@ string Controller::questToString(){
 }
 
 void Controller::loadGame() {
+    srand(static_cast <unsigned int> (time(NULL)));     // generating new random seed
     ifstream file(loadedFile);
 
     if(!file.is_open())
@@ -85,7 +90,7 @@ void Controller::loadGame() {
         getline(iss, type, ';');
 
         //Si la ligne commence par character, on récupère les informations associées
-        if (type == "Character")
+        if (type == "Character" || type == "Enemy")
         {
             string name;
             getline(iss, name, ';');
@@ -108,8 +113,13 @@ void Controller::loadGame() {
             string place;
             getline(iss, place);
 
-            auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), stoi(armorPower), placeType, place);
-            addCharacter(newCharacter);
+            if (type == "Character") {
+                auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower), stoi(armorPower), placeType, place);
+                addCharacter(newCharacter);
+            } else {    // if Enemy
+                auto newEnemy = make_shared<Enemy>(name, poste, stoi(health), stoi(attackPower), stoi(armorPower), placeType, place);
+                addEnemy(newEnemy);
+            }
 
 
         }
@@ -172,7 +182,28 @@ void Controller::addCharacter(const shared_ptr<Character>& newCharacter) {
             break;
         }
     }
+}
 
+// redundancy
+void Controller::addEnemy(const shared_ptr<Enemy>& newEnemy) {
+    enemyMap[newEnemy->getName()] = newEnemy;
+    // Ajout du personnage à l'équipage du vaisseau auquel il est associé
+    for(auto& ship : spaceshipMap)
+    {
+        if(newEnemy->getPlace() == ship.second->getName()){
+            ship.second->addEnemyCrewMember(enemyMap[newEnemy->getName()]);
+            break;
+        }
+    }
+
+    // Ajout de l'enemy aux habitants de la planete auquel il est associé
+    for(auto& pla : planetMap)
+    {
+        if(newEnemy->getPlace() == pla.second->getName()){
+            pla.second->addNewPlanetEnemyResident(enemyMap[newEnemy->getName()]);
+            break;
+        }
+    }
 }
 
 void Controller::addSpaceship(const shared_ptr<Spaceship>& newSpaceship) {
@@ -202,19 +233,50 @@ void Controller::cleanWeakPtr(vector<weak_ptr<Character>>& vec) { //Nettoyer les
 bool Controller::deleteCharacter(const string& name) {
     //Rechercher le personnage dans la map
     auto it = characterMap.find(name);
-    if (it == characterMap.end()) {
-        return false;
-    } else {
+    auto it2 = enemyMap.find(name);
+
+    if (it != characterMap.end()) {
         string characterName = it->first;
         // Vérifier si le pointeur de personnage est nul
         if (characterMap[characterName]) {
             //Obtenir le type de lieu où se situe le personnage
             string typePlace = characterMap[characterName]->getPlaceType();
             //Si le personnage est sur une planete
+            if (typePlace == "Planet") {
+                // Obtenir la planète associée au personnage
+                string place = characterMap[characterName]->getPlace();
+                auto planetIt = planetMap.find(place);
+                if (planetIt != planetMap.end()) {
+                    auto planet = planetIt->second;
+                    // Supprimer le personnage de la liste des résidents de la planète
+                    cleanWeakPtr(planet->getResident());
+                }
+            }
+                //Si le personnage est sur un vaisseau
+            else if (typePlace == "Spaceship") {
+                string place = characterMap[characterName]->getPlace();
+                auto spaceshipIt = spaceshipMap.find(place);
+                if (spaceshipIt != spaceshipMap.end()) {
+                    auto spaceship = spaceshipIt->second;
+                    cleanWeakPtr(spaceship->getCrew());
+                }
+            }
+        }
+        characterMap.erase(characterName);
+        return true;
+    }
+
+    else if (it2 != enemyMap.end()) {
+        string enemyName = it->first;
+        // Vérifier si le pointeur de personnage est nul
+        if (enemyMap[enemyName]) {
+            //Obtenir le type de lieu où se situe le personnage
+            string typePlace = enemyMap[enemyName]->getPlaceType();
+            //Si le personnage est sur une planete
             if(typePlace == "Planet")
             {
                 // Obtenir la planète associée au personnage
-                string place = characterMap[characterName]->getPlace();
+                string place = enemyMap[enemyName]->getPlace();
                 auto planetIt = planetMap.find(place);
                 if (planetIt != planetMap.end())
                 {
@@ -223,9 +285,9 @@ bool Controller::deleteCharacter(const string& name) {
                     cleanWeakPtr(planet->getResident());
                 }
             }
-            //Si le personnage est sur un vaisseau
+                //Si le personnage est sur un vaisseau
             else if (typePlace == "Spaceship"){
-                string place = characterMap[characterName]->getPlace();
+                string place = enemyMap[enemyName]->getPlace();
                 auto spaceshipIt = spaceshipMap.find(place);
                 if (spaceshipIt != spaceshipMap.end())
                 {
@@ -233,13 +295,12 @@ bool Controller::deleteCharacter(const string& name) {
                     cleanWeakPtr(spaceship->getCrew());
                 }
             }
-            //Si le personnage a une mission
-            else if (typePlace == "Quest"){
-            //Il faut developper d'abord un getMissions() dans character
-            }
         }
-        characterMap.erase(characterName);
+        enemyMap.erase(enemyName);
         return true;
+    }
+    else {
+        return false;
     }
 }
 
@@ -257,6 +318,7 @@ bool Controller::deleteSpaceship(const string& name) {
                 if(member.lock()){
                     // Supprimer le personnage de la map characterMap
                     characterMap.erase(member.lock()->getName());
+                    enemyMap.erase(member.lock()->getName());
                 }
                 // Supprimer le vaisseau de la map spaceshipMap
                 spaceshipMap.erase(spaceshipName);
@@ -273,23 +335,31 @@ bool Controller::deleteSpaceship(const string& name) {
 }
 
 bool Controller::deletePlanet(const string& name) {
-    //Rechercher la planete dans la map
+    // Rechercher la planète dans la map
     auto it = planetMap.find(name);
     if (it == planetMap.end()) {
         return false;
     } else {
         string planetName = it->first;
-        if(planetMap[planetName]){
-            // Parcourir les residents de la planete
-            for (auto resident : it->second->getResident()){
-                if(resident.lock())
-                {
-                    // Supprimer le personnage de la map characterMap
-                    characterMap.erase(resident.lock()->getName());
+        if (planetMap[planetName]) {
+            // Parcourir les résidents de la planète
+            for (auto resident : it->second->getResident()) {
+                if (resident.lock()) {
+                    if (auto character = dynamic_pointer_cast<Character>(resident.lock())) {
+                        // Vérifier si c'est un ennemi
+                        if (auto enemy = dynamic_pointer_cast<Enemy>(character)) {
+                            cout << "Suppression de l'ennemi : " << enemy->getName() << endl;
+                            enemyMap.erase(enemy->getName());
+                        } else {
+                            // Supprimer le personnage de la map characterMap
+                            cout << "Suppression du personnage: " << character->getName() << endl;
+                            characterMap.erase(character->getName());
+                        }
+                    }
                 }
-                // Supprimer le vaisseau de la map spaceshipMap
-                planetMap.erase(planetName);
             }
+            // Supprimer la planète de la map planetMap
+            planetMap.erase(planetName);
         }
         return true;
     }

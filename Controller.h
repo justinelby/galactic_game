@@ -5,6 +5,7 @@
 #ifndef JEU_PERSONNAGES_CONTROLLER_H
 #define JEU_PERSONNAGES_CONTROLLER_H
 #include <map>
+#include <ctime>
 #include "Quest.h"
 #include "Character.h"
 #include "Enemy.h"
@@ -21,6 +22,7 @@ public:
     //Getters et Setters
     map<string, shared_ptr<Quest>> getQuest();
     map<string, shared_ptr<Character>> getCharacter();
+    map<string, shared_ptr<Enemy>> getEnemy();
     map<string, shared_ptr<Planet>> getPlanet();
     map<string, shared_ptr<Spaceship>> getSpaceship();
 
@@ -29,6 +31,7 @@ public:
     void saveGame();
 
     void addCharacter(const shared_ptr<Character>&);
+    void addEnemy(const shared_ptr<Enemy>&);
     void addSpaceship(const shared_ptr<Spaceship>&);
     void addPlanet(const shared_ptr<Planet>&);
     void addQuest(const shared_ptr<Quest>&);
