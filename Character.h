@@ -29,14 +29,10 @@ public:
     virtual void setAttackPower(int);  // different for Enemy
     int getArmorPower() const;
     void setArmorPower(int);
-
     string getPlaceType() const;
     void setPlaceType(const string &place);
     string getPlace() const;
     void setPlace(const string &place);
-
-    // Methods
-    void attack(Character&);
 
 protected:
     int attackPower;

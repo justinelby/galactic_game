@@ -38,14 +38,6 @@ void Character::setPlaceType(const string &pt) { this->place = pt; }    // add v
 string Character::getPlace() const { return place; }
 void Character::setPlace(const string &pl) { this->place = pl; }    // add verification if input is valid
 
-
-
-void Character::attack(Character &personnageCible){
-    std::cout << name << " attaque " << personnageCible.getName() << " !" << std::endl;
-    personnageCible.setHealth(personnageCible.getHealth() - this->attackPower);
-    //std::cout <<"Vies restantes a " << personnageCible.getName() << " : " << personnageCible.getHealth() << std::endl;
-}
-
 Character::~Character()
 {
     //dtor

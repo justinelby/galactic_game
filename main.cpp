@@ -8,7 +8,7 @@
 using namespace std;
 
 
-/// AFFICHAGE GENERAL
+/// TESTING FUNCTIONS
 void displayAllInfo(Controller controller){
     cout << "Affichage des Characters : " << endl;
     for( auto it : controller.getCharacter()){
@@ -55,18 +55,12 @@ void displayAllInfo(Controller controller){
     }
 }
 
-//Code contenant l'execution du menu et le jeu
-int main() {
+void planetDeleteTest(Controller controller){
+    cout << "Liste des planetes : " <<endl;
+    for( auto it : controller.getPlanet()){
+        cout << it.second->getName() << endl;
+    }
 
-    string savedFile= "save.txt";
-    string loadedFile= "data.txt";
-    Controller controller(loadedFile, savedFile);
-    controller.loadGame();
-
-///----------------------------------------------------------------------------
-///TEST SUPPRESSION PLANET
-
-/*
     string line;
     bool result;
     do {
@@ -74,31 +68,21 @@ int main() {
         getline(cin, line);
         result = controller.deletePlanet(line);
     } while (result == false);
-    */
+}
 
+void questDeleteTest(Controller controller){
+    string line;
+    bool result;
 
-///----------------------------------------------------------------------------
-///TEST ATTACK FUNCTION
+    do {
+    cout << "Nom du vaisseau a supprimer : "<< endl;
+    getline(cin, line);
+    result = controller.deleteSpaceship(line);
+    } while (result == false);
+}
 
-/* Test attack function */
-/*    Character& firstCharacter = *(controller.getCharacter().begin()->second);
-    Enemy& firstEnemy = *(controller.getEnemy().begin()->second);*/
-
-    /*character attack -> Enemy */
-/*    cout << firstEnemy.getName() << " " << firstEnemy.getHealth() << endl;
-    controller.characterAttackEnemy(firstCharacter, firstEnemy);
-    cout << firstEnemy.getName() << " " << firstEnemy.getHealth() << endl;*/
-
-    /*character attack -> Enemy */
-/*
-    cout << firstCharacter.getName() << " " << firstCharacter.getHealth() << endl;
-    //controller.enemyAttackCharacter(firstEnemy, firstCharacter);
-    cout << firstCharacter.getName() << " " << firstCharacter.getHealth() << endl;
-*/
-
-///----------------------------------------------------------------------------
-///TEST SUPPRESSION MISSION
-/*   cout << "Liste des missions : " <<endl;
+void deleteQuestTest(Controller controller){
+    cout << "Liste des missions : " <<endl;
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << endl;
     }
@@ -109,60 +93,25 @@ int main() {
         cout << "Nom de la mission a supprimer : "<< endl;
         getline(cin, line4);
         result4 = controller.deleteQuest(line4);
-    } while (result4 == false);*/
+    } while (result4 == false);
+}
 
-    /*cout << "Liste des missions : " <<endl;
-    for( auto it : controller.getQuest()){
-        cout << it.second->getName() << endl;
-    }*/
+void attackFunctionTest(Controller controller){
+    Character& firstCharacter = *(controller.getCharacter().begin()->second);
+    Enemy& firstEnemy = *(controller.getEnemy().begin()->second);
 
-    controller.saveGame();
-/*  cout << "Liste des planetes : " << endl;
-    for( auto it : controller.getPlanet()){
-        cout << it.second->getName() << endl;
-    }
+    //character attack -> Enemy
+    cout << firstEnemy.getName() << " " << firstEnemy.getHealth() << endl;
+    controller.characterAttackEnemy(firstCharacter, firstEnemy);
+    cout << firstEnemy.getName() << " " << firstEnemy.getHealth() << endl;
 
-*/
+    /*character attack -> Enemy */
+    cout << firstCharacter.getName() << " " << firstCharacter.getHealth() << endl;
+    controller.enemyAttackCharacter(firstEnemy, firstCharacter);
+    cout << firstCharacter.getName() << " " << firstCharacter.getHealth() << endl;
+}
 
-
-
-
-    ///TEST SUPPRESSION VAISSEAU
-/*    cout << "Liste des personnages : " <<endl;
-    for( auto it : controller.getCharacter()){
-           cout << it.second->getName() << endl;
-    }
-    cout << "Liste des vaisseaux : " <<endl;
-    for( auto it : controller.getSpaceship()){
-        cout << it.second->getName() << endl;
-    }
-    string line2;
-    bool result2;
-    do {
-        cout << "Nom du vaisseau a supprimer : "<< endl;
-        getline(cin, line2);
-        result2 = controller.deleteSpaceship(line2);
-    } while (result2 == false);
-
-    cout << "Liste des vaisseaux : " <<endl;
-    for( auto it : controller.getSpaceship()){
-        cout << it.second->getName() << endl;
-    }
-
-    cout << "Liste des personnages : " <<endl;
-    for( auto it : controller.getCharacter()){
-        cout << it.second->getName() << endl;
-    }
-
-    cout << "------Spaceships" <<endl;
-    for( auto it : controller.getSpaceship()){
-        for (auto character : it.second->getCrew()){
-            cout << character.lock()->getName() << endl;
-        }
-    }*/
-
-/*
-
+void displayWeakPtrNbr(Controller controller){
     cout << "------Nb weak" <<endl;
     int count = 0;
     for( auto it : controller.getPlanet()){
@@ -173,38 +122,22 @@ int main() {
         }
     }
     cout << count << endl;
-*/
+}
 
 
+//Code contenant l'execution du menu et le jeu
+int main() {
+
+    string savedFile= "save.txt";
+    string loadedFile= "data.txt";
+    Controller controller(loadedFile, savedFile);
+    controller.loadGame();
 
 
-//
-//
-//    controller.deleteCharacter("Capitaine Anderson");
-//
-//    cout << "---Character list after character deletion :" << endl;
-//    for (auto& pair : controller.getCharacter()){
-//        auto& character = pair.second;
-//        cout << "Nom : " << character->getName() << endl;
-//    }
-//    cout << "\n\n Liste des vaisseaux" <<endl;
-//    for (auto& pair : controller.getSpaceship()){
-//        auto& ship = pair.second;
-//        ship->showCrew();
-//    }
-//
-//
+    controller.saveGame();
 
 
-
-
-
-
-
-
-
-
-    //Boucle de jeu
+///Boucle de jeu
 //    bool isRunning = true;
 //
 //    while (isRunning){
