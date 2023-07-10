@@ -13,5 +13,5 @@ Enemy::Enemy(string name, string desc, int hp, int ap, int dp, string placeType,
 
 
 void Enemy::setAttackPower(int apMax) {   // apMax describes the max value you can randomly get
-    this->attackPower = rand() % apMax + 1;      // affects randomly enemy's attack between 1 & apMax
+    this->ap = rand() % apMax + 1;      // affects randomly enemy's attack between 1 & apMax
 }

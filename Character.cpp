@@ -9,30 +9,30 @@ Character::Character(string name, string desc, int hp, int ap, int dp, string pl
 {
     this->name = name;
     this->descr = desc;
-    this->health = hp;
-    this->attackPower = ap;
-    this->armorPower = dp;
+    this->hp = hp;
+    this->ap = ap;
+    this->dp = dp;
     this->placeType = placeType;
     this->place = place;
 }
 
 Character::Character(istringstream& iss) {
-    iss >> name >> descr >> health >> attackPower >> armorPower >> placeType >> place;
+    iss >> name >> descr >> hp >> ap >> dp >> placeType >> place;
 }
 
 string Character::getName() const { return name; }
 string Character::getDescr() const { return descr; }
 
-int Character::getHealth() const { return health; }
-void Character::setHealth(int const hp) { this->health = hp; }
+int Character::getHealth() const { return hp; }
+void Character::setHealth(int const hp) { this->hp = hp; }
 
-int Character::getAttackPower() const { return attackPower; }
-void Character::setAttackPower(int ap) { this->attackPower = ap; }
+int Character::getAttackPower() const { return ap; }
+void Character::setAttackPower(int ap) { this->ap = ap; }
 
-int Character::getArmorPower() const { return armorPower; }
-void Character::setArmorPower(int dp) { this->armorPower = dp; }
+int Character::getArmorPower() const { return dp; }
+void Character::setArmorPower(int dp) { this->dp = dp; }
 
-vector<int> Character::getStatus() { return {health, attackPower, armorPower}; }
+vector<int> Character::getStatus() { return {hp, ap, dp}; }
 
 string Character::getPlaceType() const { return placeType; }
 void Character::setPlaceType(const string &pt) { this->place = pt; }    // add verification if input is valid

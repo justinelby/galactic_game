@@ -393,7 +393,6 @@ bool Controller::deleteQuest(const std::string &name) {
 #endif
 }
 
-
 bool Controller::neutralAttack(string assailant, string defender) {
 
     auto as = setupRole(assailant,defender)[0];
@@ -430,54 +429,6 @@ vector<shared_ptr<Character>> Controller::setupRole(string assailant, string def
     }
     return roles;
 }
-
-void Controller::characterAttackEnemy(Character &character, Enemy &enemy) {
-    cout << character.getName() << " attaque " << enemy.getName() << " !" << endl;
-    // Vérifier que le personnage attaque un ennemi et que l'ennemi attaque un personnage
-    if (dynamic_cast<Character *>(&character) && dynamic_cast<Enemy *>(&enemy)) {
-        // Réduire la santé de l'ennemi en fonction de la puissance d'attaque du personnage
-        int damage = character.getAttackPower();
-        int enemyHealth = enemy.getHealth();
-        int enemyArmor = enemy.getArmorPower();
-        if (enemyArmor >= damage)
-            enemy.setArmorPower(enemyArmor - damage);
-        else { enemy.setHealth(enemyHealth + enemyArmor - damage);}
-
-        // Vérifier si l'ennemi est vaincu
-        if (enemy.getHealth() <= 0) {
-            // Supprimer l'ennemi de la map des ennemis du contrôleur
-            cout << enemy.getName() << " a ete execute." << endl;
-            deleteCharacter(enemy.getName());
-        }
-    } else {
-        cout << "Invalid attack! Characters can only attack enemies." << endl;
-    }
-}
-
-void Controller::enemyAttackCharacter(Enemy &enemy, Character &character) {
-    cout << enemy.getName() << " attaque " << character.getName()<< " !" << endl;
-    // Vérifier que le personnage attaque un ennemi et que l'ennemi attaque un personnage
-    if (dynamic_cast<Enemy *>(&enemy) && dynamic_cast<Character *>(&character)) {
-        // Réduire la santé de l'ennemi en fonction de la puissance d'attaque du personnage
-        int damage = enemy.getAttackPower();
-        int characterHealth = character.getHealth();
-        int characterArmor = character.getArmorPower();
-        if (characterArmor >= damage)
-            character.setArmorPower(characterArmor - damage);
-        else { character.setHealth(characterHealth + characterArmor - damage);}
-        character.setHealth(characterHealth - damage);
-
-        // Vérifier si le personnage est vaincu
-        if (character.getHealth() <= 0) {
-            // Supprimer le personnage de la map des personnages du contrôleur
-            cout << character.getName() << "a ete execute." << endl;
-            deleteCharacter(character.getName());
-        }
-    } else {
-        cout << "Invalid attack! Enemies can only attack characters." << endl;
-    }
-}
-
 
 Controller::~Controller() {
 

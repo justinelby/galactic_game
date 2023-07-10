@@ -18,7 +18,7 @@ class Character
 {
 public:
     // Constructor / Destructor
-    Character(string, string, int, int,int, string, string);
+    Character(string, string, int, int, int, string, string);
     Character(istringstream&);
     ~Character();
 
@@ -39,12 +39,12 @@ public:
     void setPlace(const string &place);
 
 protected:
-    int attackPower;
-    int armorPower;
+    int ap;
+    int dp;
 private:
     string name;
     string descr;
-    int health;
+    int hp;
     string placeType;
     string place;
 };

@@ -9,7 +9,20 @@ using namespace std;
 
 
 /// TESTING FUNCTIONS
+void displayAllCharacters(Controller controller) {
+    cout << "Affichage des Characters : " << endl;
+    for( auto it : controller.getCharacter()){
+        cout << it.second->getName() << " ";
+        cout << it.second->getHealth() << " ";
+        cout << it.second->getAttackPower() << " " ;
+        cout << it.second->getArmorPower() << " " ;
+        cout << it.second->getPlaceType() << " " ;
+        cout << it.second->getPlace() << endl;
+    }
+}
+
 void displayAllEnemies(Controller controller) {
+    cout << "Affichage des Enemies : " << endl;
     for( auto it : controller.getEnemy()){
         cout << it.second->getName() << " ";
         cout << it.second->getHealth() << " ";
@@ -21,19 +34,12 @@ void displayAllEnemies(Controller controller) {
 }
 
 void displayAllInfo(Controller controller){
-    cout << "Affichage des Characters : " << endl;
-    for( auto it : controller.getCharacter()){
-        cout << it.second->getName() << " ";
-        cout << it.second->getHealth() << " ";
-        cout << it.second->getAttackPower() << " " ;
-        cout << it.second->getArmorPower() << " " ;
-        cout << it.second->getPlaceType() << " " ;
-        cout << it.second->getPlace() << endl;
-    }
+    displayAllCharacters(controller);
     cout << "---------------------" << endl;
-    cout << "Affichage des Enemies : " << endl;
+
     displayAllEnemies(controller);
     cout << "---------------------" << endl;
+
     cout << "Affichage des résidents par Planet : " << endl;
     for( auto it : controller.getPlanet()){
         cout << it.second->getName() << endl;
@@ -59,8 +65,6 @@ void displayAllInfo(Controller controller){
     }
 }
 
-
-
 void planetDeleteTest(Controller controller){
     cout << "Liste des planetes : " <<endl;
     for( auto it : controller.getPlanet()){
@@ -76,7 +80,7 @@ void planetDeleteTest(Controller controller){
     } while (result == false);
 }
 
-void questDeleteTest(Controller controller){
+void spaceshipDeleteTest(Controller controller){
     string line;
     bool result;
 
@@ -103,7 +107,7 @@ void deleteQuestTest(Controller controller){
 }
 
 
-void displayWeakPtrNbr(Controller controller){
+void debugDisplayWeakPtrNbr(Controller controller){
     cout << "------Nb weak" <<endl;
     int count = 0;
     for( auto it : controller.getPlanet()){
