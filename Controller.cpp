@@ -37,6 +37,10 @@ map<string, shared_ptr<Spaceship>> Controller::getSpaceship() {
     return spaceshipMap;
 }
 
+map<string, unique_ptr<Item>*> Controller::getInventory(){
+    return inventory;
+}
+
 string Controller::characterToString() {
     ostringstream oss;
     for (const auto &pair: characterMap) {
@@ -216,6 +220,11 @@ void Controller::addPlanet(const shared_ptr<Planet> &newPlanet) {
 void Controller::addQuest(const shared_ptr<Quest> &newMission) {
     questMap[newMission->getName()] = newMission;
 }
+
+void Controller::addToInventory(std::unique_ptr<Item> newItem) {
+    inventory[newItem->getName()] = new unique_ptr<Item>(move(newItem));
+}
+
 
 void Controller::cleanWeakPtr(
         vector<weak_ptr<Character>> &vec) { //Nettoyer les weak ptr qui n'ont plus de share ptr vers lesquels pointer

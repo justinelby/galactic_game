@@ -6,11 +6,13 @@
 #define JEU_PERSONNAGES_CONTROLLER_H
 #include <map>
 #include <ctime>
+#include <unordered_map>
 #include "Quest.h"
 #include "Character.h"
 #include "Enemy.h"
 #include "Planet.h"
 #include "Spaceship.h"
+#include "item.h"
 
 using namespace std;
 
@@ -25,6 +27,7 @@ public:
     map<string, shared_ptr<Enemy>> getEnemy();
     map<string, shared_ptr<Planet>> getPlanet();
     map<string, shared_ptr<Spaceship>> getSpaceship();
+    map<string, unique_ptr<Item>*> getInventory();
 
     //Méthodes
     void loadGame();
@@ -35,6 +38,7 @@ public:
     void addSpaceship(const shared_ptr<Spaceship>&);
     void addPlanet(const shared_ptr<Planet>&);
     void addQuest(const shared_ptr<Quest>&);
+    void addToInventory(unique_ptr<Item> newItem);
     bool deleteCharacter(const string& name);
     bool deleteSpaceship(const string& name);
     bool deletePlanet(const string& name);
@@ -57,6 +61,10 @@ private :
     map<string, shared_ptr<Spaceship>> spaceshipMap;
     map<string, shared_ptr<Planet>> planetMap;
     map<string, shared_ptr<Quest>> questMap;
+    //map<string, unique_ptr<Item>> inventory;
+    // unordered_map<string, unique_ptr<Item>> inventory;
+    //map<string, shared_ptr<Item>> inventory;
+    map<std::string, unique_ptr<Item>*> inventory;
     string loadedFile;
     string savedFile;
 
