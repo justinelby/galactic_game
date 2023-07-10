@@ -32,6 +32,8 @@ void Character::setAttackPower(int ap) { this->attackPower = ap; }
 int Character::getArmorPower() const { return armorPower; }
 void Character::setArmorPower(int dp) { this->armorPower = dp; }
 
+vector<int> Character::getStatus() { return {health, attackPower, armorPower}; }
+
 string Character::getPlaceType() const { return placeType; }
 void Character::setPlaceType(const string &pt) { this->place = pt; }    // add verification if input is valid
 

@@ -393,6 +393,44 @@ bool Controller::deleteQuest(const std::string &name) {
 #endif
 }
 
+
+bool Controller::neutralAttack(string assailant, string defender) {
+
+    auto as = setupRole(assailant,defender)[0];
+    auto def = setupRole(assailant,defender)[1];
+
+    int damage = as->getAttackPower();
+    int defHealth = def->getHealth();
+    int defArmor = def->getArmorPower();
+    if (defArmor >= damage)
+        def->setArmorPower(defArmor - damage);
+    else
+        def->setHealth(defHealth + defArmor - damage);
+
+    if (def->getHealth() <= 0) {
+        deleteCharacter(defender);
+        return true;
+    }
+    return false;
+}
+
+vector<shared_ptr<Character>> Controller::setupRole(string assailant, string defender) {
+    vector<shared_ptr<Character>> roles;
+    auto it = characterMap.find(assailant);
+    auto it2 = enemyMap.find(assailant);
+    if (it != characterMap.end()) {
+        roles.push_back(it->second);
+        auto def = enemyMap.find(defender);
+        roles.push_back(def->second);
+    }
+    else if(it2 != enemyMap.end()) {
+        roles.push_back(it2->second);
+        auto def = characterMap.find(defender);
+        roles.push_back(def->second);
+    }
+    return roles;
+}
+
 void Controller::characterAttackEnemy(Character &character, Enemy &enemy) {
     cout << character.getName() << " attaque " << enemy.getName() << " !" << endl;
     // Vérifier que le personnage attaque un ennemi et que l'ennemi attaque un personnage
@@ -402,7 +440,7 @@ void Controller::characterAttackEnemy(Character &character, Enemy &enemy) {
         int enemyHealth = enemy.getHealth();
         int enemyArmor = enemy.getArmorPower();
         if (enemyArmor >= damage)
-        enemy.setArmorPower(enemyArmor - damage);
+            enemy.setArmorPower(enemyArmor - damage);
         else { enemy.setHealth(enemyHealth + enemyArmor - damage);}
 
         // Vérifier si l'ennemi est vaincu

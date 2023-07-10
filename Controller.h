@@ -40,8 +40,9 @@ public:
     bool deletePlanet(const string& name);
     bool deleteQuest(const string& name);
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
-    void characterAttackEnemy(Character& character, Enemy& enemy);
-    void enemyAttackCharacter(Enemy& enemy, Character& character);
+
+    bool neutralAttack(string, string);  // returns true if enemy dies
+
 
     string characterToString();
     string spaceshipToString();
@@ -58,6 +59,10 @@ private :
     map<string, shared_ptr<Quest>> questMap;
     string loadedFile;
     string savedFile;
+
+    // Methods
+    vector<shared_ptr<Character>> setupRole(string, string);
+
 };
 
 

@@ -9,6 +9,17 @@ using namespace std;
 
 
 /// TESTING FUNCTIONS
+void displayAllEnemies(Controller controller) {
+    for( auto it : controller.getEnemy()){
+        cout << it.second->getName() << " ";
+        cout << it.second->getHealth() << " ";
+        cout << it.second->getAttackPower() << " " ;
+        cout << it.second->getArmorPower() << " " ;
+        cout << it.second->getPlaceType() << " " ;
+        cout << it.second->getPlace() << endl;
+    }
+}
+
 void displayAllInfo(Controller controller){
     cout << "Affichage des Characters : " << endl;
     for( auto it : controller.getCharacter()){
@@ -21,14 +32,7 @@ void displayAllInfo(Controller controller){
     }
     cout << "---------------------" << endl;
     cout << "Affichage des Enemies : " << endl;
-    for( auto it : controller.getEnemy()){
-        cout << it.second->getName() << " ";
-        cout << it.second->getHealth() << " ";
-        cout << it.second->getAttackPower() << " " ;
-        cout << it.second->getArmorPower() << " " ;
-        cout << it.second->getPlaceType() << " " ;
-        cout << it.second->getPlace() << endl;
-    }
+    displayAllEnemies(controller);
     cout << "---------------------" << endl;
     cout << "Affichage des résidents par Planet : " << endl;
     for( auto it : controller.getPlanet()){
@@ -54,6 +58,8 @@ void displayAllInfo(Controller controller){
         cout << "--------" << endl;
     }
 }
+
+
 
 void planetDeleteTest(Controller controller){
     cout << "Liste des planetes : " <<endl;
@@ -96,20 +102,6 @@ void deleteQuestTest(Controller controller){
     } while (result4 == false);
 }
 
-void attackFunctionTest(Controller controller){
-    Character& firstCharacter = *(controller.getCharacter().begin()->second);
-    Enemy& firstEnemy = *(controller.getEnemy().begin()->second);
-
-    //character attack -> Enemy
-    cout << firstEnemy.getName() << " " << firstEnemy.getHealth() << endl;
-    controller.characterAttackEnemy(firstCharacter, firstEnemy);
-    cout << firstEnemy.getName() << " " << firstEnemy.getHealth() << endl;
-
-    /*character attack -> Enemy */
-    cout << firstCharacter.getName() << " " << firstCharacter.getHealth() << endl;
-    controller.enemyAttackCharacter(firstEnemy, firstCharacter);
-    cout << firstCharacter.getName() << " " << firstCharacter.getHealth() << endl;
-}
 
 void displayWeakPtrNbr(Controller controller){
     cout << "------Nb weak" <<endl;
@@ -133,6 +125,21 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
+    string p1 = "Alex Starborn", p2 = "Alien 1";
+
+    auto p1Infos = controller.getCharacter()[p1];
+    auto p2Infos = controller.getEnemy()[p2];
+
+    cout << p1Infos->getName() << " " << p1Infos->getStatus()[0] << " " << p1Infos->getStatus()[1] << " " << p1Infos->getStatus()[2] << endl;
+    cout << p2Infos->getName() << " " << p2Infos->getStatus()[0] << " " << p2Infos->getStatus()[1] << " " << p2Infos->getStatus()[2] << endl;
+
+
+    bool combatIsOver = controller.neutralAttack(p1,p2);
+    if (combatIsOver){
+        cout << p1 << " a execute " << p2 << endl;
+    }
+
+    displayAllEnemies(controller);
 
     controller.saveGame();
 

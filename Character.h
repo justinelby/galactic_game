@@ -4,9 +4,11 @@
 
 #ifndef JEU_PERSONNAGES_CHARACTER_H
 #define JEU_PERSONNAGES_CHARACTER_H
-#include <ctime>
-#include <string>
+
 #include <iostream>
+#include <string>
+#include <vector>
+#include <ctime>
 #include <fstream>
 #include <sstream>
 
@@ -29,6 +31,8 @@ public:
     virtual void setAttackPower(int);  // different for Enemy
     int getArmorPower() const;
     void setArmorPower(int);
+
+    vector<int> getStatus();
     string getPlaceType() const;
     void setPlaceType(const string &place);
     string getPlace() const;

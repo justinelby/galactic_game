@@ -4,7 +4,7 @@ Planet;Z-23;Une planete situee dans la galaxy Euclid ou l'or et l'argent se trou
 Spaceship;Millenium Falcon
 Spaceship;USS Enterprise
 Spaceship;WWW
-Character;Alex Starborn;Personnage principal;93;102;20;Spaceship;USS Enterprise
+Character;Alex Starborn;Personnage principal;100;102;20;Spaceship;USS Enterprise
 Character;Capitaine Anderson;Superieur d'Alex;150;100;50;Spaceship;USS Enterprise
 Character;Docteur Liara;Medecin de bord;100;30;10;Planet;Earth
 Character;Ingenieur Scott;Responsable des reparations et des ameliorations du vaisseau;120;30;20;Spaceship;USS Enterprise
