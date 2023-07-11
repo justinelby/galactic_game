@@ -32,35 +32,19 @@ void displayAllEnemies(Controller controller) {
         cout << it.second->getPlace() << endl;
     }
 }
-
-void displayAllInfo(Controller controller){
-    displayAllCharacters(controller);
-    cout << "---------------------" << endl;
-
-    displayAllEnemies(controller);
-    cout << "---------------------" << endl;
-
-    cout << "Affichage des résidents par Planet : " << endl;
-    for( auto it : controller.getPlanet()){
-        cout << it.second->getName() << endl;
-        for (auto i : it.second->getResident()) {
-            cout << i.lock()->getName() << " ";
-            cout << i.lock()->getHealth() << " ";
-            cout << i.lock()->getAttackPower() << " ";
-            cout << i.lock()->getArmorPower() << endl;
-        }
-        cout << "--------" << endl;
+void displayAllQuest(Controller controller) {
+    cout << "Affichage des missions : " << endl;
+    for( auto it : controller.getQuest()){
+        cout << it.second->getName() << " ";
+        cout << it.second->getDescription() << " ";
     }
-    cout << "---------------------" << endl;
-    cout << "Affichage des crewmates par Spaceship : " << endl;
-    for( auto it : controller.getSpaceship()){
-        cout << it.second->getName() << endl;
-        for (auto i : it.second->getCrew()) {
-            cout << i.lock()->getName() << " ";
-            cout << i.lock()->getHealth() << " ";
-            cout << i.lock()->getAttackPower();
-            cout << i.lock()->getArmorPower() << endl;
-        }
+}
+
+void displayAllObjects(Controller controller){
+    for( auto it : controller.getInventory()){
+        cout << it.second->get()->getName() << endl;
+        cout << it.second->get()->getDescription() << endl;
+        cout << it.second->get()->getEffect() << endl;
         cout << "--------" << endl;
     }
 }
@@ -106,7 +90,6 @@ void deleteQuestTest(Controller controller){
     } while (result4 == false);
 }
 
-
 void debugDisplayWeakPtrNbr(Controller controller){
     cout << "------Nb weak" <<endl;
     int count = 0;
@@ -120,6 +103,44 @@ void debugDisplayWeakPtrNbr(Controller controller){
     cout << count << endl;
 }
 
+void displayAllInfo(Controller controller){
+    displayAllCharacters(controller);
+    cout << "---------------------" << endl;
+
+    displayAllEnemies(controller);
+    cout << "---------------------" << endl;
+
+    displayAllQuest(controller);
+    cout << "---------------------" << endl;
+
+    displayAllObjects(controller);
+    cout << "---------------------" << endl;
+
+    cout << "Affichage des résidents par Planet : " << endl;
+    for( auto it : controller.getPlanet()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getResident()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower() << " ";
+            cout << i.lock()->getArmorPower() << endl;
+        }
+        cout << "--------" << endl;
+    }
+    cout << "---------------------" << endl;
+    cout << "Affichage des crewmates par Spaceship : " << endl;
+    for( auto it : controller.getSpaceship()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getCrew()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower();
+            cout << i.lock()->getArmorPower() << endl;
+        }
+        cout << "--------" << endl;
+    }
+}
+
 
 //Code contenant l'execution du menu et le jeu
 int main() {
@@ -129,7 +150,9 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
-    string p1 = "Alex Starborn", p2 = "Alien 1";
+    displayAllObjects(controller);
+
+ /*   string p1 = "Alex Starborn", p2 = "Alien 1";
 
     auto p1Infos = controller.getCharacter()[p1];
     auto p2Infos = controller.getEnemy()[p2];
@@ -141,9 +164,9 @@ int main() {
     bool combatIsOver = controller.neutralAttack(p1,p2);
     if (combatIsOver){
         cout << p1 << " a execute " << p2 << endl;
-    }
+    }*/
 
-    displayAllEnemies(controller);
+    //displayAllEnemies(controller);
 
     controller.saveGame();
 

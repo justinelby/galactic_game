@@ -7,7 +7,6 @@ using namespace std;
 Item::Item(const string& name, const string& description, int effect)
         : name(name), description(description), effect(effect) {}
 
-
 string Item::getName() const {
     return name;
 }

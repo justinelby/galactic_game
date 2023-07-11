@@ -4,13 +4,6 @@
 #define DEBUG
 
 #include "Controller.h"
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <string>
-#include "Character.h"
-#include "Spaceship.h"
-#include "Planet.h"
 
 using namespace std;
 
@@ -128,43 +121,53 @@ void Controller::loadGame() {
                 addEnemy(newEnemy);
             }
 
-/*            if (type == "Item") {
 
+        } else if (type ==
+                   "Spaceship") //Si la ligne commence par spaceship, on récupère les informations associées et on les stocke
+        {
+            string name;
+            getline(iss, name, ';');
 
-                auto newItem = make_unique<Item>(name, description, effect);
-            }*/
+            auto newSpaceship = make_shared<Spaceship>(name);
+            addSpaceship(newSpaceship);
+        }
+        else if (type ==
+                 "Planet") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
+        {
+            string name;
+            getline(iss, name, ';');
 
-            } else if (type ==
-                       "Spaceship") //Si la ligne commence par spaceship, on récupère les informations associées et on les stocke
-            {
-                string name;
-                getline(iss, name, ';');
+            string description;
+            getline(iss, description, '\n');
 
-                auto newSpaceship = make_shared<Spaceship>(name);
-                addSpaceship(newSpaceship);
-            } else if (type ==
-                       "Planet") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
-            {
-                string name;
-                getline(iss, name, ';');
+            auto newPlanet = make_shared<Planet>(name, description);
+            addPlanet(newPlanet);
+        }
+        else if (type == "Item") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
+        {
+            string name;
+            getline(iss, name, ';');
 
-                string description;
-                getline(iss, description, '\n');
+            string description;
+            getline(iss, description, ';');
 
-                auto newPlanet = make_shared<Planet>(name, description);
-                addPlanet(newPlanet);
-            } else if (type ==
-                       "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
-            {
-                string name;
-                getline(iss, name, ';');
+            string effect;
+            getline(iss, effect, '\n');
 
-                string description;
-                getline(iss, description, '\n');
-                iss >> description;
+            auto newItem = make_unique<Item>(name, description, stoi(effect));
+            addToInventory(move(newItem));
+        } else if (type ==
+                   "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
+        {
+            string name;
+            getline(iss, name, ';');
 
-                auto newMission = make_shared<Quest>(name, description);
-                addQuest(newMission);
+            string description;
+            getline(iss, description, '\n');
+            iss >> description;
+
+            auto newMission = make_shared<Quest>(name, description);
+            addQuest(newMission);
         }
     }
 }
@@ -226,8 +229,15 @@ void Controller::addQuest(const shared_ptr<Quest> &newMission) {
     questMap[newMission->getName()] = newMission;
 }
 
-void Controller::addToInventory(std::unique_ptr<Item> newItem) {
-    inventory[newItem->getName()] = new unique_ptr<Item>(move(newItem));
+void Controller::addToInventory(unique_ptr<Item> newItem) {
+    string key = newItem->getName();
+
+    auto it = inventory.find(key);
+    if (it != inventory.end()) {
+        *(it->second) = std::move(newItem);
+    } else {
+        inventory.insert(make_pair(key, new unique_ptr<Item>(std::move(newItem))));
+    }
 }
 
 

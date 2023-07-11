@@ -11,6 +11,7 @@ using namespace std;
 class Item {
 public:
     Item(const string& name, const string& description, int effect);
+    Item(istringstream&);
     string getName() const;
     string getDescription() const;
     int getEffect() const;

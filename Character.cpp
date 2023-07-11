@@ -1,9 +1,4 @@
 #include "Character.h"
-#include "Quest.h"
-#include <iostream>
-#include <string>
-#include <sstream>
-
 
 Character::Character(string name, string desc, int hp, int ap, int dp, string placeType, string place)
 {

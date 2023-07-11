@@ -5,14 +5,12 @@
 #ifndef JEU_PERSONNAGES_CONTROLLER_H
 #define JEU_PERSONNAGES_CONTROLLER_H
 #include <map>
-#include <ctime>
-#include <unordered_map>
 #include "Quest.h"
 #include "Character.h"
 #include "Enemy.h"
 #include "Planet.h"
 #include "Spaceship.h"
-#include "item.h"
+#include "Item.h"
 
 using namespace std;
 
@@ -20,6 +18,7 @@ using namespace std;
 class Controller {
 public:
     Controller(string& loadedFile, string& savedFile);
+
 
     //Getters et Setters
     map<string, shared_ptr<Quest>> getQuest();
@@ -47,7 +46,6 @@ public:
 
     bool neutralAttack(string, string);  // returns true if enemy dies
 
-
     string characterToString();
     string spaceshipToString();
     string planetToString();
@@ -61,9 +59,6 @@ private :
     map<string, shared_ptr<Spaceship>> spaceshipMap;
     map<string, shared_ptr<Planet>> planetMap;
     map<string, shared_ptr<Quest>> questMap;
-    //map<string, unique_ptr<Item>> inventory;
-    // unordered_map<string, unique_ptr<Item>> inventory;
-    //map<string, shared_ptr<Item>> inventory;
     map<string, unique_ptr<Item>*> inventory;
     string loadedFile;
     string savedFile;
