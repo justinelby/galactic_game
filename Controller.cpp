@@ -128,38 +128,43 @@ void Controller::loadGame() {
                 addEnemy(newEnemy);
             }
 
+/*            if (type == "Item") {
 
-        } else if (type ==
-                   "Spaceship") //Si la ligne commence par spaceship, on récupère les informations associées et on les stocke
-        {
-            string name;
-            getline(iss, name, ';');
 
-            auto newSpaceship = make_shared<Spaceship>(name);
-            addSpaceship(newSpaceship);
-        } else if (type ==
-                   "Planet") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
-        {
-            string name;
-            getline(iss, name, ';');
+                auto newItem = make_unique<Item>(name, description, effect);
+            }*/
 
-            string description;
-            getline(iss, description, '\n');
+            } else if (type ==
+                       "Spaceship") //Si la ligne commence par spaceship, on récupère les informations associées et on les stocke
+            {
+                string name;
+                getline(iss, name, ';');
 
-            auto newPlanet = make_shared<Planet>(name, description);
-            addPlanet(newPlanet);
-        } else if (type ==
-                   "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
-        {
-            string name;
-            getline(iss, name, ';');
+                auto newSpaceship = make_shared<Spaceship>(name);
+                addSpaceship(newSpaceship);
+            } else if (type ==
+                       "Planet") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
+            {
+                string name;
+                getline(iss, name, ';');
 
-            string description;
-            getline(iss, description, '\n');
-            iss >> description;
+                string description;
+                getline(iss, description, '\n');
 
-            auto newMission = make_shared<Quest>(name, description);
-            addQuest(newMission);
+                auto newPlanet = make_shared<Planet>(name, description);
+                addPlanet(newPlanet);
+            } else if (type ==
+                       "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
+            {
+                string name;
+                getline(iss, name, ';');
+
+                string description;
+                getline(iss, description, '\n');
+                iss >> description;
+
+                auto newMission = make_shared<Quest>(name, description);
+                addQuest(newMission);
         }
     }
 }

@@ -64,7 +64,7 @@ private :
     //map<string, unique_ptr<Item>> inventory;
     // unordered_map<string, unique_ptr<Item>> inventory;
     //map<string, shared_ptr<Item>> inventory;
-    map<std::string, unique_ptr<Item>*> inventory;
+    map<string, unique_ptr<Item>*> inventory;
     string loadedFile;
     string savedFile;
 
