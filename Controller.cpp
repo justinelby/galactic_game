@@ -233,14 +233,18 @@ void Controller::addQuest(const shared_ptr<Quest> &newMission) {
 }
 
 void Controller::addToInventory(unique_ptr<Item> newItem) {
-    string key = newItem->getName();
-
-    auto it = inventory.find(key);
+    string itemName = newItem->getName();
+    //On vérifie si l'objet existe déjà
+    auto it = inventory.find(itemName);
     if (it != inventory.end()) {
-        *(it->second) = move(newItem);
-        //it->second->quantity += newItem->quantity;
+        //S'il existe, on modifie sa quantité
+        unique_ptr<Item>& existingItem = *(it->second);
+        int itemInitialQuantity = existingItem->getQuantity();
+        int newItemQuantity = newItem->getQuantity();
+        existingItem->setQuantity(itemInitialQuantity + newItemQuantity);
     } else {
-        inventory.insert(make_pair(key, new unique_ptr<Item>(move(newItem))));
+        //S'il n'existe pas, on l'ajoute à l'inventaire
+        inventory.insert(make_pair(itemName, new unique_ptr<Item>(move(newItem))));
     }
 }
 

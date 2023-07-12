@@ -20,5 +20,9 @@ int Item::getEffect() const {
 }
 
 int Item::getQuantity() const {
-    return effect;
+    return quantity;
+}
+
+void Item::setQuantity(int newQuantity) {
+    quantity = newQuantity;
 }

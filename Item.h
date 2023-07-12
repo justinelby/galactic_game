@@ -16,6 +16,7 @@ public:
     string getDescription() const;
     int getEffect() const;
     int getQuantity() const;
+    void setQuantity(int quantity);
 
 private:
     string name;
