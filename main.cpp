@@ -45,6 +45,7 @@ void displayAllObjects(Controller controller){
         cout << it.second->get()->getName() << endl;
         cout << it.second->get()->getDescription() << endl;
         cout << it.second->get()->getEffect() << endl;
+        cout << it.second->get()->getQuantity() << endl;
         cout << "--------" << endl;
     }
 }

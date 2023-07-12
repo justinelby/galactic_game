@@ -10,16 +10,18 @@
 using namespace std;
 class Item {
 public:
-    Item(const string& name, const string& description, int effect);
+    Item(const string& name, const string& description, int effect, int quantity);
     Item(istringstream&);
     string getName() const;
     string getDescription() const;
     int getEffect() const;
+    int getQuantity() const;
 
 private:
     string name;
     string description;
     int effect;
+    int quantity;
 };
 
 

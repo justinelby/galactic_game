@@ -4,8 +4,8 @@
 
 #include "Item.h"
 using namespace std;
-Item::Item(const string& name, const string& description, int effect)
-        : name(name), description(description), effect(effect) {}
+Item::Item(const string& name, const string& description, int effect, int quantity)
+        : name(name), description(description), effect(effect), quantity(quantity) {}
 
 string Item::getName() const {
     return name;
@@ -16,5 +16,9 @@ string Item::getDescription() const {
 }
 
 int Item::getEffect() const {
+    return effect;
+}
+
+int Item::getQuantity() const {
     return effect;
 }

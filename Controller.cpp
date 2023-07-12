@@ -152,9 +152,12 @@ void Controller::loadGame() {
             getline(iss, description, ';');
 
             string effect;
-            getline(iss, effect, '\n');
+            getline(iss, effect, ';');
 
-            auto newItem = make_unique<Item>(name, description, stoi(effect));
+            string quantity;
+            getline(iss, quantity, '\n');
+
+            auto newItem = make_unique<Item>(name, description, stoi(effect), stoi(quantity));
             addToInventory(move(newItem));
         } else if (type ==
                    "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
@@ -234,9 +237,10 @@ void Controller::addToInventory(unique_ptr<Item> newItem) {
 
     auto it = inventory.find(key);
     if (it != inventory.end()) {
-        *(it->second) = std::move(newItem);
+        *(it->second) = move(newItem);
+        //it->second->quantity += newItem->quantity;
     } else {
-        inventory.insert(make_pair(key, new unique_ptr<Item>(std::move(newItem))));
+        inventory.insert(make_pair(key, new unique_ptr<Item>(move(newItem))));
     }
 }
 
