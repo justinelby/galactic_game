@@ -50,6 +50,7 @@ public:
     string spaceshipToString();
     string planetToString();
     string questToString();
+    string itemToString();
     virtual ~Controller();
 
 private :

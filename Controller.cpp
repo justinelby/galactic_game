@@ -67,7 +67,16 @@ string Controller::questToString() {
     ostringstream oss;
     for (const auto &pair: questMap) {
         auto m = pair.second;
-        oss << "Mission;" << m->getName() << ";" << m->getDescription() << "\n";
+        oss << "Quest;" << m->getName() << ";" << m->getDescription() << "\n";
+    }
+    return oss.str();
+}
+
+string Controller::itemToString() {
+    ostringstream oss;
+    for (const auto &pair: inventory) {
+        auto m = pair.second;
+        oss << "Item;" << m->get()->getName() << ";" << m->get()->getDescription() <<";" << m->get()->getEffect()<<";" << m->get()->getQuantity() <<"\n";
     }
     return oss.str();
 }
@@ -178,7 +187,7 @@ void Controller::loadGame() {
 void Controller::saveGame() {
     //Ecriture du fichier de sauvegarde
     ofstream file(savedFile);
-    file << planetToString() << spaceshipToString() << characterToString() << questToString() << endl;
+    file << planetToString() << spaceshipToString() << characterToString() << questToString() << itemToString();
 }
 
 void Controller::addCharacter(const shared_ptr<Character> &newCharacter) {
