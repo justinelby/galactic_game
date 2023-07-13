@@ -151,14 +151,16 @@ void displayAllInfo(Controller &controller){
 //Code contenant l'execution du menu et le jeu
 int main() {
 
-/*
+
     string savedFile= "save.txt";
     string loadedFile= "data.txt";
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
+    displayAllObjects(controller);
+    displayAllCharacters(controller);
     //displayAllObjects(controller);
-*/
+
 
  /*   string p1 = "Alex Starborn", p2 = "Alien 1";
 
