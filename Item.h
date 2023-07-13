@@ -10,13 +10,14 @@
 using namespace std;
 class Item {
 public:
-    Item(const string& name, const string& description, int effect, int quantity);
-    Item(istringstream&);
+    Item(const string name, const string description, const int effect);
     string getName() const;
     string getDescription() const;
     int getEffect() const;
-    int getQuantity() const;
-    void setQuantity(int quantity);
+
+
+    virtual ~Item();
+
 
 private:
     string name;

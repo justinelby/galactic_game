@@ -3,13 +3,11 @@
 #include <iostream>
 #include <string>
 #include "Controller.h"
-#define DEBUG
 
 using namespace std;
 
 
-/// TESTING FUNCTIONS
-void displayAllCharacters(Controller controller) {
+void displayAllCharacters(Controller &controller) {
     cout << "Affichage des Characters : " << endl;
     for( auto it : controller.getCharacter()){
         cout << it.second->getName() << " ";
@@ -21,7 +19,7 @@ void displayAllCharacters(Controller controller) {
     }
 }
 
-void displayAllEnemies(Controller controller) {
+void displayAllEnemies(Controller &controller) {
     cout << "Affichage des Enemies : " << endl;
     for( auto it : controller.getEnemy()){
         cout << it.second->getName() << " ";
@@ -32,7 +30,7 @@ void displayAllEnemies(Controller controller) {
         cout << it.second->getPlace() << endl;
     }
 }
-void displayAllQuest(Controller controller) {
+void displayAllQuest(Controller &controller) {
     cout << "Affichage des missions : " << endl;
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << " ";
@@ -40,17 +38,23 @@ void displayAllQuest(Controller controller) {
     }
 }
 
-void displayAllObjects(Controller controller){
-    for( auto it : controller.getInventory()){
-        cout << it.second->get()->getName() << endl;
-        cout << it.second->get()->getDescription() << endl;
-        cout << it.second->get()->getEffect() << endl;
-        cout << it.second->get()->getQuantity() << endl;
-        cout << "--------" << endl;
+void displayAllObjects(Controller &controller){
+    if(controller.getInventory().empty()){
+        cout << "inventory vide" << endl;
+    }
+    else
+    {
+        for( auto &it : controller.getInventory()){
+            cout << it.second->getName() << endl;
+            cout << it.second->getDescription()<< endl;
+            cout << it.second->getEffect() << endl;
+            cout << "--------" << endl;
+        }
+
     }
 }
 
-void planetDeleteTest(Controller controller){
+void planetDeleteTest(Controller &controller){
     cout << "Liste des planetes : " <<endl;
     for( auto it : controller.getPlanet()){
         cout << it.second->getName() << endl;
@@ -65,7 +69,7 @@ void planetDeleteTest(Controller controller){
     } while (result == false);
 }
 
-void spaceshipDeleteTest(Controller controller){
+void spaceshipDeleteTest(Controller &controller){
     string line;
     bool result;
 
@@ -76,7 +80,7 @@ void spaceshipDeleteTest(Controller controller){
     } while (result == false);
 }
 
-void deleteQuestTest(Controller controller){
+void deleteQuestTest(Controller &controller){
     cout << "Liste des missions : " <<endl;
     for( auto it : controller.getQuest()){
         cout << it.second->getName() << endl;
@@ -91,7 +95,7 @@ void deleteQuestTest(Controller controller){
     } while (result4 == false);
 }
 
-void debugDisplayWeakPtrNbr(Controller controller){
+void debugDisplayWeakPtrNbr(Controller &controller){
     cout << "------Nb weak" <<endl;
     int count = 0;
     for( auto it : controller.getPlanet()){
@@ -104,7 +108,7 @@ void debugDisplayWeakPtrNbr(Controller controller){
     cout << count << endl;
 }
 
-void displayAllInfo(Controller controller){
+void displayAllInfo(Controller &controller){
     displayAllCharacters(controller);
     cout << "---------------------" << endl;
 
@@ -143,15 +147,18 @@ void displayAllInfo(Controller controller){
 }
 
 
+
 //Code contenant l'execution du menu et le jeu
 int main() {
 
+/*
     string savedFile= "save.txt";
     string loadedFile= "data.txt";
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
-    displayAllObjects(controller);
+    //displayAllObjects(controller);
+*/
 
  /*   string p1 = "Alex Starborn", p2 = "Alien 1";
 
@@ -169,7 +176,7 @@ int main() {
 
     //displayAllEnemies(controller);
 
-    controller.saveGame();
+    //controller.saveGame();
 
 
 ///Boucle de jeu

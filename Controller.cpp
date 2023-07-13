@@ -30,7 +30,7 @@ map<string, shared_ptr<Spaceship>> Controller::getSpaceship() {
     return spaceshipMap;
 }
 
-map<string, unique_ptr<Item>*> Controller::getInventory(){
+map<string, unique_ptr<Item>>& Controller::getInventory(){
     return inventory;
 }
 
@@ -75,8 +75,8 @@ string Controller::questToString() {
 string Controller::itemToString() {
     ostringstream oss;
     for (const auto &pair: inventory) {
-        auto m = pair.second;
-        oss << "Item;" << m->get()->getName() << ";" << m->get()->getDescription() <<";" << m->get()->getEffect()<<";" << m->get()->getQuantity() <<"\n";
+        auto &m = pair.second;
+        oss << "Item;" << m->getName() << ";" << m->getDescription() <<";" << m->getEffect()<<";" <<"\n";
     }
     return oss.str();
 }
@@ -163,11 +163,8 @@ void Controller::loadGame() {
             string effect;
             getline(iss, effect, ';');
 
-            string quantity;
-            getline(iss, quantity, '\n');
-
-            auto newItem = make_unique<Item>(name, description, stoi(effect), stoi(quantity));
-            addToInventory(move(newItem));
+            auto newItem = make_unique<Item>(name, description, stoi(effect));
+            addToInventory(newItem);
         } else if (type ==
                    "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
         {
@@ -187,7 +184,7 @@ void Controller::loadGame() {
 void Controller::saveGame() {
     //Ecriture du fichier de sauvegarde
     ofstream file(savedFile);
-    file << planetToString() << spaceshipToString() << characterToString() << questToString() << itemToString();
+    file << planetToString() << spaceshipToString() << itemToString() << characterToString() << questToString() ;
 }
 
 void Controller::addCharacter(const shared_ptr<Character> &newCharacter) {
@@ -241,22 +238,9 @@ void Controller::addQuest(const shared_ptr<Quest> &newMission) {
     questMap[newMission->getName()] = newMission;
 }
 
-void Controller::addToInventory(unique_ptr<Item> newItem) {
-    string itemName = newItem->getName();
-    //On vérifie si l'objet existe déjà
-    auto it = inventory.find(itemName);
-    if (it != inventory.end()) {
-        //S'il existe, on modifie sa quantité
-        unique_ptr<Item>& existingItem = *(it->second);
-        int itemInitialQuantity = existingItem->getQuantity();
-        int newItemQuantity = newItem->getQuantity();
-        existingItem->setQuantity(itemInitialQuantity + newItemQuantity);
-    } else {
-        //S'il n'existe pas, on l'ajoute à l'inventaire
-        inventory.insert(make_pair(itemName, new unique_ptr<Item>(move(newItem))));
-    }
+void Controller::addToInventory(unique_ptr<Item>& newItem) {
+    inventory[newItem ->getName()] = move(newItem);
 }
-
 
 void Controller::cleanWeakPtr(
         vector<weak_ptr<Character>> &vec) { //Nettoyer les weak ptr qui n'ont plus de share ptr vers lesquels pointer
