@@ -37,22 +37,21 @@ public:
     void addSpaceship(const shared_ptr<Spaceship>&);
     void addPlanet(const shared_ptr<Planet>&);
     void addQuest(const shared_ptr<Quest>&);
-    void addToInventory(unique_ptr<Item>&);
+    void addToGameInventory(unique_ptr<Item>&);
     bool deleteCharacter(const string& name);
     bool deleteSpaceship(const string& name);
     bool deletePlanet(const string& name);
     bool deleteQuest(const string& name);
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
+    void cleanUniquePtr(map<string, unique_ptr<Item>>&);
 
     bool neutralAttack(string, string);  // returns true if enemy dies
-
     string characterToString();
     string spaceshipToString();
     string planetToString();
     string questToString();
     string itemToString();
     virtual ~Controller();
-
 private :
     //Attributs
     map<string, shared_ptr<Character>> characterMap;
@@ -62,8 +61,8 @@ private :
     map<string, shared_ptr<Quest>> questMap;
     map<string, unique_ptr<Item>> inventory;
     string loadedFile;
-    string savedFile;
 
+    string savedFile;
     // Methods
     vector<shared_ptr<Character>> setupRole(string, string);
 

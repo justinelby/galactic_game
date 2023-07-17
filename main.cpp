@@ -38,19 +38,36 @@ void displayAllQuest(Controller &controller) {
     }
 }
 
-void displayAllObjects(Controller &controller){
+void displayControllerItems(Controller &controller){
     if(controller.getInventory().empty()){
-        cout << "inventory vide" << endl;
+        cout << "Empty Game Inventory !" << endl;
     }
     else
     {
+        cout << "Game inventory : " << endl;
         for( auto &it : controller.getInventory()){
-            cout << it.second->getName() << endl;
-            cout << it.second->getDescription()<< endl;
-            cout << it.second->getEffect() << endl;
-            cout << "--------" << endl;
+            if(it.second != nullptr)
+            {
+                cout << it.second->getName() << endl;
+                cout << it.second->getDescription() << endl;
+                cout << it.second->getEffect() << endl;
+                cout << "--------" << endl;
+            }
         }
 
+    }
+}
+
+void displayCharacterInventory(shared_ptr<Character>& character) {
+    cout << character->getName() << "'s inventory : " << endl;
+    if (character->getInventory().empty()) {
+        cout << "Empty inventory !" << endl;
+    } else {
+        for (auto &it: character->getInventory()) {
+            cout << it.second->getName() << " ";
+            cout << it.second->getDescription() << " ";
+            cout << it.second->getEffect() << endl;
+        }
     }
 }
 
@@ -118,7 +135,7 @@ void displayAllInfo(Controller &controller){
     displayAllQuest(controller);
     cout << "---------------------" << endl;
 
-    displayAllObjects(controller);
+    displayControllerItems(controller);
     cout << "---------------------" << endl;
 
     cout << "Affichage des résidents par Planet : " << endl;
@@ -150,31 +167,48 @@ void displayAllInfo(Controller &controller){
 
 //Code contenant l'execution du menu et le jeu
 int main() {
-
-
     string savedFile= "save.txt";
     string loadedFile= "data.txt";
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
-    displayAllObjects(controller);
-    displayAllCharacters(controller);
-    //displayAllObjects(controller);
+//    displayAllCharacters(controller);
+
+    displayControllerItems(controller);
+
+    auto alex = controller.getCharacter()["Alex Starborn"];
 
 
- /*   string p1 = "Alex Starborn", p2 = "Alien 1";
+    for(auto it = controller.getInventory().begin(); it != controller.getInventory().end(); it++) {
+        if(alex->getInventory().size() < 5)
+            alex->addToInventory(it->second);
+    }
+    controller.cleanUniquePtr(controller.getInventory());   // cleaning game Inventory
 
-    auto p1Infos = controller.getCharacter()[p1];
-    auto p2Infos = controller.getEnemy()[p2];
+    cout << "-----------------" << endl;
+    displayCharacterInventory(alex);
+    cout << "-----------------" << endl;
+    displayControllerItems(controller);
+    cout << "-----------------" << endl;
 
-    cout << p1Infos->getName() << " " << p1Infos->getStatus()[0] << " " << p1Infos->getStatus()[1] << " " << p1Infos->getStatus()[2] << endl;
-    cout << p2Infos->getName() << " " << p2Infos->getStatus()[0] << " " << p2Infos->getStatus()[1] << " " << p2Infos->getStatus()[2] << endl;
+
+    cout << "MOVE POTION POISON 3" << endl;
+    auto soloItem = std::move(controller.getInventory()["Potion of Poison III"]);
+    cout << "-----------------" << endl;
+    displayControllerItems(controller);
+    /*   string p1 = "Alex Starborn", p2 = "Alien 1";
+
+       auto p1Infos = controller.getCharacter()[p1];
+       auto p2Infos = controller.getEnemy()[p2];
+
+       cout << p1Infos->getName() << " " << p1Infos->getStatus()[0] << " " << p1Infos->getStatus()[1] << " " << p1Infos->getStatus()[2] << endl;
+       cout << p2Infos->getName() << " " << p2Infos->getStatus()[0] << " " << p2Infos->getStatus()[1] << " " << p2Infos->getStatus()[2] << endl;
 
 
-    bool combatIsOver = controller.neutralAttack(p1,p2);
-    if (combatIsOver){
-        cout << p1 << " a execute " << p2 << endl;
-    }*/
+       bool combatIsOver = controller.neutralAttack(p1,p2);
+       if (combatIsOver){
+           cout << p1 << " a execute " << p2 << endl;
+       }*/
 
     //displayAllEnemies(controller);
 

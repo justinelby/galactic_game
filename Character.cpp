@@ -1,4 +1,5 @@
 #include "Character.h"
+#define DEBUG
 
 Character::Character(string name, string desc, int hp, int ap, int dp, string placeType, string place)
 {
@@ -34,6 +35,50 @@ void Character::setPlaceType(const string &pt) { this->place = pt; }    // add v
 
 string Character::getPlace() const { return place; }
 void Character::setPlace(const string &pl) { this->place = pl; }    // add verification if input is valid
+
+map<string, unique_ptr<Item>>& Character::getInventory() { return inventory; }
+
+void Character::addToInventory(unique_ptr<Item>& newItem) {
+    if (inventory.size() < 5) {                 // each Character has a 5-item inventory
+        inventory[newItem->getName()] = move(newItem);
+#ifdef DEBUG
+        cout << " added to " << getName() << "'s inventory." << endl;
+#endif
+    }
+    else {
+#ifdef DEBUG
+        cout << "Item not added to inventory." << endl;
+#endif
+    }
+
+}
+
+bool Character::isLooting() {
+    char response;
+    if(inventory.size() >= 5) {
+        do {
+            cout << "Do you want to replace something in your Inventory (y/N) : " << endl;
+            cin >> response;
+        } while(response != 'y' or response != 'Y' or response != 'n' or response != 'N');
+
+        if(response == 'y' or response == 'Y')
+            return true;
+    }
+    return false;
+}
+
+void Character::looting(unique_ptr<Item>& lootedItem) {
+    if(isLooting()) {
+        string itemToReplace;
+        for (auto &it: inventory) {
+            cout << "Name : " << it.second->getName() << endl;
+        }
+        cout << "Saisir l'Item à remplacer : ";
+        cin >> itemToReplace;
+        swap(inventory[itemToReplace], lootedItem);
+    }
+}
+
 
 Character::~Character()
 {

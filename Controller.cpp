@@ -164,7 +164,7 @@ void Controller::loadGame() {
             getline(iss, effect, ';');
 
             auto newItem = make_unique<Item>(name, description, stoi(effect));
-            addToInventory(newItem);
+            addToGameInventory(newItem);
         } else if (type ==
                    "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
         {
@@ -238,7 +238,7 @@ void Controller::addQuest(const shared_ptr<Quest> &newMission) {
     questMap[newMission->getName()] = newMission;
 }
 
-void Controller::addToInventory(unique_ptr<Item>& newItem) {
+void Controller::addToGameInventory(unique_ptr<Item>& newItem) {
     inventory[newItem ->getName()] = move(newItem);
 }
 
@@ -255,6 +255,17 @@ void Controller::cleanWeakPtr(
         }
     }
     vec.clear();
+}
+
+void Controller::cleanUniquePtr(map<string, unique_ptr<Item>>& mapToClean) {
+    vector<unique_ptr<Item>> vec;
+//    for (auto &it: mapToClean) {
+    for (auto it = mapToClean.begin(); it != mapToClean.end(); ++it) {
+        if (it->second == nullptr) {
+            vec.push_back(move(it->second));    // taking note of nullptr pointers into the map
+        }
+    }
+    vec.clear();    // deleting nullptr pointers
 }
 
 bool Controller::deleteCharacter(const string &name) {
