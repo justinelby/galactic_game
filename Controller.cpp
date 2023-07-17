@@ -183,7 +183,6 @@ void Controller::loadGame() {
     } else {
         std::cout << "Le document JSON ne contient pas la clé 'attack'.\n";
     }
-
 }
 
 
