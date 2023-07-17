@@ -149,28 +149,47 @@ void *connection_handler(void *sock_fd) {
 
     // request data
     char buffer[BUFFER_SIZE] = {0};
-
     std::string jsonData;
+    bool headersReceived = false;
+    bool contentLengthReceived = false;
+    int contentLength = 0;
+    int totalBytesReceived = 0;
 
-    // read response continue
     while ((read_byte = recv(conn_id, buffer, BUFFER_SIZE, 0)) > 0) {
-        std::cout << "[RECEIVED] " << buffer << "\n";
-
-        //Ajouter les données lues dans tampon
+        // Ajouter les données lues dans le tampon
         jsonData += buffer;
 
-        // clear buffer data
-        memset(buffer, 0, BUFFER_SIZE);
+        // Mettre à jour le nombre total d'octets reçus
+        totalBytesReceived += read_byte;
 
         // Rechercher les en-têtes de fin du message HTTP
         std::string endHeaders = "\r\n\r\n";
         size_t endPos = jsonData.find(endHeaders);
-        if (endPos != std::string::npos) {
+        if (!headersReceived && endPos != std::string::npos) {
+            // Les en-têtes ont été reçus, vous pouvez marquer les en-têtes comme reçus
+            headersReceived = true;
+
+            // Extraire le contenu de l'en-tête Content-Length
+            std::string contentLengthHeader = "Content-Length: ";
+            size_t contentLengthPos = jsonData.find(contentLengthHeader);
+            if (contentLengthPos != std::string::npos) {
+                contentLengthPos += contentLengthHeader.length();
+                size_t endLinePos = jsonData.find("\r\n", contentLengthPos);
+                if (endLinePos != std::string::npos) {
+                    std::string contentLengthStr = jsonData.substr(contentLengthPos, endLinePos - contentLengthPos);
+                    contentLength = std::stoi(contentLengthStr);
+                    contentLengthReceived = true;
+                }
+            }
+        }
+
+        // Si le contenu JSON a été entièrement reçu
+        if (headersReceived && contentLengthReceived && totalBytesReceived >= (endPos + endHeaders.length() + contentLength)) {
             // Extraire le contenu JSON à partir des en-têtes
-            std::string jsonContent = jsonData.substr(endPos + endHeaders.length());
+            std::string jsonContent = jsonData.substr(endPos + endHeaders.length(), contentLength);
 
             // Enregistrer le contenu JSON dans le fichier
-            std::ofstream outputFile("/galactic_game/data.json");
+            std::ofstream outputFile("../cmake-build-debug/data.json");
             if (outputFile.is_open()) {
                 outputFile << jsonContent;
                 outputFile.close();
@@ -179,14 +198,23 @@ void *connection_handler(void *sock_fd) {
                 std::cout << "Erreur lors de l'ouverture du fichier data.json pour l'enregistrement du message JSON\n";
             }
 
+            std::cout << "[RECEIVED JSON]: " << jsonContent << "\n";
+
+
             // Réinitialiser jsonData pour traiter les messages suivants
             jsonData = "";
+            headersReceived = false;
+            contentLengthReceived = false;
+            contentLength = 0;
+            totalBytesReceived = 0;
         }
 
+        // clear buffer data
+        memset(buffer, 0, BUFFER_SIZE);
 
         // response data
         char response[] = "Hello";
-       // send response
+        // send response
         if (send(conn_id, response, strlen(response), 0) > 0) {
             std::cout << "[SEND] " << response << "\n";
         } else {

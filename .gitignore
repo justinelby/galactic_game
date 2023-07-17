@@ -43,9 +43,11 @@
 # CMake
 cmake-build-debug/
 !cmake-build-debug/data.txt
-!cmake-build-debug/save.txt
-
+!cmake-build-debug/data.json
 CMakeLists.txt
+
+#Build
+galactic-game
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
