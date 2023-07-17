@@ -11,6 +11,8 @@
 #include "Character.h"
 #include "Spaceship.h"
 #include "Planet.h"
+#include "./rapidjson-master/include/rapidjson/document.h"
+#include "./rapidjson-master/include/rapidjson/filereadstream.h"
 
 using namespace std;
 
@@ -82,83 +84,108 @@ void Controller::loadGame() {
     if (!file.is_open()) {
         cout << "Le fichier ne s'est pas ouvert" << endl;
     }
-    string line;
-    vector<shared_ptr<Character>> crew, resident;
+// Lecture du contenu du fichier JSON
+    std::string jsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    file.close();
 
-    //On parcourt les lignes du fichier
-    while (getline(file, line)) {
-        istringstream iss(line);
-        string type;
-        getline(iss, type, ';');
+    // Création du document JSON
+    rapidjson::Document document;
+    document.Parse(jsonContent.c_str());
 
-        //Si la ligne commence par character, on récupère les informations associées
-        if (type == "Character" || type == "Enemy") {
-            string name;
-            getline(iss, name, ';');
+    // Chargement des données à partir du document JSON
 
-            string poste;
-            getline(iss, poste, ';');
-
-            string health;
-            getline(iss, health, ';');
-
-            string attackPower;
-            getline(iss, attackPower, ';');
-
-            string armorPower;
-            getline(iss, armorPower, ';');
-
-            string placeType;
-            getline(iss, placeType, ';');
-
-            string place;
-            getline(iss, place);
-
-            if (type == "Character") {
-                auto newCharacter = make_shared<Character>(name, poste, stoi(health), stoi(attackPower),
-                                                           stoi(armorPower), placeType, place);
+    // Chargement des character
+    if (document.HasMember("character")) {
+        const rapidjson::Value& characters = document["character"];
+        if (characters.IsArray()) {
+            for (rapidjson::SizeType i = 0; i < characters.Size(); i++) {
+                const rapidjson::Value& character = characters[i];
+                // Extraire les valeurs des propriétés du personnage
+                std::string name = character["Nom"].GetString();
+                std::string description = character["Description"].GetString();
+                int health = character["Santé"].GetInt();
+                int attackPower = character["Puissance d'attaque"].GetInt();
+                int armorPower = character["Puissance d'armure"].GetInt();
+                std::string placeType = character["Type de lieu"].GetString();
+                std::string place = character["Lieu"].GetString();
+                // Créer et ajouter le personnage à la map characterMap
+                auto newCharacter = std::make_shared<Character>(name, description, health, attackPower, armorPower, placeType, place);
                 addCharacter(newCharacter);
-            } else {    // if Enemy
-                auto newEnemy = make_shared<Enemy>(name, poste, stoi(health), stoi(attackPower), stoi(armorPower),
-                                                   placeType, place);
-                addEnemy(newEnemy);
             }
-
-
-        } else if (type ==
-                   "Spaceship") //Si la ligne commence par spaceship, on récupère les informations associées et on les stocke
-        {
-            string name;
-            getline(iss, name, ';');
-
-            auto newSpaceship = make_shared<Spaceship>(name);
-            addSpaceship(newSpaceship);
-        } else if (type ==
-                   "Planet") //Si la ligne commence par planet, on récupère les informations associées et on les stocke
-        {
-            string name;
-            getline(iss, name, ';');
-
-            string description;
-            getline(iss, description, '\n');
-
-            auto newPlanet = make_shared<Planet>(name, description);
-            addPlanet(newPlanet);
-        } else if (type ==
-                   "Quest")//Si la ligne commence par mission, on récupère les informations associées et on les stocke
-        {
-            string name;
-            getline(iss, name, ';');
-
-            string description;
-            getline(iss, description, '\n');
-            iss >> description;
-
-            auto newMission = make_shared<Quest>(name, description);
-            addQuest(newMission);
         }
     }
+
+    // Chargement des planet
+    if (document.HasMember("planet")) {
+        const rapidjson::Value& planets = document["planet"];
+        if (planets.IsArray()) {
+            for (rapidjson::SizeType i = 0; i < planets.Size(); i++) {
+                const rapidjson::Value& planet = planets[i];
+                // Extraire les valeurs des propriétés de la planète
+                std::string name = planet["Nom"].GetString();
+                std::string description = planet["Description"].GetString();
+                // Créer et ajouter la planète à la map planetMap
+                auto newPlanet = std::make_shared<Planet>(name, description);
+                addPlanet(newPlanet);
+            }
+        }
+    }
+
+    // Chargement des spaceship
+    if (document.HasMember("spaceship")) {
+        const rapidjson::Value& spaceships = document["spaceship"];
+        if (spaceships.IsArray()) {
+            for (rapidjson::SizeType i = 0; i < spaceships.Size(); i++) {
+                const rapidjson::Value& spaceship = spaceships[i];
+                // Extraire les valeurs des propriétés du vaisseau spatial
+                std::string name = spaceship["Nom"].GetString();
+                // Créer et ajouter le vaisseau spatial à la map spaceshipMap
+                auto newSpaceship = std::make_shared<Spaceship>(name);
+                addSpaceship(newSpaceship);
+            }
+        }
+    }
+
+    // Chargement des quest
+    if (document.HasMember("quest")) {
+        const rapidjson::Value& quests = document["quest"];
+        if (quests.IsArray()) {
+            for (rapidjson::SizeType i = 0; i < quests.Size(); i++) {
+                const rapidjson::Value& quest = quests[i];
+                // Extraire les valeurs des propriétés de la quête
+                std::string name = quest["Nom"].GetString();
+                std::string description = quest["Description"].GetString();
+                // Créer et ajouter la quête à la map questMap
+                auto newQuest = std::make_shared<Quest>(name, description);
+                addQuest(newQuest);
+            }
+        }
+    }
+    // Vérifier si le document JSON contient la clé "attack"
+    if (document.HasMember("attack")) {
+        const rapidjson::Value& attack = document["attack"];
+
+        // Vérifier si les clés "Assaillant" et "Défenseur" sont présentes
+        if (attack.HasMember("Assaillant") && attack.HasMember("Défenseur")) {
+            std::string assailant = attack["Assaillant"].GetString();
+            std::string defender = attack["Défenseur"].GetString();
+
+            // Appeler la fonction neutralAttack avec les noms des personnages assailant et defender
+            bool result = neutralAttack(assailant, defender);
+            if (result) {
+                std::cout << "Le personnage " << defender << " a été éliminé.\n";
+            } else {
+                std::cout << "Le personnage " << defender << " a subi des dégâts.\n";
+            }
+        } else {
+            std::cout << "Les clés 'Assaillant' et 'Défenseur' sont manquantes dans la clé 'attack'.\n";
+        }
+    } else {
+        std::cout << "Le document JSON ne contient pas la clé 'attack'.\n";
+    }
+
 }
+
 
 void Controller::saveGame() {
     //Ecriture du fichier de sauvegarde
@@ -232,8 +259,8 @@ void Controller::cleanWeakPtr(
     vec.clear();
 }
 
-bool Controller::deleteCharacter(const string &name) {
-    //Rechercher le personnage dans la map
+bool Controller::deleteCharacter(const string& name) {
+    // Rechercher le personnage dans la map characterMap
     auto it = characterMap.find(name);
     auto it2 = enemyMap.find(name);
 
@@ -241,9 +268,9 @@ bool Controller::deleteCharacter(const string &name) {
         string characterName = it->first;
         // Vérifier si le pointeur de personnage est nul
         if (characterMap[characterName]) {
-            //Obtenir le type de lieu où se situe le personnage
+            // Obtenir le type de lieu où se situe le personnage
             string typePlace = characterMap[characterName]->getPlaceType();
-            //Si le personnage est sur une planete
+            // Si le personnage est sur une planète
             if (typePlace == "Planet") {
                 // Obtenir la planète associée au personnage
                 string place = characterMap[characterName]->getPlace();
@@ -254,7 +281,7 @@ bool Controller::deleteCharacter(const string &name) {
                     cleanWeakPtr(planet->getResident());
                 }
             }
-                //Si le personnage est sur un vaisseau
+                // Si le personnage est sur un vaisseau
             else if (typePlace == "Spaceship") {
                 string place = characterMap[characterName]->getPlace();
                 auto spaceshipIt = spaceshipMap.find(place);
@@ -266,13 +293,14 @@ bool Controller::deleteCharacter(const string &name) {
         }
         characterMap.erase(characterName);
         return true;
-    } else if (it2 != enemyMap.end()) {
+    }
+    else if (it2 != enemyMap.end()) {
         string enemyName = it2->first;
         // Vérifier si le pointeur de personnage est nul
         if (enemyMap[enemyName]) {
-            //Obtenir le type de lieu où se situe le personnage
+            // Obtenir le type de lieu où se situe le personnage
             string typePlace = enemyMap[enemyName]->getPlaceType();
-            //Si le personnage est sur une planete
+            // Si le personnage est sur une planète
             if (typePlace == "Planet") {
                 // Obtenir la planète associée au personnage
                 string place = enemyMap[enemyName]->getPlace();
@@ -283,7 +311,7 @@ bool Controller::deleteCharacter(const string &name) {
                     cleanWeakPtr(planet->getResident());
                 }
             }
-                //Si le personnage est sur un vaisseau
+                // Si le personnage est sur un vaisseau
             else if (typePlace == "Spaceship") {
                 string place = enemyMap[enemyName]->getPlace();
                 auto spaceshipIt = spaceshipMap.find(place);
@@ -295,69 +323,64 @@ bool Controller::deleteCharacter(const string &name) {
         }
         enemyMap.erase(enemyName);
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 }
 
-bool Controller::deleteSpaceship(const string &name) {
-    //Rechercher le vaisseau dans la map
+bool Controller::deleteSpaceship(const string& name) {
+    // Rechercher le vaisseau dans la map spaceshipMap
     auto it = spaceshipMap.find(name);
     if (it == spaceshipMap.end()) {
         return false;
-    } else {
+    }
+    else {
         string spaceshipName = it->first;
         if (spaceshipMap[spaceshipName]) {
             // Parcourir les membres de l'équipage du vaisseau
-            for (auto member: it->second->getCrew()) {
-                if (member.lock()) {
-                    if (auto character = dynamic_pointer_cast<Character>(member.lock())) {
-                        // Vérifier si c'est un ennemi
-                        if (auto enemy = dynamic_pointer_cast<Enemy>(character)) {
-                            cout << "Suppression de l'ennemi : " << enemy->getName() << endl;
-                            enemyMap.erase(enemy->getName());
-                        } else {
-                            // Supprimer le personnage de la map characterMap
-                            cout << "Suppression du personnage: " << character->getName() << endl;
-                            characterMap.erase(character->getName());
-                        }
+            for (auto member : it->second->getCrew()) {
+                if (auto character = dynamic_pointer_cast<Character>(member.lock())) {
+                    // Vérifier si c'est un ennemi
+                    if (auto enemy = dynamic_pointer_cast<Enemy>(character)) {
+                        cout << "Suppression de l'ennemi : " << enemy->getName() << endl;
+                        enemyMap.erase(enemy->getName());
+                    }
+                    else {
+                        // Supprimer le personnage de la map characterMap
+                        cout << "Suppression du personnage: " << character->getName() << endl;
+                        characterMap.erase(character->getName());
                     }
                 }
             }
-            // Supprimer la planète de la map planetMap
+            // Supprimer le vaisseau de la map spaceshipMap
             spaceshipMap.erase(spaceshipName);
         }
         return true;
     }
-#ifdef DEBUG
-    for (auto &pair: spaceshipMap) {
-        auto &ship = pair.second;
-        cout << "Nom : " << ship->getName() << endl;
-    }
-#endif
 }
 
-bool Controller::deletePlanet(const string &name) {
-    // Rechercher la planète dans la map
+bool Controller::deletePlanet(const string& name) {
+    // Rechercher la planète dans la map planetMap
     auto it = planetMap.find(name);
     if (it == planetMap.end()) {
         return false;
-    } else {
+    }
+    else {
         string planetName = it->first;
         if (planetMap[planetName]) {
             // Parcourir les résidents de la planète
-            for (auto resident: it->second->getResident()) {
-                if (resident.lock()) {
-                    if (auto character = dynamic_pointer_cast<Character>(resident.lock())) {
-                        // Vérifier si c'est un ennemi
-                        if (auto enemy = dynamic_pointer_cast<Enemy>(character)) {
-                            cout << "Suppression de l'ennemi : " << enemy->getName() << endl;
-                            enemyMap.erase(enemy->getName());
-                        } else {
-                            // Supprimer le personnage de la map characterMap
-                            cout << "Suppression du personnage: " << character->getName() << endl;
-                            characterMap.erase(character->getName());
-                        }
+            for (auto resident : it->second->getResident()) {
+                if (auto character = dynamic_pointer_cast<Character>(resident.lock())) {
+                    // Vérifier si c'est un ennemi
+                    if (auto enemy = dynamic_pointer_cast<Enemy>(character)) {
+                        cout << "Suppression de l'ennemi : " << enemy->getName() << endl;
+                        enemyMap.erase(enemy->getName());
+                    }
+                    else {
+                        // Supprimer le personnage de la map characterMap
+                        cout << "Suppression du personnage: " << character->getName() << endl;
+                        characterMap.erase(character->getName());
                     }
                 }
             }
@@ -366,13 +389,8 @@ bool Controller::deletePlanet(const string &name) {
         }
         return true;
     }
-#ifdef DEBUG
-    for (auto &pair: planetMap) {
-        auto &pla = pair.second;
-        cout << "Nom : " << pla->getName() << endl;
-    }
-#endif
 }
+
 
 bool Controller::deleteQuest(const std::string &name) {
     //Rechercher la mission dans la map
