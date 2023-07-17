@@ -42,8 +42,7 @@
 
 # CMake
 cmake-build-debug/
-!cmake-build-debug/data.txt
-!cmake-build-debug/data.json
+!cmake-build-debug/gameData.json
 CMakeLists.txt
 
 #Build
