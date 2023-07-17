@@ -12,7 +12,6 @@
 #include "Spaceship.h"
 #include "Planet.h"
 #include "./rapidjson-master/include/rapidjson/document.h"
-#include "./rapidjson-master/include/rapidjson/filereadstream.h"
 
 using namespace std;
 
@@ -82,7 +81,7 @@ void Controller::loadGame() {
     ifstream file(gameFile);
 
     if (!file.is_open()) {
-        cout << "Le fichier ne s'est pas ouvert" << endl;
+        cout << "Le fichier de chargement du jeu ne s'est pas ouvert" << endl;
     }
 // Lecture du contenu du fichier JSON
     std::string jsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -167,7 +166,7 @@ void Controller::loadActions(string actionsFile) {
     ifstream file(actionsFile);
 
     if (!file.is_open()) {
-        cout << "Le fichier ne s'est pas ouvert" << endl;
+        cout << "Le fichier du chargement des fonctions ne s'est pas ouvert" << endl;
     }
 // Lecture du contenu du fichier JSON
     std::string jsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
