@@ -16,7 +16,7 @@
 
 using namespace std;
 
-Controller::Controller(string &loadedFile, string &savedFile) : loadedFile(loadedFile), savedFile(savedFile) {
+Controller::Controller(string &loadedFile, string &savedFile) : gameFile(loadedFile), savedFile(savedFile) {
 }
 
 map<string, shared_ptr<Quest>> Controller::getQuest() {
@@ -79,7 +79,7 @@ string Controller::questToString() {
 
 void Controller::loadGame() {
     srand(static_cast <unsigned int> (time(NULL)));     // generating new random seed
-    ifstream file(loadedFile);
+    ifstream file(gameFile);
 
     if (!file.is_open()) {
         cout << "Le fichier ne s'est pas ouvert" << endl;
@@ -161,6 +161,24 @@ void Controller::loadGame() {
             }
         }
     }
+}
+
+void Controller::loadActions(string actionsFile) {
+    ifstream file(actionsFile);
+
+    if (!file.is_open()) {
+        cout << "Le fichier ne s'est pas ouvert" << endl;
+    }
+// Lecture du contenu du fichier JSON
+    std::string jsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    file.close();
+
+    // Création du document JSON
+    rapidjson::Document document;
+    document.Parse(jsonContent.c_str());
+
+    // Chargement des données à partir du document JSON
+
     // Vérifier si le document JSON contient la clé "attack"
     if (document.HasMember("attack")) {
         const rapidjson::Value& attack = document["attack"];
@@ -184,7 +202,6 @@ void Controller::loadGame() {
         std::cout << "Le document JSON ne contient pas la clé 'attack'.\n";
     }
 }
-
 
 void Controller::saveGame() {
     //Ecriture du fichier de sauvegarde

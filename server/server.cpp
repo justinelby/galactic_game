@@ -189,13 +189,13 @@ void *connection_handler(void *sock_fd) {
             std::string jsonContent = jsonData.substr(endPos + endHeaders.length(), contentLength);
 
             // Enregistrer le contenu JSON dans le fichier
-            std::ofstream outputFile("../cmake-build-debug/data.json");
+            std::ofstream outputFile("../cmake-build-debug/actionsData.json");
             if (outputFile.is_open()) {
                 outputFile << jsonContent;
                 outputFile.close();
-                std::cout << "Message JSON enregistré dans le fichier data.json\n";
+                std::cout << "Message JSON enregistré dans le fichier actionsData.json\n";
             } else {
-                std::cout << "Erreur lors de l'ouverture du fichier data.json pour l'enregistrement du message JSON\n";
+                std::cout << "Erreur lors de l'ouverture du fichier actionsData.json pour l'enregistrement du message JSON\n";
             }
 
             std::cout << "[RECEIVED JSON]: " << jsonContent << "\n";

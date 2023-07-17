@@ -127,11 +127,14 @@ void debugDisplayWeakPtrNbr(Controller &controller){
 int main() {
 
     string savedFile= "save.txt";
-    string loadedFile= "data.json";
-    Controller controller(loadedFile, savedFile);
-    controller.loadGame();
+    string gameFile= "gameData.json";
+    string actionsFile= "actionsData.json";
+    Controller controller(gameFile, savedFile);
 
-    controller.saveGame();
+    controller.loadGame();
+    controller.loadActions(actionsFile);
+
+    //controller.saveGame();
 
     return 0;
 }

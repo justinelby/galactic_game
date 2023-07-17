@@ -1,0 +1,20 @@
+Planet;Mars;La planète rouge
+Planet;Terre;La planète bleue
+Planet;Z-23;Une planete situee dans la galaxy Euclid ou l'or et l'argent se trouvent en grande quantite.
+Spaceship;Enterprise
+Spaceship;Faucon Millenium
+Spaceship;WWW
+Character;Alex Starborn;Personnage principal;100;102;20;Espace;USS Enterprise
+Character;Capitaine Anderson;Superieur d'Alex;150;100;50;Espace;USS Enterprise
+Character;Docteur Liara;Medecin de bord;100;30;10;Planète;Earth
+Character;Ingenieur Scott;Responsable des reparations et des ameliorations du vaisseau;120;30;20;Espace;USS Enterprise
+Character;John Doe;Un personnage mystérieux;100;50;20;Planète;Terre
+Character;Toto;PNJ;1000;200;400;Planète;Z-23
+Mission;Des pirates de l'espace !!;Avec votre equipage, defendez votre vaisseau et combattez les pirates de l'espace
+Mission;Explorer l'espace;Découvrir de nouvelles planètes
+Mission;Explorer une planète mysterieuse;A l'aide de votre radar, retrouvez et explorez la planete Z-23
+Mission;Faire la paix;Négocier un traité de paix entre deux factions rivales
+Mission;Ressources rares;Trouver des ressources rares pour améliorer l'Odyssee
+Mission;Sauver la galaxie;Empêcher l'invasion des extraterrestres
+Mission;Une etrange pandemie...;Résoudre une crise médicale sur une colonie lointaine
+

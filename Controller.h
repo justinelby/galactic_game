@@ -28,6 +28,7 @@ public:
 
     //Méthodes
     void loadGame();
+    void loadActions(string actionsFile);
     void saveGame();
 
     void addCharacter(const shared_ptr<Character>&);
@@ -57,7 +58,8 @@ private :
     map<string, shared_ptr<Spaceship>> spaceshipMap;
     map<string, shared_ptr<Planet>> planetMap;
     map<string, shared_ptr<Quest>> questMap;
-    string loadedFile;
+    string gameFile;
+    string actionsFile;
     string savedFile;
 
     // Methods
