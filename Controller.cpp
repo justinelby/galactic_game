@@ -11,7 +11,7 @@
 #include "Character.h"
 #include "Spaceship.h"
 #include "Planet.h"
-#include "./rapidjson-master/include/rapidjson/document.h"
+#include "./include/rapidjson/document.h"
 
 using namespace std;
 
@@ -93,33 +93,12 @@ void Controller::loadGame() {
 
     // Chargement des données à partir du document JSON
 
-    // Chargement des character
-    if (document.HasMember("character")) {
-        const rapidjson::Value& characters = document["character"];
-        if (characters.IsArray()) {
-            for (rapidjson::SizeType i = 0; i < characters.Size(); i++) {
-                const rapidjson::Value& character = characters[i];
-                // Extraire les valeurs des propriétés du personnage
-                std::string name = character["Nom"].GetString();
-                std::string description = character["Description"].GetString();
-                int health = character["Santé"].GetInt();
-                int attackPower = character["Puissance d'attaque"].GetInt();
-                int armorPower = character["Puissance d'armure"].GetInt();
-                std::string placeType = character["Type de lieu"].GetString();
-                std::string place = character["Lieu"].GetString();
-                // Créer et ajouter le personnage à la map characterMap
-                auto newCharacter = std::make_shared<Character>(name, description, health, attackPower, armorPower, placeType, place);
-                addCharacter(newCharacter);
-            }
-        }
-    }
-
     // Chargement des planet
     if (document.HasMember("planet")) {
-        const rapidjson::Value& planets = document["planet"];
+        const rapidjson::Value &planets = document["planet"];
         if (planets.IsArray()) {
             for (rapidjson::SizeType i = 0; i < planets.Size(); i++) {
-                const rapidjson::Value& planet = planets[i];
+                const rapidjson::Value &planet = planets[i];
                 // Extraire les valeurs des propriétés de la planète
                 std::string name = planet["Nom"].GetString();
                 std::string description = planet["Description"].GetString();
@@ -132,12 +111,12 @@ void Controller::loadGame() {
 
     // Chargement des spaceship
     if (document.HasMember("spaceship")) {
-        const rapidjson::Value& spaceships = document["spaceship"];
+        const rapidjson::Value &spaceships = document["spaceship"];
         if (spaceships.IsArray()) {
             for (rapidjson::SizeType i = 0; i < spaceships.Size(); i++) {
-                const rapidjson::Value& spaceship = spaceships[i];
+                const rapidjson::Value &spaceship = spaceships[i];
                 // Extraire les valeurs des propriétés du vaisseau spatial
-                std::string name = spaceship["Nom"].GetString();
+                string name = spaceship["Nom"].GetString();
                 // Créer et ajouter le vaisseau spatial à la map spaceshipMap
                 auto newSpaceship = std::make_shared<Spaceship>(name);
                 addSpaceship(newSpaceship);
@@ -147,16 +126,60 @@ void Controller::loadGame() {
 
     // Chargement des quest
     if (document.HasMember("quest")) {
-        const rapidjson::Value& quests = document["quest"];
+        const rapidjson::Value &quests = document["quest"];
         if (quests.IsArray()) {
             for (rapidjson::SizeType i = 0; i < quests.Size(); i++) {
-                const rapidjson::Value& quest = quests[i];
+                const rapidjson::Value &quest = quests[i];
                 // Extraire les valeurs des propriétés de la quête
                 std::string name = quest["Nom"].GetString();
                 std::string description = quest["Description"].GetString();
                 // Créer et ajouter la quête à la map questMap
                 auto newQuest = std::make_shared<Quest>(name, description);
                 addQuest(newQuest);
+            }
+        }
+    }
+
+    // Chargement des character
+    if (document.HasMember("character")) {
+        const rapidjson::Value &characters = document["character"];
+        if (characters.IsArray()) {
+            for (rapidjson::SizeType i = 0; i < characters.Size(); i++) {
+                const rapidjson::Value &character = characters[i];
+                // Extraire les valeurs des propriétés du personnage
+                string name = character["Nom"].GetString();
+                string description = character["Description"].GetString();
+                int health = character["Santé"].GetInt();
+                int attackPower = character["Puissance d'attaque"].GetInt();
+                int armorPower = character["Puissance d'armure"].GetInt();
+                string placeType = character["Type de lieu"].GetString();
+                string place = character["Lieu"].GetString();
+                // Créer et ajouter le personnage à la map characterMap
+                auto newCharacter = make_shared<Character>(name, description, health, attackPower, armorPower,
+                                                           placeType, place);
+                addCharacter(newCharacter);
+            }
+        }
+    }
+
+    // Chargement des ennemis
+    if (document.HasMember("enemy")) {
+        const rapidjson::Value &enemies = document["enemy"];
+        if (enemies.IsArray()) {
+            for (rapidjson::SizeType i = 0; i < enemies.Size(); i++) {
+                const rapidjson::Value &enemy = enemies[i];
+                // Extraire les valeurs des propriétés du personnage
+                std::string name = enemy["Nom"].GetString();
+                std::string description = enemy["Description"].GetString();
+                int health = enemy["Santé"].GetInt();
+                int attackPower = enemy["Puissance d'attaque"].GetInt();
+                int armorPower = enemy["Puissance d'armure"].GetInt();
+                std::string placeType = enemy["Type de lieu"].GetString();
+                std::string place = enemy["Lieu"].GetString();
+                // Créer et ajouter le personnage à la map characterMap
+                auto newEnemy = std::make_shared<Enemy>(name, description, health, attackPower, armorPower, placeType,
+                                                        place);
+                addEnemy(newEnemy);
             }
         }
     }
@@ -179,27 +202,198 @@ void Controller::loadActions(string actionsFile) {
     // Chargement des données à partir du document JSON
 
     // Vérifier si le document JSON contient la clé "attack"
-    if (document.HasMember("attack")) {
-        const rapidjson::Value& attack = document["attack"];
+    if (document.HasMember("Attack")) {
+        // Extraction de l'action "Attack" du document JSON
+        const rapidjson::Value &attack = document["Attack"];
 
         // Vérifier si les clés "Assaillant" et "Défenseur" sont présentes
-        if (attack.HasMember("Assaillant") && attack.HasMember("Défenseur")) {
-            std::string assailant = attack["Assaillant"].GetString();
-            std::string defender = attack["Défenseur"].GetString();
+        if (attack.HasMember("Assailant") && attack.HasMember("Defenseur")) {
+            string assailant = attack["Assailant"].GetString();
+            string defender = attack["Defenseur"].GetString();
 
             // Appeler la fonction neutralAttack avec les noms des personnages assailant et defender
             bool result = neutralAttack(assailant, defender);
             if (result) {
-                std::cout << "Le personnage " << defender << " a été éliminé.\n";
+                cout << "Le personnage " << defender << " a été éliminé.\n";
             } else {
-                std::cout << "Le personnage " << defender << " a subi des dégâts.\n";
+                cout << "Le personnage " << defender << " a subi des dégâts.\n";
             }
         } else {
             std::cout << "Les clés 'Assaillant' et 'Défenseur' sont manquantes dans la clé 'attack'.\n";
         }
-    } else {
-        std::cout << "Le document JSON ne contient pas la clé 'attack'.\n";
     }
+
+    if (document.HasMember("GetCharacterByName")) {
+        const rapidjson::Value &getCharacterByName = document["GetCharacterByName"];
+        if (getCharacterByName.HasMember("CharacterName")) {
+            string characterName = getCharacterByName["CharacterName"].GetString();
+            auto characterIt = characterMap.find(characterName);
+            if (characterIt != characterMap.end()) {
+                auto character = characterIt->second;
+                cout << "***********************************************" << endl;
+                std::cout << "     Informations about character " << characterName << "\n";
+                cout << "***********************************************" << endl;
+                std::cout << "* Description : " << character->getDescr() << "\n";
+                std::cout << "* Health : " << character->getHealth() << "\n";
+                std::cout << "* AP : " << character->getAttackPower() << "\n";
+                std::cout << "* DP : " << character->getArmorPower() << "\n";
+                std::cout << "* Localisation : " << character->getPlaceType() << "\n";
+                std::cout << "* Place : " << character->getPlace() << "\n";
+            } else {
+                std::cout << "Character" << characterName << " hasn't been found.\n";
+            }
+        }
+    }
+
+    if (document.HasMember("GetAllCharacters")) {
+        const rapidjson::Value &getAllCharacters = document["GetAllCharacters"];
+        cout << "***********************************************" << endl;
+        cout << "     Informations about all characters: " << endl;
+        cout << "***********************************************" << endl;
+        for (auto it: getCharacter()) {
+            cout << "* " << it.second->getName() << endl;
+            cout << "     Health :" << it.second->getHealth() << endl;
+            cout << "     AP :" << it.second->getAttackPower() << endl;
+            cout << "     DP :" << it.second->getArmorPower() << endl;
+            cout << "     Localisation : " << it.second->getPlaceType() << endl;
+            cout << "     Place : " << it.second->getPlace() << endl;
+            cout << "-----------------------------------" << endl;
+        }
+    }
+
+    if (document.HasMember("GetSpaceshipByName")) {
+        const rapidjson::Value &getSpaceshipByName = document["GetSpaceshipByName"];
+        if (getSpaceshipByName.HasMember("SpaceshipName")) {
+            string spaceshipName = getSpaceshipByName["SpaceshipName"].GetString();
+            auto spaceshipIt = spaceshipMap.find(spaceshipName);
+            if (spaceshipIt != spaceshipMap.end()) {
+                auto spaceship = spaceshipIt->second;
+                cout << "***********************************************" << endl;
+                std::cout << "     Informations about spaceship " << spaceshipName << "\n";
+                cout << "***********************************************" << endl;
+                std::cout << "* Equipage : " << "\n";
+                for (auto &it: spaceship->getCrew()) {
+                    cout << "    " << it.lock()->getName() << " (";
+                    cout << "Health : " << it.lock()->getHealth() << ", ";
+                    cout << "AP : " << it.lock()->getAttackPower() << ", ";
+                    cout << "DP : " << it.lock()->getArmorPower() << ")" << endl;
+                }
+            }
+        }
+    }
+
+    if (document.HasMember("GetAllSpaceships")) {
+        const rapidjson::Value &getAllSpaceships = document["GetAllSpaceships"];
+        cout << "***********************************************" << endl;
+        cout << "     Informations about all spaceships: " << endl;
+        cout << "***********************************************" << endl;
+        for (auto &it: getSpaceship()) {
+            cout << "* " << it.second->getName() << endl;
+            auto spaceshipIt = spaceshipMap.find(it.second->getName());
+            if (spaceshipIt != spaceshipMap.end()) {
+                auto spaceship = spaceshipIt->second;
+                std::cout << "* Equipage : " << "\n";
+                for (auto &it: spaceship->getCrew()) {
+                    cout << "    " << it.lock()->getName() << " (";
+                    cout << "Health : " << it.lock()->getHealth() << ", ";
+                    cout << "AP : " << it.lock()->getAttackPower() << ", ";
+                    cout << "DP : " << it.lock()->getArmorPower() << ")" << endl;
+                }
+            }
+            cout << "-----------------------------------" << endl;
+        }
+    }
+
+    if (document.HasMember("GetPlanetByName")) {
+        const rapidjson::Value &getPlanetByName = document["GetPlanetByName"];
+        if (getPlanetByName.HasMember("PlanetName")) {
+            string planetName = getPlanetByName["PlanetName"].GetString();
+            auto planetIt = planetMap.find(planetName);
+            if (planetIt != planetMap.end()) {
+                auto planet = planetIt->second;
+                cout << "***********************************************" << endl;
+                std::cout << "     Informations about planet " << planetName << "\n";
+                cout << "***********************************************" << endl;
+                std::cout << "* Description : " << planet->getDescription() << "\n";
+                std::cout << "* Habitants : " << "\n";
+                for (auto &it: planet->getResident()) {
+                    cout << "    " << it.lock()->getName() << " (";
+                    cout << "Health : " << it.lock()->getHealth() << ", ";
+                    cout << "AP : " << it.lock()->getAttackPower() << ", ";
+                    cout << "DP : " << it.lock()->getArmorPower() << ")" << endl;
+                }
+            }
+        }
+    }
+
+    if (document.HasMember("GetAllPlanets")) {
+        const rapidjson::Value &getAllPlanets = document["GetAllPlanets"];
+        cout << "***********************************************" << endl;
+        cout << "     Informations about all planets: " << endl;
+        cout << "***********************************************" << endl;
+        for (auto &it: getPlanet()) {
+            cout << "* " << it.second->getName() << endl;
+            cout << "* " << "Description : " << it.second->getDescription() << endl;
+            auto planetIt = planetMap.find(it.second->getName());
+            if (planetIt != planetMap.end()) {
+                auto spaceship = planetIt->second;
+                std::cout << "* Residents : " << "\n";
+                for (auto &it: spaceship->getResident()) {
+                    cout << "    " << it.lock()->getName() << " (";
+                    cout << "Health : " << it.lock()->getHealth() << ", ";
+                    cout << "AP : " << it.lock()->getAttackPower() << ", ";
+                    cout << "DP : " << it.lock()->getArmorPower() << ")" << endl;
+                }
+            }
+            cout << "-----------------------------------" << endl;
+        }
+    }
+
+    if (document.HasMember("GetQuestByName")) {
+        const rapidjson::Value &getQuestByName = document["GetQuestByName"];
+        if (getQuestByName.HasMember("QuestName")) {
+            string questName = getQuestByName["QuestName"].GetString();
+            auto questIt = questMap.find(questName);
+            if (questIt != questMap.end()) {
+                auto quest = questIt->second;
+                cout << "***********************************************" << endl;
+                std::cout << "     Informations about quest " << "\n";
+                cout << "***********************************************" << endl;
+                std::cout << "* Name : " << quest->getName() << "\n";
+                std::cout << "* Description : " << quest->getDescription() << "\n";
+            } else {
+                std::cout << "Quest" << questName << " hasn't been found.\n";
+            }
+        }
+    }
+
+    if (document.HasMember("GetAllQuests")) {
+        const rapidjson::Value &getAllQuests = document["GetAllQuests"];
+        cout << "***********************************************" << endl;
+        cout << "     Informations about all quests: " << endl;
+        cout << "***********************************************" << endl;
+        for (auto &it: getQuest()) {
+            cout << "* " << it.second->getName() << endl;
+            cout << "* " << "Description : " << it.second->getDescription() << endl;
+            cout << "-----------------------------------" << endl;
+        }
+    }
+/*    if (document.HasMember("addCharacter")){
+        const rapidjson::Value &addCharacter = document["addNewCharacter"];
+        // Extraire les informations du message JSON
+        string name = addCharacter["name"].GetString();
+        string description = addCharacter["description"].GetString();
+        int health = addCharacter["health"].GetInt();
+        int attackPower = addCharacter["attackPower"].GetInt();
+        int armorPower = addCharacter["armorPower"].GetInt();
+        string placeType = addCharacter["placeType"].GetString();
+        string place = addCharacter["place"].GetString();
+        // Créer et ajouter le personnage à la map characterMap
+        auto newCharacter = make_shared<Character>(name, description, health, attackPower, armorPower,
+                                                   placeType, place);
+        addCharacter(newCharacter);
+    }*/
+
 }
 
 void Controller::saveGame() {
@@ -274,7 +468,7 @@ void Controller::cleanWeakPtr(
     vec.clear();
 }
 
-bool Controller::deleteCharacter(const string& name) {
+bool Controller::deleteCharacter(const string &name) {
     // Rechercher le personnage dans la map characterMap
     auto it = characterMap.find(name);
     auto it2 = enemyMap.find(name);
@@ -308,8 +502,7 @@ bool Controller::deleteCharacter(const string& name) {
         }
         characterMap.erase(characterName);
         return true;
-    }
-    else if (it2 != enemyMap.end()) {
+    } else if (it2 != enemyMap.end()) {
         string enemyName = it2->first;
         // Vérifier si le pointeur de personnage est nul
         if (enemyMap[enemyName]) {
@@ -338,30 +531,27 @@ bool Controller::deleteCharacter(const string& name) {
         }
         enemyMap.erase(enemyName);
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
-bool Controller::deleteSpaceship(const string& name) {
+bool Controller::deleteSpaceship(const string &name) {
     // Rechercher le vaisseau dans la map spaceshipMap
     auto it = spaceshipMap.find(name);
     if (it == spaceshipMap.end()) {
         return false;
-    }
-    else {
+    } else {
         string spaceshipName = it->first;
         if (spaceshipMap[spaceshipName]) {
             // Parcourir les membres de l'équipage du vaisseau
-            for (auto member : it->second->getCrew()) {
+            for (auto member: it->second->getCrew()) {
                 if (auto character = dynamic_pointer_cast<Character>(member.lock())) {
                     // Vérifier si c'est un ennemi
                     if (auto enemy = dynamic_pointer_cast<Enemy>(character)) {
                         cout << "Suppression de l'ennemi : " << enemy->getName() << endl;
                         enemyMap.erase(enemy->getName());
-                    }
-                    else {
+                    } else {
                         // Supprimer le personnage de la map characterMap
                         cout << "Suppression du personnage: " << character->getName() << endl;
                         characterMap.erase(character->getName());
@@ -375,24 +565,22 @@ bool Controller::deleteSpaceship(const string& name) {
     }
 }
 
-bool Controller::deletePlanet(const string& name) {
+bool Controller::deletePlanet(const string &name) {
     // Rechercher la planète dans la map planetMap
     auto it = planetMap.find(name);
     if (it == planetMap.end()) {
         return false;
-    }
-    else {
+    } else {
         string planetName = it->first;
         if (planetMap[planetName]) {
             // Parcourir les résidents de la planète
-            for (auto resident : it->second->getResident()) {
+            for (auto resident: it->second->getResident()) {
                 if (auto character = dynamic_pointer_cast<Character>(resident.lock())) {
                     // Vérifier si c'est un ennemi
                     if (auto enemy = dynamic_pointer_cast<Enemy>(character)) {
                         cout << "Suppression de l'ennemi : " << enemy->getName() << endl;
                         enemyMap.erase(enemy->getName());
-                    }
-                    else {
+                    } else {
                         // Supprimer le personnage de la map characterMap
                         cout << "Suppression du personnage: " << character->getName() << endl;
                         characterMap.erase(character->getName());
@@ -405,7 +593,6 @@ bool Controller::deletePlanet(const string& name) {
         return true;
     }
 }
-
 
 bool Controller::deleteQuest(const std::string &name) {
     //Rechercher la mission dans la map
@@ -428,8 +615,8 @@ bool Controller::deleteQuest(const std::string &name) {
 
 bool Controller::neutralAttack(string assailant, string defender) {
 
-    auto as = setupRole(assailant,defender)[0];
-    auto def = setupRole(assailant,defender)[1];
+    auto as = setupRole(assailant, defender)[0];
+    auto def = setupRole(assailant, defender)[1];
 
     int damage = as->getAttackPower();
     int defHealth = def->getHealth();
@@ -454,8 +641,7 @@ vector<shared_ptr<Character>> Controller::setupRole(string assailant, string def
         roles.push_back(it->second);
         auto def = enemyMap.find(defender);
         roles.push_back(def->second);
-    }
-    else if(it2 != enemyMap.end()) {
+    } else if (it2 != enemyMap.end()) {
         roles.push_back(it2->second);
         auto def = characterMap.find(defender);
         roles.push_back(def->second);

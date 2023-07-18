@@ -7,6 +7,7 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/vcs.xml
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -43,10 +44,15 @@
 # CMake
 cmake-build-debug/
 !cmake-build-debug/gameData.json
+!cmake-build-debug/actionsData.json
 CMakeLists.txt
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
 
 #Build
-galactic-game
+galactic_game
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml

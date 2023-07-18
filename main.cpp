@@ -1,11 +1,8 @@
 // main.cpp
-
 #include <iostream>
 #include <string>
 #include "Controller.h"
-#include "rapidjson-master/include/rapidjson/document.h"
 
-#define DEBUG
 
 using namespace std;
 
@@ -128,7 +125,7 @@ int main() {
 
     string savedFile= "save.txt";
     string gameFile= "gameData.json";
-    string actionsFile= "actionsData.json";
+    string actionsFile= "cmake-build-debug/actionsData.json";
     Controller controller(gameFile, savedFile);
 
     controller.loadGame();
