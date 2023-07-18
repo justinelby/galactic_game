@@ -38,6 +38,7 @@ public:
     void addPlanet(const shared_ptr<Planet>&);
     void addQuest(const shared_ptr<Quest>&);
     void addToGameInventory(unique_ptr<Item>&);
+    void addToCharacterInventory(shared_ptr<Character>&, unique_ptr<Item>&);
     bool deleteCharacter(const string& name);
     bool deleteSpaceship(const string& name);
     bool deletePlanet(const string& name);
@@ -46,6 +47,7 @@ public:
     void cleanUniquePtr(map<string, unique_ptr<Item>>&);
 
     bool neutralAttack(string, string);  // returns true if enemy dies
+    void looting(shared_ptr<Character>, unique_ptr<Item>&);
     string characterToString();
     string spaceshipToString();
     string planetToString();
@@ -65,7 +67,7 @@ private :
     string savedFile;
     // Methods
     vector<shared_ptr<Character>> setupRole(string, string);
-
+    bool isReplacing();
 };
 
 

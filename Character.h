@@ -41,8 +41,6 @@ public:
     void setPlace(const string &place);
     map<string, unique_ptr<Item>>& getInventory();
 
-    void addToInventory(unique_ptr<Item>&);
-    void looting(unique_ptr<Item>&);        // bool ==> if l'echange a eu lieu
 protected:
     int ap;
     int dp;
@@ -55,8 +53,6 @@ private:
     string place;
     map<string, unique_ptr<Item>> inventory;
 
-    // Methods
-    bool isLooting();
 };
 
 #endif //JEU_PERSONNAGES_CHARACTER_H

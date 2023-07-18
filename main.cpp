@@ -181,9 +181,25 @@ int main() {
 
     for(auto it = controller.getInventory().begin(); it != controller.getInventory().end(); it++) {
         if(alex->getInventory().size() < 5)
-            alex->addToInventory(it->second);
+            controller.addToCharacterInventory(alex, it->second);
     }
-    controller.cleanUniquePtr(controller.getInventory());   // cleaning game Inventory
+
+    cout << "GAME INVENTORY 1 " << endl;
+    for (auto& it : controller.getInventory()) {
+        if(it.second == nullptr)
+            cout << "null print" << endl;
+        else
+            cout << it.second->getName() << endl;
+    }
+
+
+    cout << "GAME INVENTORY 2 " << endl;
+    for (auto& it : controller.getInventory()) {
+        if(it.second == nullptr)
+            cout << "null print" << endl;
+        else
+            cout << it.second->getName() << endl;
+    }
 
     cout << "-----------------" << endl;
     displayCharacterInventory(alex);
@@ -193,9 +209,36 @@ int main() {
 
 
     cout << "MOVE POTION POISON 3" << endl;
-    auto soloItem = std::move(controller.getInventory()["Potion of Poison III"]);
+    auto poison = std::move(controller.getInventory()["Potion of Poison III"]);
     cout << "-----------------" << endl;
     displayControllerItems(controller);
+
+    cout << "ALEX LOOT POISON III ?" << endl;
+    controller.looting(alex, poison);
+    for (auto& it : alex->getInventory()) {
+        cout << it.second->getName() << endl;
+    }
+
+    cout << "------------------" << endl;
+    cout << "GAME INVENTORY 2 " << endl;
+    for (auto& it : controller.getInventory()) {
+        if(it.second == nullptr)
+            cout << "null print" << endl;
+        else
+            cout << it.second->getName() << endl;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     /*   string p1 = "Alex Starborn", p2 = "Alien 1";
 
        auto p1Infos = controller.getCharacter()[p1];
