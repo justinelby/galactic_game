@@ -1,6 +1,7 @@
 // Server.cpp
 
 #include "Server.h"
+#include "Controller.h"
 #include <cstring> // pour la fonction strerror
 #include <netinet/in.h>
 #include <iostream> // input output
@@ -34,7 +35,12 @@
 // current connections
 int connection = 0;
 
-Server::Server() {
+struct ConnectionData {
+    int conn_id;
+    Controller* controller;
+};
+
+Server::Server(Controller* controller) : controller(controller) {
     // Initialize any necessary members
 }
 
@@ -121,9 +127,13 @@ int Server::run() {
             } else {
                 std::cout << "[INFO] NEW CONNECTION ACCEPTED FROM " << inet_ntoa(client.sin_addr) << ":" << ntohs(client.sin_port) << "\n";
                 // create new thread for new connection
-                if (pthread_create(&thread_id, &attr, &Server::connection_handler, new int(conn_id)) == -1) {
+                ConnectionData* data = new ConnectionData;
+                data->conn_id = conn_id;
+                data->controller = controller;
+                if (pthread_create(&thread_id, &attr, &Server::connection_handler, data) == -1) {
                     std::cout << "[WARNING] CAN'T CREATE NEW THREAD\n";
                     close(conn_id);
+                    delete data;
                 } else {
                     std::cout << "[INFO] NEW THREAD CREATED\n";
                     connection++; // increase connection count
@@ -135,7 +145,7 @@ int Server::run() {
 }
 
 // This will handle connection for each client
-void* Server::connection_handler(void* sock_fd) {
+void* Server::connection_handler(void* data) {
     /* clock_t clock(void) returns the number of clock ticks
        elapsed since the program was launched.To get the number
        of seconds used by the CPU, you will need to divide by
@@ -150,7 +160,8 @@ void* Server::connection_handler(void* sock_fd) {
     int read_byte = 0;
 
     // Get the socket descriptor
-    int conn_id = *(int*)sock_fd;
+    int conn_id = reinterpret_cast<ConnectionData*>(data)->conn_id;
+    Controller* controller = reinterpret_cast<ConnectionData*>(data)->controller;
 
     // request data
     char buffer[BUFFER_SIZE] = {0};
@@ -205,6 +216,38 @@ void* Server::connection_handler(void* sock_fd) {
 
             std::cout << "[RECEIVED JSON]: " << jsonContent << "\n";
 
+            std::ifstream file("./cmake-build-debug/actionsData.json");
+            if (!file.is_open()) {
+                std::cout << "Le fichier de chargement des fonctions ne s'est pas ouvert" << std::endl;
+            }
+            // Lecture du contenu du fichier JSON
+            std::string fileJsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            file.close();
+
+            // Création du document JSON
+            rapidjson::Document document;
+            document.Parse(fileJsonContent.c_str());
+
+            if (document.HasMember("Attack")) {
+                // Extraction de l'action "Attack" du document JSON
+                const rapidjson::Value& attack = document["Attack"];
+
+                // Vérifier si les clés "Assaillant" et "Défenseur" sont présentes
+                if (attack.HasMember("Assailant") && attack.HasMember("Defenseur")) {
+                    std::string assailant = attack["Assailant"].GetString();
+                    std::string defender = attack["Defenseur"].GetString();
+
+                    // Appeler la fonction neutralAttack avec les noms des personnages assailant et defender
+                    bool result = controller->neutralAttack(assailant, defender);
+                    if (result) {
+                        std::cout << "Le personnage " << defender << " a été éliminé.\n";
+                    } else {
+                        std::cout << "Le personnage " << defender << " a subi des dégâts.\n";
+                    }
+                } else {
+                    std::cout << "Les clés 'Assaillant' et 'Défenseur' sont manquantes dans la clé 'attack'.\n";
+                }
+            }
 
             // Réinitialiser jsonData pour traiter les messages suivants
             jsonData = "";
@@ -237,7 +280,7 @@ void* Server::connection_handler(void* sock_fd) {
     // thread automatically terminate after exit connection handler
     std::cout << "[INFO] THREAD TERMINATED" << std::endl;
 
-    delete (int*)sock_fd;
+    delete reinterpret_cast<ConnectionData*>(data);
 
     // Recording the end clock tick.
     end = clock();

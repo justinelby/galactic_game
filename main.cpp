@@ -130,7 +130,7 @@ int main() {
 
     controller.loadGame();
     // controller.loadActions(actionsFile);
-    Server server;
+    Server server(&controller);
     server.run();
     //controller.saveGame();
 

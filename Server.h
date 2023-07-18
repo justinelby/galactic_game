@@ -3,17 +3,19 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <pthread.h>
+class Controller; // Forward declaration of Controller class
 
 class Server {
 public:
-    Server();
+    Server(Controller* controller);
     ~Server();
     int run();
 
+    // Static member function for connection handler
+    static void* connection_handler(void* data);
+
 private:
-    static void *connection_handler(void *sock_fd);
-    // Déclarez les autres membres de la classe nécessaires pour le serveur
+    Controller* controller;
 };
 
 #endif // SERVER_H
