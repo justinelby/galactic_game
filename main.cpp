@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include "Controller.h"
-
+#include "Server.h"
 
 using namespace std;
 
@@ -125,12 +125,13 @@ int main() {
 
     string savedFile= "save.txt";
     string gameFile= "gameData.json";
-    string actionsFile= "cmake-build-debug/actionsData.json";
+   // string actionsFile= "cmake-build-debug/actionsData.json";
     Controller controller(gameFile, savedFile);
 
     controller.loadGame();
-    controller.loadActions(actionsFile);
-
+    // controller.loadActions(actionsFile);
+    Server server;
+    server.run();
     //controller.saveGame();
 
     return 0;

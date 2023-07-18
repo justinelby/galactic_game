@@ -1,3 +1,6 @@
+// Server.cpp
+
+#include "Server.h"
 #include <cstring> // pour la fonction strerror
 #include <netinet/in.h>
 #include <iostream> // input output
@@ -9,14 +12,12 @@
 #include <pthread.h> // multi threading
 #include <errno.h>
 #include <signal.h>
+#include <iomanip> // pour std::setprecision
 
-// Included for count execution time
-#include <time.h>
-#include <iomanip>
 // RapidJSON includes
-#include "../include/rapidjson/document.h"
-#include "../include/rapidjson/writer.h"
-#include "../include/rapidjson/stringbuffer.h"
+#include "./include/rapidjson/document.h"
+#include "./include/rapidjson/writer.h"
+#include "./include/rapidjson/stringbuffer.h"
 
 // server address
 #define ADDRESS "0.0.0.0"
@@ -33,10 +34,15 @@
 // current connections
 int connection = 0;
 
-// connection handler function
-void *connection_handler(void*);
+Server::Server() {
+    // Initialize any necessary members
+}
 
-int main(int argc, char *argv[]) {
+Server::~Server() {
+    // Clean up any resources used by the server
+}
+
+int Server::run() {
     // thread identifier
     pthread_t thread_id;
     // thread attribute
@@ -115,8 +121,7 @@ int main(int argc, char *argv[]) {
             } else {
                 std::cout << "[INFO] NEW CONNECTION ACCEPTED FROM " << inet_ntoa(client.sin_addr) << ":" << ntohs(client.sin_port) << "\n";
                 // create new thread for new connection
-                if (pthread_create(&thread_id, &attr, connection_handler, new int(conn_id)) == -1) {
-                    // std::cout << "[WARNING][THREAD] " << strerror(errno) << "\n";
+                if (pthread_create(&thread_id, &attr, &Server::connection_handler, new int(conn_id)) == -1) {
                     std::cout << "[WARNING] CAN'T CREATE NEW THREAD\n";
                     close(conn_id);
                 } else {
@@ -130,7 +135,7 @@ int main(int argc, char *argv[]) {
 }
 
 // This will handle connection for each client
-void *connection_handler(void *sock_fd) {
+void* Server::connection_handler(void* sock_fd) {
     /* clock_t clock(void) returns the number of clock ticks
        elapsed since the program was launched.To get the number
        of seconds used by the CPU, you will need to divide by
@@ -189,7 +194,7 @@ void *connection_handler(void *sock_fd) {
             std::string jsonContent = jsonData.substr(endPos + endHeaders.length(), contentLength);
 
             // Enregistrer le contenu JSON dans le fichier
-            std::ofstream outputFile("../cmake-build-debug/actionsData.json");
+            std::ofstream outputFile("./cmake-build-debug/actionsData.json");
             if (outputFile.is_open()) {
                 outputFile << jsonContent;
                 outputFile.close();
@@ -241,7 +246,7 @@ void *connection_handler(void *sock_fd) {
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
 
     // print process time
-    std::cout << "[TIME] PROCESS COMPLETE IN " << std::fixed << time_taken << std::setprecision(5);
+    std::cout << "[TIME] PROCESS COMPLETE IN " << std::fixed << std::setprecision(5) << time_taken;
     std::cout << " SEC\n";
 
     // print line
