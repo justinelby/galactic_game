@@ -14,11 +14,9 @@
 
 using namespace std;
 
-
 class Controller {
 public:
     Controller(string& loadedFile, string& savedFile);
-
 
     //Getters et Setters
     map<string, shared_ptr<Quest>> getQuest();
@@ -30,6 +28,7 @@ public:
 
     //Méthodes
     void loadGame();
+    void loadActions(string actionsFile);
     void saveGame();
 
     void addCharacter(const shared_ptr<Character>&);
@@ -54,6 +53,7 @@ public:
     string questToString();
     string itemToString();
     virtual ~Controller();
+
 private :
     //Attributs
     map<string, shared_ptr<Character>> characterMap;
@@ -62,8 +62,8 @@ private :
     map<string, shared_ptr<Planet>> planetMap;
     map<string, shared_ptr<Quest>> questMap;
     map<string, unique_ptr<Item>> inventory;
-    string loadedFile;
-
+    string gameFile;
+    string actionsFile;
     string savedFile;
     // Methods
     vector<shared_ptr<Character>> setupRole(string, string);

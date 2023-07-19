@@ -1,13 +1,13 @@
-// main.cpp
-
 #include <iostream>
 #include <string>
 #include "Controller.h"
+#include "Server.h"
 
 using namespace std;
 
 
-void displayAllCharacters(Controller &controller) {
+/// TESTING FUNCTIONS
+/*void displayAllCharacters(Controller &controller) {
     cout << "Affichage des Characters : " << endl;
     for( auto it : controller.getCharacter()){
         cout << it.second->getName() << " ";
@@ -28,13 +28,6 @@ void displayAllEnemies(Controller &controller) {
         cout << it.second->getArmorPower() << " " ;
         cout << it.second->getPlaceType() << " " ;
         cout << it.second->getPlace() << endl;
-    }
-}
-void displayAllQuest(Controller &controller) {
-    cout << "Affichage des missions : " << endl;
-    for( auto it : controller.getQuest()){
-        cout << it.second->getName() << " ";
-        cout << it.second->getDescription() << " ";
     }
 }
 
@@ -58,16 +51,41 @@ void displayControllerItems(Controller &controller){
     }
 }
 
-void displayCharacterInventory(shared_ptr<Character>& character) {
-    cout << character->getName() << "'s inventory : " << endl;
-    if (character->getInventory().empty()) {
-        cout << "Empty inventory !" << endl;
-    } else {
-        for (auto &it: character->getInventory()) {
-            cout << it.second->getName() << " ";
-            cout << it.second->getDescription() << " ";
-            cout << it.second->getEffect() << endl;
+void displayAllInfo(Controller &controller){
+    displayAllCharacters(controller);
+    cout << "---------------------" << endl;
+
+    displayAllEnemies(controller);
+    cout << "---------------------" << endl;
+
+    displayAllQuest(controller);
+    cout << "---------------------" << endl;
+
+    displayControllerItems(controller);
+    cout << "---------------------" << endl;
+
+    cout << "Affichage des résidents par Planet : " << endl;
+    for( auto it : controller.getPlanet()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getResident()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower() << " ";
+            cout << i.lock()->getArmorPower() << endl;
         }
+        cout << "--------" << endl;
+    }
+    cout << "---------------------" << endl;
+    cout << "Affichage des crewmates par Spaceship : " << endl;
+    for( auto it : controller.getSpaceship()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getCrew()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower();
+            cout << i.lock()->getArmorPower() << endl;
+        }
+        cout << "--------" << endl;
     }
 }
 
@@ -112,6 +130,7 @@ void deleteQuestTest(Controller &controller){
     } while (result4 == false);
 }
 
+
 void debugDisplayWeakPtrNbr(Controller &controller){
     cout << "------Nb weak" <<endl;
     int count = 0;
@@ -123,207 +142,20 @@ void debugDisplayWeakPtrNbr(Controller &controller){
         }
     }
     cout << count << endl;
-}
-
-void displayAllInfo(Controller &controller){
-    displayAllCharacters(controller);
-    cout << "---------------------" << endl;
-
-    displayAllEnemies(controller);
-    cout << "---------------------" << endl;
-
-    displayAllQuest(controller);
-    cout << "---------------------" << endl;
-
-    displayControllerItems(controller);
-    cout << "---------------------" << endl;
-
-    cout << "Affichage des résidents par Planet : " << endl;
-    for( auto it : controller.getPlanet()){
-        cout << it.second->getName() << endl;
-        for (auto i : it.second->getResident()) {
-            cout << i.lock()->getName() << " ";
-            cout << i.lock()->getHealth() << " ";
-            cout << i.lock()->getAttackPower() << " ";
-            cout << i.lock()->getArmorPower() << endl;
-        }
-        cout << "--------" << endl;
-    }
-    cout << "---------------------" << endl;
-    cout << "Affichage des crewmates par Spaceship : " << endl;
-    for( auto it : controller.getSpaceship()){
-        cout << it.second->getName() << endl;
-        for (auto i : it.second->getCrew()) {
-            cout << i.lock()->getName() << " ";
-            cout << i.lock()->getHealth() << " ";
-            cout << i.lock()->getAttackPower();
-            cout << i.lock()->getArmorPower() << endl;
-        }
-        cout << "--------" << endl;
-    }
-}
-
+}*/
 
 
 //Code contenant l'execution du menu et le jeu
 int main() {
+
     string savedFile= "save.txt";
-    string loadedFile= "data.txt";
-    Controller controller(loadedFile, savedFile);
+    string gameFile= "gameData.json";
+    Controller controller(gameFile, savedFile);
+
     controller.loadGame();
-
-//    displayAllCharacters(controller);
-
-    displayControllerItems(controller);
-
-    auto alex = controller.getCharacter()["Alex Starborn"];
-
-
-    for(auto it = controller.getInventory().begin(); it != controller.getInventory().end(); it++) {
-        if(alex->getInventory().size() < 5)
-            controller.addToCharacterInventory(alex, it->second);
-    }
-
-    cout << "GAME INVENTORY 1 " << endl;
-    for (auto& it : controller.getInventory()) {
-        if(it.second == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it.second->getName() << endl;
-    }
-
-
-    cout << "GAME INVENTORY 2 " << endl;
-    for (auto& it : controller.getInventory()) {
-        if(it.second == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it.second->getName() << endl;
-    }
-
-    cout << "-----------------" << endl;
-    displayCharacterInventory(alex);
-    cout << "-----------------" << endl;
-    displayControllerItems(controller);
-    cout << "-----------------" << endl;
-
-
-    cout << "MOVE POTION POISON 3" << endl;
-    auto poison = std::move(controller.getInventory()["Potion of Poison III"]);
-    cout << "-----------------" << endl;
-    displayControllerItems(controller);
-
-    cout << "ALEX LOOT POISON III ?" << endl;
-    controller.looting(alex, poison);
-    for (auto& it : alex->getInventory()) {
-        cout << it.second->getName() << endl;
-    }
-
-    cout << "------------------" << endl;
-    cout << "GAME INVENTORY 2 " << endl;
-    for (auto& it : controller.getInventory()) {
-        if(it.second == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it.second->getName() << endl;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    /*   string p1 = "Alex Starborn", p2 = "Alien 1";
-
-       auto p1Infos = controller.getCharacter()[p1];
-       auto p2Infos = controller.getEnemy()[p2];
-
-       cout << p1Infos->getName() << " " << p1Infos->getStatus()[0] << " " << p1Infos->getStatus()[1] << " " << p1Infos->getStatus()[2] << endl;
-       cout << p2Infos->getName() << " " << p2Infos->getStatus()[0] << " " << p2Infos->getStatus()[1] << " " << p2Infos->getStatus()[2] << endl;
-
-
-       bool combatIsOver = controller.neutralAttack(p1,p2);
-       if (combatIsOver){
-           cout << p1 << " a execute " << p2 << endl;
-       }*/
-
-    //displayAllEnemies(controller);
-
+    Server server(&controller);
+    server.run();
     //controller.saveGame();
-
-
-///Boucle de jeu
-//    bool isRunning = true;
-//
-//    while (isRunning){
-//        // Afficher le menu principal
-//        displayMenu();
-//
-//        //Obtenir l'entrée du joueur
-//        int choix;
-//        cout << "Entrez votre choix : ";
-//        cin >> choix;
-//
-//        // Exécuter l'action correspondante
-//        switch (choix) {
-//            case 1: {
-//                // Récupération du vecteur de character, vaisseau, planet, mission à partir de l'objet "controller"
-//                auto character = controller.getCharacter();
-//                auto spaceship = controller.getSpaceship();
-//                auto planet = controller.getPlanet();
-//                auto mission = controller.getQuest();
-//
-//                // Afficher les personnages
-//                if (character.empty()) {
-//                    cout << "Il n'y a pas de personnages disponibles pour le moment." << endl;
-//                } else {
-//                    cout << "\n===== Personnages disponibles =====" << endl;
-//                    for (auto Character : character) {
-//                        cout << Character->getName() << ", " << Character->getPoste() << ", " << Character->getHealth() << ", " << Character->getAttackPower() << ", " << Character->getPlaceType() << ", " << Character->getPlace() << endl;
-//                    }
-//                    cout << "\n===== Spaceship disponibles =====" << endl;
-//                    for (auto Spaceship : spaceship) {
-//                        cout << "- " << Spaceship->getName() << endl;
-//                    }
-//                    cout << "\n===== Planetes existantes =====" << endl;
-//                    for (auto Planet : planet) {
-//                        cout << "- " << Planet->getName() << " : " << Planet->getDescription() << endl;
-//                    }
-//                    cout << "\n===== Missions =====" << endl;
-//                    for (auto Mission : mission) {
-//                        cout << Mission->getName() << " : " << Mission->getDescription() << endl;
-//                    }
-//                }
-//                break;
-//            }
-//            case 2: {
-//                // Parler aux personnages
-//                break;
-//            }
-//            case 3: {
-//                // Voyager vers une autre planète
-//                break;
-//            }
-//            case 0: {
-//                // Quitter le jeu
-//                isRunning = false;
-//                break;
-//            }
-//            default: {
-//                cout << "Choix invalide. Veuillez réessayer." << endl;
-//                break;
-//            }
-//        }
-//    }
-
-
 
     return 0;
 }
-
