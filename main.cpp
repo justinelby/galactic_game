@@ -31,7 +31,7 @@ void displayAllEnemies(Controller &controller) {
     }
 }
 
-void displayControllerItems(Controller &controller){
+*/void displayControllerItems(Controller &controller){
     if(controller.getInventory().empty()){
         cout << "Empty Game Inventory !" << endl;
     }
@@ -49,7 +49,7 @@ void displayControllerItems(Controller &controller){
         }
 
     }
-}
+}/*
 
 void displayAllInfo(Controller &controller){
     displayAllCharacters(controller);
@@ -153,9 +153,9 @@ int main() {
     Controller controller(gameFile, savedFile);
 
     controller.loadGame();
-    Server server(&controller);
-    server.run();
+    //Server server(&controller);
+    //server.run();
     //controller.saveGame();
-
+ displayControllerItems(controller);
     return 0;
 }
