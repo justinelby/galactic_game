@@ -192,51 +192,29 @@ void *Server::connection_handler(void *data)
 
     // request data
     char buffer[BUFFER_SIZE] = {0};
-    std::string jsonData;
-    bool headersReceived = false;
-    bool contentLengthReceived = false;
-    int contentLength = 0;
-    int totalBytesReceived = 0;
+
+    // read response continue
+    std::string receivedData;
 
     while ((read_byte = recv(conn_id, buffer, BUFFER_SIZE, 0)) > 0)
     {
-        // Ajouter les données lues dans le tampon
-        jsonData += buffer;
+        receivedData += buffer;
 
-        // Mettre à jour le nombre total d'octets reçus
-        totalBytesReceived += read_byte;
+        std::cout << "[RECEIVED] " << buffer << "\n";
+        // clear buffer data
+        memset(buffer, 0, BUFFER_SIZE);
 
-        // Rechercher les en-têtes de fin du message HTTP
-        std::string endHeaders = "\r\n\r\n";
-        size_t endPos = jsonData.find(endHeaders);
-        if (!headersReceived && endPos != std::string::npos)
+        // Enregistrer le contenu JSON dans le fichier
+        // Rechercher la position du premier '{' dans receivedData
+        size_t startPos = receivedData.find_first_of('{');
+
+        // Rechercher la position du dernier '}' dans receivedData
+        size_t endPos = receivedData.find_last_of('}');
+
+        if (startPos != std::string::npos && endPos != std::string::npos)
         {
-            // Les en-têtes ont été reçus, vous pouvez marquer les en-têtes comme reçus
-            headersReceived = true;
-
-            // Extraire le contenu de l'en-tête Content-Length
-            std::string contentLengthHeader = "Content-Length: ";
-            size_t contentLengthPos = jsonData.find(contentLengthHeader);
-            if (contentLengthPos != std::string::npos)
-            {
-                contentLengthPos += contentLengthHeader.length();
-                size_t endLinePos = jsonData.find("\r\n", contentLengthPos);
-                if (endLinePos != std::string::npos)
-                {
-                    std::string contentLengthStr = jsonData.substr(contentLengthPos, endLinePos - contentLengthPos);
-                    contentLength = std::stoi(contentLengthStr);
-                    contentLengthReceived = true;
-                }
-            }
-        }
-
-        // Si le contenu JSON a été entièrement reçu
-
-        if (headersReceived && contentLengthReceived &&
-            totalBytesReceived >= (endPos + endHeaders.length() + contentLength))
-        {
-            // Extraire le contenu JSON à partir des en-têtes
-            std::string jsonContent = jsonData.substr(endPos + endHeaders.length(), contentLength);
+            // Extraire la partie JSON de receivedData
+            std::string jsonContent = receivedData.substr(startPos, endPos - startPos + 1);
 
             // Enregistrer le contenu JSON dans le fichier
             std::ofstream outputFile("./cmake-build-debug/actionsData.json");
@@ -248,114 +226,114 @@ void *Server::connection_handler(void *data)
             }
             else
             {
-                std::cout
-                    << "Erreur lors de l'ouverture du fichier actionsData.json pour l'enregistrement du message JSON\n";
+                std::cout << "Erreur lors de l'ouverture du fichier actionsData.json pour l'enregistrement du message JSON\n";
             }
 
             std::cout << "[RECEIVED JSON]: " << jsonContent << "\n";
 
-            std::ifstream file("./cmake-build-debug/actionsData.json");
-            if (!file.is_open())
+            receivedData.clear(); // Effacer le contenu traité
+        }
+        else
+        {
+            std::cout << "Erreur : Aucun objet JSON trouvé dans les données reçues\n";
+        }
+
+        std::cout << "[RECEIVED JSON]: " << receivedData << "\n";
+
+        std::ifstream file("./cmake-build-debug/actionsData.json");
+        if (!file.is_open())
+        {
+            std::cout << "Le fichier de chargement des fonctions ne s'est pas ouvert" << std::endl;
+        }
+        // Lecture du contenu du fichier JSON
+        std::string fileJsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        file.close();
+
+        // Création du document JSON
+        rapidjson::Document document;
+        document.Parse(fileJsonContent.c_str());
+
+        // Find the method name from the JSON request
+        string methodName;
+        for (auto &member : document.GetObject())
+        {
+            if (member.name.IsString())
             {
-                std::cout << "Le fichier de chargement des fonctions ne s'est pas ouvert" << std::endl;
+                methodName = member.name.GetString();
+                break;
             }
-            // Lecture du contenu du fichier JSON
-            std::string fileJsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-            file.close();
+        }
 
-            // Création du document JSON
-            rapidjson::Document document;
-            document.Parse(fileJsonContent.c_str());
+        // Prepare the JSON response
+        rapidjson::StringBuffer sb;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
 
-            // Find the method name from the JSON request
-            string methodName;
-            for (auto &member : document.GetObject())
+        // Check if the message is for getting character info
+        if (methodName == "GetCharacterInfo")
+        {
+            const rapidjson::Value &getCharacterInfo = document["GetCharacterInfo"];
+
+            writer.StartObject();
+            writer.Key("GetCharacterInfo");
+            writer.StartObject();
+            if (getCharacterInfo.HasMember("CharacterName"))
             {
-                if (member.name.IsString())
+                string characterName = getCharacterInfo["CharacterName"].GetString();
+                cout << "Test with new command = " << controller->getCharacter().find(characterName)->second->getDescr() << endl;
+                cout << "CharacterName fix variable = " << characterName << endl;
+                auto characterIt = controller->getCharacter().find(characterName);
+                cout << "CharacterIt = " << characterIt->second->getName() << endl;
+                if (characterIt != controller->getCharacter().end())
                 {
-                    methodName = member.name.GetString();
-                    break;
+                    writer.String("Name");
+                    writer.String(controller->getCharacter().find(characterName)->second->getName().c_str());
+                    writer.String("Description");
+                    writer.String(controller->getCharacter().find(characterName)->second->getDescr().c_str());
+                    writer.String("Health");
+                    writer.Int(controller->getCharacter().find(characterName)->second->getHealth());
+                    writer.String("AP");
+                    writer.Int(controller->getCharacter().find(characterName)->second->getAttackPower());
+                    writer.String("DP");
+                    writer.Int(controller->getCharacter().find(characterName)->second->getArmorPower());
+                    writer.String("Place");
+                    writer.String(controller->getCharacter().find(characterName)->second->getPlaceType().c_str());
+                    writer.String("Localisation");
+                    writer.String(controller->getCharacter().find(characterName)->second->getPlace().c_str());
+                }
+                else
+                {
+                    writer.String("Error");
+                    writer.String(("Character " + characterName + " hasn't been found.").c_str());
                 }
             }
+        }
 
-            // Prepare the JSON response
-            rapidjson::StringBuffer sb;
-            rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
+        // You can add more conditions for other methods here...
+        writer.EndObject();
+        writer.EndObject();
+        // clear buffer data
+        memset(buffer, 0, BUFFER_SIZE);
 
-            // Check if the message is for getting character info
-            if (methodName == "GetCharacterInfo")
-            {
-                const rapidjson::Value &getCharacterInfo = document["GetCharacterInfo"];
+        // response data
+        string jsonResponse = sb.GetString();
 
-                writer.StartObject();
-                writer.Key("GetCharacterInfo");
-                writer.StartObject();
-                if (getCharacterInfo.HasMember("CharacterName"))
-                {
-                    string characterName = getCharacterInfo["CharacterName"].GetString();
-                    cout << "Test with new command = " << controller->getCharacter().find(characterName)->second->getDescr() << endl;
-                    cout << "CharacterName fix variable = " << characterName << endl;
-                    auto characterIt = controller->getCharacter().find(characterName);
-                    cout << "CharacterIt = " << characterIt->second->getName() << endl;
-                    if (characterIt != controller->getCharacter().end())
-                    {
-                        writer.String("Name");
-                        writer.String(controller->getCharacter().find(characterName)->second->getName().c_str());
-                        writer.String("Description");
-                        writer.String(controller->getCharacter().find(characterName)->second->getDescr().c_str());
-                        writer.String("Health");
-                        writer.Int(controller->getCharacter().find(characterName)->second->getHealth());
-                        writer.String("AP");
-                        writer.Int(controller->getCharacter().find(characterName)->second->getAttackPower());
-                        writer.String("DP");
-                        writer.Int(controller->getCharacter().find(characterName)->second->getArmorPower());
-                        writer.String("Place");
-                        writer.String(controller->getCharacter().find(characterName)->second->getPlaceType().c_str());
-                        writer.String("Localisation");
-                        writer.String(controller->getCharacter().find(characterName)->second->getPlace().c_str());
-                    }
-                    else
-                    {
-                        writer.String("Error");
-                        writer.String(("Character " + characterName + " hasn't been found.").c_str());
-                    }
-                }
-            }
+        // Send the JSON response back to the client
+        std::string responseHeader;
+        responseHeader += "HTTP/1.1 200 OK\r\n";
+        responseHeader += "Content-Type: application/json\r\n";
+        responseHeader += "Connection: close\r\n";
+        responseHeader += "Content-Length: " + std::to_string(jsonResponse.length()) + "\r\n";
+        responseHeader += "\r\n";
 
-            // You can add more conditions for other methods here...
-            writer.EndObject();
-            writer.EndObject();
-            // clear buffer data
-            memset(buffer, 0, BUFFER_SIZE);
+        std::string fullResponse = responseHeader + jsonResponse;
 
-            // response data
-            string jsonResponse = sb.GetString();
-
-            // Send the JSON response back to the client
-            std::string responseHeader;
-            responseHeader += "HTTP/1.1 200 OK\r\n";
-            responseHeader += "Content-Type: application/json\r\n";
-            responseHeader += "Connection: close\r\n";
-            responseHeader += "Content-Length: " + std::to_string(jsonResponse.length()) + "\r\n";
-            responseHeader += "\r\n";
-
-            std::string fullResponse = responseHeader + jsonResponse;
-
-            if (send(conn_id, fullResponse.c_str(), fullResponse.length(), 0) > 0)
-            {
-                std::cout << "[SEND] " << fullResponse << "\n";
-            }
-            else
-            {
-                std::cout << "[WARNING][SEND] " << strerror(errno) << "\n";
-            }
-
-            // Réinitialiser jsonData pour traiter les messages suivants
-            jsonData = "";
-            headersReceived = false;
-            contentLengthReceived = false;
-            contentLength = 0;
-            totalBytesReceived = 0;
+        if (send(conn_id, fullResponse.c_str(), fullResponse.length(), 0) > 0)
+        {
+            std::cout << "[SEND] " << fullResponse << "\n";
+        }
+        else
+        {
+            std::cout << "[WARNING][SEND] " << strerror(errno) << "\n";
         }
     }
 
