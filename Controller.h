@@ -5,15 +5,14 @@
 #ifndef JEU_PERSONNAGES_CONTROLLER_H
 #define JEU_PERSONNAGES_CONTROLLER_H
 #include <map>
-#include <ctime>
 #include "Quest.h"
 #include "Character.h"
 #include "Enemy.h"
 #include "Planet.h"
 #include "Spaceship.h"
+#include "Item.h"
 
 using namespace std;
-
 
 class Controller {
 public:
@@ -25,6 +24,7 @@ public:
     map<string, shared_ptr<Enemy>> getEnemy();
     map<string, shared_ptr<Planet>> getPlanet();
     map<string, shared_ptr<Spaceship>> getSpaceship();
+    map<string, unique_ptr<Item>>& getInventory();
 
     //Méthodes
     void loadGame();
@@ -36,19 +36,22 @@ public:
     void addSpaceship(const shared_ptr<Spaceship>&);
     void addPlanet(const shared_ptr<Planet>&);
     void addQuest(const shared_ptr<Quest>&);
+    void addToGameInventory(unique_ptr<Item>&);
+    void addToCharacterInventory(shared_ptr<Character>&, unique_ptr<Item>&);
     bool deleteCharacter(const string& name);
     bool deleteSpaceship(const string& name);
     bool deletePlanet(const string& name);
     bool deleteQuest(const string& name);
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
+    void cleanUniquePtr(map<string, unique_ptr<Item>>&);
 
     bool neutralAttack(string, string);  // returns true if enemy dies
-
-
+    void looting(shared_ptr<Character>, unique_ptr<Item>&);
     string characterToString();
     string spaceshipToString();
     string planetToString();
     string questToString();
+    string itemToString();
     virtual ~Controller();
 
 private :
@@ -58,13 +61,13 @@ private :
     map<string, shared_ptr<Spaceship>> spaceshipMap;
     map<string, shared_ptr<Planet>> planetMap;
     map<string, shared_ptr<Quest>> questMap;
+    map<string, unique_ptr<Item>> inventory;
     string gameFile;
     string actionsFile;
     string savedFile;
-
     // Methods
     vector<shared_ptr<Character>> setupRole(string, string);
-
+    bool isReplacing();
 };
 
 

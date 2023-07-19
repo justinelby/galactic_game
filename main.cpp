@@ -1,4 +1,3 @@
-// main.cpp
 #include <iostream>
 #include <string>
 #include "Controller.h"
@@ -32,11 +31,37 @@ void displayAllEnemies(Controller &controller) {
     }
 }
 
+void displayControllerItems(Controller &controller){
+    if(controller.getInventory().empty()){
+        cout << "Empty Game Inventory !" << endl;
+    }
+    else
+    {
+        cout << "Game inventory : " << endl;
+        for( auto &it : controller.getInventory()){
+            if(it.second != nullptr)
+            {
+                cout << it.second->getName() << endl;
+                cout << it.second->getDescription() << endl;
+                cout << it.second->getEffect() << endl;
+                cout << "--------" << endl;
+            }
+        }
+
+    }
+}
+
 void displayAllInfo(Controller &controller){
     displayAllCharacters(controller);
     cout << "---------------------" << endl;
 
     displayAllEnemies(controller);
+    cout << "---------------------" << endl;
+
+    displayAllQuest(controller);
+    cout << "---------------------" << endl;
+
+    displayControllerItems(controller);
     cout << "---------------------" << endl;
 
     cout << "Affichage des résidents par Planet : " << endl;
@@ -125,15 +150,12 @@ int main() {
 
     string savedFile= "save.txt";
     string gameFile= "gameData.json";
-   // string actionsFile= "cmake-build-debug/actionsData.json";
     Controller controller(gameFile, savedFile);
 
     controller.loadGame();
-    // controller.loadActions(actionsFile);
     Server server(&controller);
     server.run();
     //controller.saveGame();
 
     return 0;
 }
-

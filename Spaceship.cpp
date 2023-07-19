@@ -3,7 +3,6 @@
 //
 
 #include "Spaceship.h"
-#include "Character.h"
 
 Spaceship::Spaceship(string nom) {
     this->name = nom;

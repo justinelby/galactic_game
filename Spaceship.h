@@ -9,9 +9,9 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include "Character.h"
 #include "Enemy.h"
-#include <memory>
 
 using namespace std;
 

@@ -6,11 +6,12 @@
 #define JEU_PERSONNAGES_PLANET_H
 #include <string>
 #include <vector>
-#include "Character.h"
-#include "Enemy.h"
 #include <fstream>
 #include <sstream>
 #include <memory>
+#include <algorithm>
+#include "Character.h"
+#include "Enemy.h"
 
 using namespace std;
 

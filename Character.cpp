@@ -1,9 +1,5 @@
 #include "Character.h"
-#include "Quest.h"
-#include <iostream>
-#include <string>
-#include <sstream>
-
+#define DEBUG
 
 Character::Character(string name, string desc, int hp, int ap, int dp, string placeType, string place)
 {
@@ -39,6 +35,8 @@ void Character::setPlaceType(const string &pt) { this->place = pt; }    // add v
 
 string Character::getPlace() const { return place; }
 void Character::setPlace(const string &pl) { this->place = pl; }    // add verification if input is valid
+
+map<string, unique_ptr<Item>>& Character::getInventory() { return inventory; }
 
 Character::~Character()
 {
