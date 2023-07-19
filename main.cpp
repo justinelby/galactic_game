@@ -153,9 +153,13 @@ int main() {
     Controller controller(gameFile, savedFile);
 
     controller.loadGame();
-    //Server server(&controller);
-    //server.run();
+    Server server(&controller);
+    server.run();
     //controller.saveGame();
- displayControllerItems(controller);
-    return 0;
+ //displayControllerItems(controller);
+	//string characterName = "Docteur Liara";
+	//cout << controller.getCharacter().find(characterName)->second->getDescr() << endl;
+                     
+
+return 0;
 }
