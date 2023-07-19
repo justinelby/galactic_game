@@ -256,16 +256,15 @@ void Controller::cleanWeakPtr(
     vec.clear();
 }
 
-void Controller::cleanUniquePtr(map<string, unique_ptr<Item>>& mapToClean) {
-    for (auto it = mapToClean.begin(); it != mapToClean.end();) {
-        if (it->second == nullptr) {
-            mapToClean.erase(it);
-        } else {
-            ++it;
-        }
-    }
-    //mapToClean.clear();    // deleting nullptr pointers
-}
+//void Controller::cleanUniquePtr(map<string, unique_ptr<Item>>& mapToClean) {
+//    for (auto it = mapToClean.begin(); it != mapToClean.end();) {
+//        if (it->second == nullptr) {
+//            mapToClean.erase(it);
+//        } else {
+//            ++it;
+//        }
+//    }
+//}
 
 void Controller::addToCharacterInventory(shared_ptr<Character>& character, unique_ptr<Item>& newItem) {
     if (character->getInventory().size() < 5) {             // each Character has a 5-item inventory
@@ -507,7 +506,15 @@ void Controller::looting(shared_ptr<Character> character, unique_ptr<Item>& loot
     }
 }
 
-
+void Controller::useItem(shared_ptr<Character>& character, unique_ptr<Item>& item) {
+    string itemKey = item->getName();   // va affecter des changements
+    if(itemKey == "Potion of Healing I" || itemKey == "Potion of Healing II" || itemKey == "Potion of Healing III")
+        character->setHealth(min(character->getmaxHp(), character->getHealth() + character->getInventory()[itemKey]->getEffect()));
+    else if(itemKey == "Potion of Max Healing")
+        character->setHealth(character->getmaxHp());
+    else if (itemKey == "Potion of Poison I" || itemKey == "Potion of Poison II" || itemKey == "Potion of Poison III")
+        character->setHealth(min(character->getmaxHp(), character->getHealth() - character->getInventory()[itemKey]->getEffect()));
+}
 
 
 vector<shared_ptr<Character>> Controller::setupRole(string assailant, string defender) {

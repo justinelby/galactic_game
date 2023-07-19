@@ -8,6 +8,7 @@ Character::Character(string name, string desc, int hp, int ap, int dp, string pl
     this->hp = hp;
     this->ap = ap;
     this->dp = dp;
+    this->maxHp = hp;
     this->placeType = placeType;
     this->place = place;
 }
@@ -29,6 +30,8 @@ int Character::getArmorPower() const { return dp; }
 void Character::setArmorPower(int dp) { this->dp = dp; }
 
 vector<int> Character::getStatus() { return {hp, ap, dp}; }
+
+int Character::getmaxHp() const { return maxHp; }
 
 string Character::getPlaceType() const { return placeType; }
 void Character::setPlaceType(const string &pt) { this->place = pt; }    // add verification if input is valid

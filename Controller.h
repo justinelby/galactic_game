@@ -20,7 +20,7 @@ public:
     Controller(string& loadedFile, string& savedFile);
 
 
-    //Getters et Setters
+    //Getters & Setters
     map<string, shared_ptr<Quest>> getQuest();
     map<string, shared_ptr<Character>> getCharacter();
     map<string, shared_ptr<Enemy>> getEnemy();
@@ -28,7 +28,7 @@ public:
     map<string, shared_ptr<Spaceship>> getSpaceship();
     map<string, unique_ptr<Item>>& getInventory();
 
-    //Méthodes
+    //Methods
     void loadGame();
     void saveGame();
 
@@ -44,10 +44,13 @@ public:
     bool deletePlanet(const string& name);
     bool deleteQuest(const string& name);
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
-    void cleanUniquePtr(map<string, unique_ptr<Item>>&);
+//    void cleanUniquePtr(map<string, unique_ptr<Item>>&);
+
 
     bool neutralAttack(string, string);  // returns true if enemy dies
     void looting(shared_ptr<Character>, unique_ptr<Item>&);
+    void useItem(shared_ptr<Character>&, unique_ptr<Item>&);
+
     string characterToString();
     string spaceshipToString();
     string planetToString();
