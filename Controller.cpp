@@ -154,6 +154,23 @@ void Controller::loadGame() {
         }
     }
 
+    // Chargement des items
+    if (document.HasMember("item")) {
+        const rapidjson::Value &items = document["item"];
+        if (items.IsArray()) {
+            for (rapidjson::SizeType i = 0; i < items.Size(); i++) {
+                const rapidjson::Value &item = items[i];
+                // Extraire les valeurs des propriétés de la quête
+                string name = item["Nom"].GetString();
+                string description = item["Description"].GetString();
+                string effect = item["Effect"].GetString();
+                // Créer et ajouter la quête à la map questMap
+                auto newItem = make_unique<Item>(name, description, stoi(effect));
+                addToGameInventory(newItem);
+            }
+        }
+    }
+
     // Chargement des character
     if (document.HasMember("character")) {
         const rapidjson::Value &characters = document["character"];

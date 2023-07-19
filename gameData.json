@@ -58,46 +58,42 @@
     {
       "Nom": "Potion of Healing I",
       "Description": "Heals a character for 20 HP",
-      "Puissance de soin": 20
+      "Effect": 20
     },
     {
       "Nom": "Potion of Healing II",
       "Description": "Heals a character for 40 HP",
-      "Puissance de soin": 40
+      "Effect": 40
     },
     {
       "Nom": "Potion of Healing III",
       "Description": "Heals a character for 80 HP",
-      "Puissance de soin": 80
+      "Effect": 80
     },
     {
       "Nom": "Potion of Max Healing",
       "Description": "Heals a character for his maximum health",
-      "Puissance de soin": 2
+      "Effect": 2
     },
     {
       "Nom": "Potion of Poison I",
       "Description": "Deals 1 HP damage per second to a character for 10 seconds",
-      "Puissance de poison": 1,
-      "Durée": 10
+      "Effect": 1
     },
     {
       "Nom": "Potion of Poison II",
       "Description": "Deals 3 HP damage per second to a character for 10 seconds",
-      "Puissance de poison": 3,
-      "Durée": 10
+      "Effect": 3
     },
     {
       "Nom": "Potion of Poison III",
       "Description": "Deals 5 HP damage per second to a character for 10 seconds",
-      "Puissance de poison": 5,
-      "Durée": 10
+      "Effect": 5
     },
     {
       "Nom": "Potion of Invisibility",
       "Description": "Makes your character untouchable by Enemies for 30 seconds",
-      "Puissance de poison": 0,
-      "Durée": 30
+      "Effect": 0
     }
   ],
   "character": [
