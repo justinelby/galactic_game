@@ -268,7 +268,7 @@ void *Server::connection_handler(void *data)
         rapidjson::StringBuffer sb;
         rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
 
-        // Check if the message is for getting character info
+        // GetCharacterInfo Function
         if (methodName == "GetCharacterInfo")
         {
             const rapidjson::Value &getCharacterInfo = document["GetCharacterInfo"];
@@ -279,8 +279,6 @@ void *Server::connection_handler(void *data)
             if (getCharacterInfo.HasMember("CharacterName"))
             {
                 string characterName = getCharacterInfo["CharacterName"].GetString();
-                cout << "Test with new command = " << controller->getCharacter().find(characterName)->second->getDescr() << endl;
-                cout << "CharacterName fix variable = " << characterName << endl;
                 auto characterIt = controller->getCharacter().find(characterName);
                 cout << "CharacterIt = " << characterIt->second->getName() << endl;
                 if (characterIt != controller->getCharacter().end())
@@ -306,11 +304,62 @@ void *Server::connection_handler(void *data)
                     writer.String(("Character " + characterName + " hasn't been found.").c_str());
                 }
             }
+            writer.EndObject();
+            writer.EndObject();
         }
 
+        //GetSpaceshipInfo Function
+        if (methodName == "GetSpaceshipInfo")
+        {
+            const rapidjson::Value &getSpaceshipInfo = document["GetSpaceshipInfo"];
+
+            writer.StartObject();
+            writer.Key("GetSpaceshipInfo");
+            writer.StartObject();
+            if (getSpaceshipInfo.HasMember("SpaceshipName"))
+            {
+                string spaceshipName = getSpaceshipInfo["SpaceshipName"].GetString();
+                auto spaceshipIt = controller->getSpaceship().find(spaceshipName);
+                if (spaceshipIt != controller->getSpaceship().end())
+                {
+                    writer.String("SpaceshipName");
+                    writer.String(controller->getSpaceship().find(spaceshipName)->second->getName().c_str());
+                    writer.String("Crew");
+                    writer.StartArray();
+                    for (const auto &crewMember : controller->getSpaceship().find(spaceshipName)->second->getCrew())
+                    {
+                        const auto &character = crewMember.lock();
+                        if (character)
+                        {
+                            writer.StartObject();
+                            writer.String("Name");
+                            writer.String(character->getName().c_str());
+                            writer.String("Health");
+                            writer.Int(character->getHealth());
+                            writer.String("AP");
+                            writer.Int(character->getAttackPower());
+                            writer.String("DP");
+                            writer.Int(character->getArmorPower());
+                            writer.EndObject();
+                        }
+                    }
+                    writer.EndArray();
+                }
+                else
+                {
+                    writer.String("Error");
+                    writer.String(("Spaceship " + spaceshipName + " hasn't been found.").c_str());
+                }
+            }
+            writer.EndObject();
+            writer.EndObject();
+        }
+
+
         // You can add more conditions for other methods here...
-        writer.EndObject();
-        writer.EndObject();
+        // writer.EndObject();
+        // writer.EndObject();
+
         // clear buffer data
         memset(buffer, 0, BUFFER_SIZE);
 
@@ -325,7 +374,7 @@ void *Server::connection_handler(void *data)
         responseHeader += "Content-Length: " + std::to_string(jsonResponse.length()) + "\r\n";
         responseHeader += "\r\n";
 
-        //std::string fullResponse = responseHeader + jsonResponse;
+        // std::string fullResponse = responseHeader + jsonResponse;
 
         std::string fullResponse = jsonResponse;
 
