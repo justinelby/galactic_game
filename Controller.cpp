@@ -254,22 +254,6 @@ void Controller::loadActions(string actionsFile) {
         }
     }
 
-/*    if (document.HasMember("addCharacter")){
-        const rapidjson::Value &addCharacter = document["addNewCharacter"];
-        // Extraire les informations du message JSON
-        string name = addCharacter["name"].GetString();
-        string description = addCharacter["description"].GetString();
-        int health = addCharacter["health"].GetInt();
-        int attackPower = addCharacter["attackPower"].GetInt();
-        int armorPower = addCharacter["armorPower"].GetInt();
-        string placeType = addCharacter["placeType"].GetString();
-        string place = addCharacter["place"].GetString();
-        // Créer et ajouter le personnage à la map characterMap
-        auto newCharacter = make_shared<Character>(name, description, health, attackPower, armorPower,
-                                                   placeType, place);
-        addCharacter(newCharacter);
-    }*/
-
 }
 
 void Controller::saveGame() {

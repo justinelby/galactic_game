@@ -588,6 +588,41 @@ void *Server::connection_handler(void *data)
             }
         }
 
+        //Add character function 
+        if (methodName == "addCharacter") {
+            const rapidjson::Value &addCharacter = document["addCharacter"];
+            if (addCharacter.HasMember("name") && addCharacter.HasMember("description") &&
+                addCharacter.HasMember("health") && addCharacter.HasMember("attackPower") &&
+                addCharacter.HasMember("armorPower") && addCharacter.HasMember("placeType") &&
+                addCharacter.HasMember("place")) {
+                
+                std::string name = addCharacter["name"].GetString();
+                std::string description = addCharacter["description"].GetString();
+                int health = addCharacter["health"].GetInt();
+                int attackPower = addCharacter["attackPower"].GetInt();
+                int armorPower = addCharacter["armorPower"].GetInt();
+                std::string placeType = addCharacter["placeType"].GetString();
+                std::string place = addCharacter["place"].GetString();
+
+                // Créer et ajouter le personnage à la map characterMap
+                auto newCharacter = std::make_shared<Character>(name, description, health, attackPower, armorPower, placeType, place);
+                controller->addCharacter(newCharacter);
+
+                writer.StartObject();
+                writer.Key("addCharacter");
+                writer.StartObject();
+                writer.String("status");
+                writer.String("success");
+                writer.EndObject();
+                writer.EndObject();
+            } else {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'addCharacter'.");
+                writer.EndObject();
+            }
+    }
+
 
         // You can add more conditions for other methods here...
         // writer.EndObject();
