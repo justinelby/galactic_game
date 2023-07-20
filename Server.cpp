@@ -23,7 +23,7 @@
 // server address
 #define ADDRESS "0.0.0.0"
 // port number
-#define PORT 8888
+#define PORT 8044
 // maximum concurrent connections
 #define CONCURRENT_CONNECTION 10
 // maximum connection requests queued
