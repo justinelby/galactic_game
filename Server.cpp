@@ -426,82 +426,93 @@ void *Server::connection_handler(void *data)
         }
 
         //GetItem Function
-        if(methodName == "GetItemInfo"){
-
-            const rapidjson::Value &getQuestInfo = document["GetItemInfo"];
+        if (methodName == "GetItemInfo") {
+            const rapidjson::Value& getItemInfo = document["GetItemInfo"];
             writer.StartObject();
             writer.Key("GetItemInfo");
             writer.StartObject();
 
-            if (getQuestInfo.HasMember("ItemName")) {
-                string itemName = getQuestInfo["ItemName"].GetString();
+            if (getItemInfo.HasMember("ItemName")) {
+                std::string itemName = getItemInfo["ItemName"].GetString();
                 auto itemIt = controller->getInventory().find(itemName);
 
-                if(itemIt != controller->getInventory().end()){
+                if (itemIt != controller->getInventory().end()) {
+                    const auto& item = itemIt->second;
                     writer.String("ItemName");
-                    writer.String(controller->getInventory().find(itemName)->second->getName().c_str());
+                    writer.String(item->getName().c_str());
                     writer.String("Description");
-                    writer.String(controller->getInventory().find(itemName)->second->getDescription().c_str());
+                    writer.String(item->getDescription().c_str());
                     writer.String("Effect");
-                    writer.Int(controller->getInventory().find(itemName)->second->getEffect());
+                    writer.Int(item->getEffect());
                 } else {
                     writer.String("Error");
                     writer.String(("Item " + itemName + " hasn't been found.").c_str());
                 }
             }
+
             writer.EndObject();
             writer.EndObject();
         }
 
+
         //GetCharacters Function
         if (methodName == "GetCharacters") {
+            writer.StartObject();
+            writer.Key("GetCharacters");
+            writer.StartArray();
+
+            for (const auto& characterPair : controller->getCharacter()) {
+                const auto& character = characterPair.second;
+
                 writer.StartObject();
-                writer.Key("GetCharacters");
-                writer.StartArray();
-                for (auto it: controller->getCharacter()) {
-                    writer.String("Name");
-                    writer.String(it.second->getName().c_str());
-                    writer.String("Health");
-                    writer.Int(it.second->getHealth());
-                    writer.String("AP");
-                    writer.Int(it.second->getAttackPower());
-                    writer.String("DP");
-                    writer.Int(it.second->getArmorPower());
-                    writer.String("Placetype");
-                    writer.String(it.second->getPlaceType().c_str());
-                    writer.String("Place");
-                    writer.String(it.second->getPlace().c_str());
-                }
+                writer.String("Name");
+                writer.String(character->getName().c_str());
+                writer.String("Health");
+                writer.Int(character->getHealth());
+                writer.String("AP");
+                writer.Int(character->getAttackPower());
+                writer.String("DP");
+                writer.Int(character->getArmorPower());
+                writer.String("Placetype");
+                writer.String(character->getPlaceType().c_str());
+                writer.String("Place");
+                writer.String(character->getPlace().c_str());
+                writer.EndObject();
+            }
+
             writer.EndArray();
             writer.EndObject();
         }
+
 
         //GetSpaceships Function 
         if (methodName == "GetSpaceships") {
             writer.StartObject();
             writer.Key("GetSpaceships");
             writer.StartArray();
-                for (auto &it: controller->getSpaceship()) {
-                    writer.String("Name");
-                    writer.String(it.second->getName().c_str());
-                    for (auto crewMember : it.second->getCrew())
-                    {
-                        const auto &character = crewMember.lock();
-                        if (character)
-                        {
-                            writer.StartObject();
-                            writer.String("Name");
-                            writer.String(character->getName().c_str());
-                            writer.String("Health");
-                            writer.Int(character->getHealth());
-                            writer.String("AP");
-                            writer.Int(character->getAttackPower());
-                            writer.String("DP");
-                            writer.Int(character->getArmorPower());
-                            writer.EndObject();
-                        }
+
+            for (auto &it : controller->getSpaceship()) {
+                writer.StartObject();
+                writer.Key("Name");
+                writer.String(it.second->getName().c_str());
+
+                writer.Key("Crew");
+                writer.StartArray();
+
+                for (auto crewMemberWeak : it.second->getCrew()) {
+                    auto crewMember = crewMemberWeak.lock();
+                    if (crewMember) {
+                        writer.StartObject();
+                        writer.String("Name");
+                        writer.String(crewMember->getName().c_str());
+                        writer.EndObject();
                     }
                 }
+
+                writer.EndArray();
+                writer.EndObject();
+            }
+
             writer.EndArray();
             writer.EndObject();
         }
@@ -512,10 +523,12 @@ void *Server::connection_handler(void *data)
             writer.Key("GetQuests");
             writer.StartArray();
                 for (auto &it: controller->getQuest()) {
+                    writer.StartObject();
                     writer.String("Name");
                     writer.String(it.second->getName().c_str());
                     writer.String("Description");
                     writer.String(it.second->getDescription().c_str());
+                    writer.EndObject();
                 }
             writer.EndArray();
             writer.EndObject();
@@ -527,25 +540,32 @@ void *Server::connection_handler(void *data)
             writer.Key("GetInventory");
             writer.StartArray();
                 for (auto &it : controller->getInventory()) {
+                    writer.StartObject();
                     writer.String("Name");
                     writer.String(it.second->getName().c_str());
                     writer.String("Description");
                     writer.String(it.second->getDescription().c_str());
                     writer.String("Effect");
                     writer.Int(it.second->getEffect());
+                    writer.EndObject();
                 }
             writer.EndArray();
             writer.EndObject();
         }
         
-        //GetPlanet Function
+        //GetPlanets Function
         if(methodName == "GetPlanets"){
             writer.StartObject();
             writer.Key("GetPlanets");
             writer.StartArray();
+
             for (auto &it: controller->getPlanet()) {
-                writer.String("PlanetName");
+                writer.StartObject();
+                writer.Key("PlanetName");
                 writer.String(it.second->getName().c_str());
+                writer.Key("Residents");
+                writer.StartArray();
+
                 for (auto residentList : it.second->getResident()){
                     const auto &resident = residentList.lock();
                     if(resident) {
@@ -555,6 +575,8 @@ void *Server::connection_handler(void *data)
                         writer.EndObject();
                     }
                 }
+                writer.EndArray();
+                writer.EndObject();
             }
             writer.EndArray();
             writer.EndObject();
@@ -619,6 +641,33 @@ void *Server::connection_handler(void *data)
                 writer.StartObject();
                 writer.Key("Error");
                 writer.String("Certains champs sont manquants dans la clé 'addCharacter'.");
+                writer.EndObject();
+            }
+        }
+
+        //Add planet function 
+        if (methodName == "addPlanet") {
+            const rapidjson::Value& addPlanet = document["addPlanet"];
+            if (addPlanet.HasMember("name") && addPlanet.HasMember("description")) 
+            {
+                std::string name = addPlanet["name"].GetString();
+                std::string description = addPlanet["description"].GetString();
+
+                // Créer et ajouter la planète à la map planetMap
+                auto newPlanet = std::make_shared<Planet>(name, description);
+                controller->addPlanet(newPlanet);
+
+                writer.StartObject();
+                writer.Key("addPlanet");
+                writer.StartObject();
+                writer.String("status");
+                writer.String("success");
+                writer.EndObject();
+                writer.EndObject();
+            } else {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'addPlanet'.");
                 writer.EndObject();
             }
     }
