@@ -38,7 +38,7 @@ public:
     void addPlanet(const shared_ptr<Planet>&);
     void addQuest(const shared_ptr<Quest>&);
     void addToGameInventory(unique_ptr<Item>&);
-    void addToCharacterInventory(shared_ptr<Character>&, unique_ptr<Item>&);
+    void addToCharacterInventory(string, string);
     bool deleteCharacter(const string& name);
     bool deleteSpaceship(const string& name);
     bool deletePlanet(const string& name);

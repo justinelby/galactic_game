@@ -266,9 +266,11 @@ void Controller::cleanWeakPtr(
 //    }
 //}
 
-void Controller::addToCharacterInventory(shared_ptr<Character>& character, unique_ptr<Item>& newItem) {
+void Controller::addToCharacterInventory(string charName, string itemName) {
+    shared_ptr<Character>& character = characterMap[charName];
+    unique_ptr<Item>& newItem = inventory[itemName];
+
     if (character->getInventory().size() < 5) {             // each Character has a 5-item inventory
-//        character->getInventory()[newItem->getName()] = move(newItem);
         character->getInventory().push_back(move(newItem));
 #ifdef DEBUG
         cout << " added to " << character->getName() << "'s inventory." << endl;
@@ -470,17 +472,16 @@ bool Controller::neutralAttack(string assailant, string defender) {
 
 bool Controller::isReplacing() {
     char response;
-    if(inventory.size() >= 5) {
-        cout << "Do you want to replace something in your Inventory (y/N) : " << endl;
-        cin >> response;
-        while(not(response == 'y' or response == 'Y' or response == 'n' or response == 'N')) {
-            cout << "Invalid ! Please enter a valid reply (y/N) : " << endl;
-            cin >> response;
 
-        }
-        if(response == 'y' or response == 'Y')
-            return true;
+    cout << "Do you want to replace something in your Inventory (y/N) : " << endl;
+    cin >> response;
+    while(not(response == 'y' or response == 'Y' or response == 'n' or response == 'N')) {
+        cout << "Invalid ! Please enter a valid reply (y/N) : " << endl;
+        cin >> response;
+
     }
+    if(response == 'y' or response == 'Y')
+        return true;
     return false;
 }
 
@@ -491,25 +492,28 @@ void Controller::looting(string charName, string itemName) {
     shared_ptr<Character>& character = characterMap[charName];
     unique_ptr<Item>& lootedItem = inventory[itemName];
 
-
-
-    if(isReplacing()) {
-        char itemNameToReplace[100];
-        for (auto& it: character->getInventory()) {
-            cout << "Name : " << it->getName() << endl;
-        }
-        cout << "Saisir l'Item à remplacer : ";
-        cin.ignore();
-        cin.getline(itemNameToReplace,sizeof(itemNameToReplace));
-        for (auto &it: character->getInventory()) {
-            if(it->getName() == itemNameToReplace) {
-                auto temp = move(it);
-                swap(temp, lootedItem);
-                it = move(temp);
+    if(character->getInventory().size() >= 5) {
+        if(isReplacing()) {
+            char itemNameToReplace[100];
+            for (auto &it: character->getInventory()) {
+                cout << "Name : " << it->getName() << endl;
             }
-        }
-        auto droppedItem = move(lootedItem);
-        addToGameInventory(droppedItem);  // was the Item we had in our inventory before swap
+            cout << "Saisir l'Item à remplacer : ";
+            cin.ignore();
+            cin.getline(itemNameToReplace, sizeof(itemNameToReplace));
+            for (auto &it: character->getInventory()) {
+                if (it->getName() == itemNameToReplace) {
+                    auto temp = move(it);
+                    swap(temp, lootedItem);
+                    it = move(temp);
+                }
+            }
+            auto droppedItem = move(lootedItem);
+            addToGameInventory(droppedItem);  // was the Item we had in our inventory before swap
+            }
+    }
+    else {
+        addToCharacterInventory(charName, itemName);
     }
 }
 
@@ -532,6 +536,7 @@ void Controller::useItem(string charName, string itemName) {       // will affec
         character->setHealth(character->getMaxHp());
     else if (itemName == "Potion of Poison I" || itemName == "Potion of Poison II" || itemName == "Potion of Poison III")
         character->setHealth(min(character->getMaxHp(), character->getHealth() - character->getInventory().at(idx)->getEffect()));
+    character->getInventory().erase(character->getInventory().begin() + idx);
 }
 
 
