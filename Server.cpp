@@ -398,6 +398,33 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
             writer.EndObject();
         }
+
+        //GetQuest Function
+        if(methodName == "GetQuestInfo"){
+
+            const rapidjson::Value &getQuestInfo = document["GetQuestInfo"];
+            writer.StartObject();
+            writer.Key("GetQuestInfo");
+            writer.StartObject();
+
+            if (getQuestInfo.HasMember("QuestName")) {
+                string questName = getQuestInfo["QuestName"].GetString();
+                auto questIt = controller->getQuest().find(questName);
+
+                if(questIt != controller->getQuest().end()){
+                    writer.String("QuestName");
+                    writer.String(controller->getQuest().find(questName)->second->getName().c_str());
+                    writer.String("Description");
+                    writer.String(controller->getQuest().find(questName)->second->getDescription().c_str());
+                } else {
+                    writer.String("Error");
+                    writer.String(("Quest " + questName + " hasn't been found.").c_str());
+                }
+            }
+            writer.EndObject();
+            writer.EndObject();
+        }
+
         // You can add more conditions for other methods here...
         // writer.EndObject();
         // writer.EndObject();
