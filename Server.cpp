@@ -355,7 +355,49 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
+        //GetPlanet Function
+        if(methodName == "GetPlanetInfo") {
+            const rapidjson::Value &getPlanetInfo = document["GetPlanetInfo"];
+            writer.StartObject();
+            writer.Key("GetPlanetInfo");
+            writer.StartObject();
+            if(getPlanetInfo.HasMember("PlanetName")){
+                string planetName = getPlanetInfo["PlanetName"].GetString();
+                auto planetIt = controller->getPlanet().find(planetName);
+                if (planetIt != controller->getPlanet().end()){
+                    writer.String("PlanetName");
+                    writer.String(controller->getPlanet().find(planetName)->second->getName().c_str());
 
+                    writer.String("Residents");
+                    writer.StartArray();
+                    for (const auto &resident : controller->getPlanet().find(planetName)->second->getResident())
+                    {
+                        const auto &character = resident.lock();
+                        if (character)
+                        {
+                            writer.StartObject();
+                            writer.String("Name");
+                            writer.String(character->getName().c_str());
+                            writer.String("Health");
+                            writer.Int(character->getHealth());
+                            writer.String("AP");
+                            writer.Int(character->getAttackPower());
+                            writer.String("DP");
+                            writer.Int(character->getArmorPower());
+                            writer.EndObject();
+                        }
+                    }
+                    writer.EndArray();
+
+                }
+                else {
+                    writer.String("Error");
+                    writer.String(("Planet " + planetName + " hasn't been found.").c_str());
+                }
+            }
+            writer.EndObject();
+            writer.EndObject();
+        }
         // You can add more conditions for other methods here...
         // writer.EndObject();
         // writer.EndObject();
