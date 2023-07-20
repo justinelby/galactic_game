@@ -486,7 +486,13 @@ bool Controller::isReplacing() {
 
 
 
-void Controller::looting(shared_ptr<Character>& character, unique_ptr<Item>& lootedItem) {
+void Controller::looting(string charName, string itemName) {
+
+    shared_ptr<Character>& character = characterMap[charName];
+    unique_ptr<Item>& lootedItem = inventory[itemName];
+
+
+
     if(isReplacing()) {
         char itemNameToReplace[100];
         for (auto& it: character->getInventory()) {

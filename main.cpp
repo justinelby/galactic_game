@@ -212,7 +212,7 @@ int main() {
 //    displayControllerItems(controller);
 
     cout << "ALEX LOOT POISON III ?" << endl;
-    controller.looting(controller.getCharacter()["Alex Starborn"], controller.getInventory()["Potion of Poison III"]);
+    controller.looting("Alex Starborn","Potion of Poison III");
 
     cout << "ALEX INVENTORY " << endl;
     for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
@@ -244,8 +244,9 @@ int main() {
     controller.useItem("Alex Starborn", "Potion of Healing I");
     cout << "Alex's hp after Healing I: " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
     controller.useItem("Alex Starborn", "Potion of Max Healing");
+    cout << "Alex's hp after Max Healing : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
+    controller.useItem("Alex Starborn", "Potion of Healing I");
     cout << "Alex's hp after Healing I: " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-
 
 
 

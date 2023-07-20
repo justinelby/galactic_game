@@ -48,7 +48,7 @@ public:
 
 
     bool neutralAttack(string, string);  // returns true if enemy dies
-    void looting(shared_ptr<Character>&, unique_ptr<Item>&);
+    void looting(string, string);
     void useItem(string, string);
     string characterToString();
     string spaceshipToString();
