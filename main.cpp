@@ -172,32 +172,31 @@ int main() {
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
-//    displayAllCharacters(controller);
 
-    displayControllerItems(controller);
-
-
-    for(auto it = controller.getInventory().begin(); it != controller.getInventory().end(); it++) {
-        if(controller.getCharacter()["Alex Starborn"]->getInventory().size() < 4)
-            controller.addToCharacterInventory("Alex Starborn", it->second->getName());
-    }
-    cout << "ALEX INVENTORY before looting Max Healing" << endl;
-    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-        if(it == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it->getName() << endl;
-    }
-
-    controller.looting("Alex Starborn","Potion of Max Healing");
-
-    cout << "ALEX INVENTORY after looting Max Healing" << endl;
-    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-        if(it == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it->getName() << endl;
-    }
+//    displayControllerItems(controller);
+//
+//
+//    for(auto it = controller.getInventory().begin(); it != controller.getInventory().end(); it++) {
+//        if(controller.getCharacter()["Alex Starborn"]->getInventory().size() < 4)
+//            controller.addToCharacterInventory("Alex Starborn", it->second->getName());
+//    }
+//    cout << "ALEX INVENTORY before looting Max Healing" << endl;
+//    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
+//        if(it == nullptr)
+//            cout << "null print" << endl;
+//        else
+//            cout << it->getName() << endl;
+//    }
+//
+//    controller.looting("Alex Starborn","Potion of Max Healing");
+//
+//    cout << "ALEX INVENTORY after looting Max Healing" << endl;
+//    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
+//        if(it == nullptr)
+//            cout << "null print" << endl;
+//        else
+//            cout << it->getName() << endl;
+//    }
 
 //    cout << "GAME INVENTORY 1 " << endl;
 //    for (auto& it : controller.getInventory()) {
