@@ -231,32 +231,32 @@ int main() {
             cout << it->getName() << endl;
     }
 
-    cout << "------------------" << endl;
-    cout << "GAME INVENTORY " << endl;
-    for (auto& it : controller.getInventory()) {
-        if(it.second == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it.second->getName() << endl;
-    }
-    cout << "------------------" << endl;
-
-
-    cout << "Alex's hp before : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-    controller.useItem("Alex Starborn", "Potion of Poison III");
-    cout << "Alex's hp after Poison III : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-    controller.useItem("Alex Starborn", "Potion of Healing I");
-    cout << "Alex's hp after Healing I: " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-    controller.useItem("Alex Starborn", "Potion of Max Healing");
-    cout << "Alex's hp after Max Healing : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-
-    cout << "ALEX INVENTORY " << endl;
-    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-        if(it == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it->getName() << endl;
-    }
+//    cout << "------------------" << endl;
+//    cout << "GAME INVENTORY " << endl;
+//    for (auto& it : controller.getInventory()) {
+//        if(it.second == nullptr)
+//            cout << "null print" << endl;
+//        else
+//            cout << it.second->getName() << endl;
+//    }
+//    cout << "------------------" << endl;
+//
+//
+//    cout << "Alex's hp before : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
+//    controller.useItem("Alex Starborn", "Potion of Poison III");
+//    cout << "Alex's hp after Poison III : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
+//    controller.useItem("Alex Starborn", "Potion of Healing I");
+//    cout << "Alex's hp after Healing I: " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
+//    controller.useItem("Alex Starborn", "Potion of Max Healing");
+//    cout << "Alex's hp after Max Healing : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
+//
+//    cout << "ALEX INVENTORY " << endl;
+//    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
+//        if(it == nullptr)
+//            cout << "null print" << endl;
+//        else
+//            cout << it->getName() << endl;
+//    }
 
 
 

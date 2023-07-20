@@ -450,6 +450,32 @@ bool Controller::deleteQuest(const std::string &name) {
 #endif
 }
 
+bool Controller::deleteItemToCharacterInventory(string charName, string itemName) {
+
+    shared_ptr<Character>& character = characterMap[charName];
+
+    // trying to get inventory's index by using item's itemName
+    for (int i = 0; i < character->getInventory().size(); i++) {
+        if(character->getInventory().at(i)->getName() == itemName) {
+            character->getInventory().erase(character->getInventory().begin() + i);
+            return true;
+        }
+    }
+    return false;   // if item doesn't exist in character's inventory
+
+
+#ifdef DEBUG
+    for (auto &pair: questMap) {
+        auto &mi = pair.second;
+        cout << "Nom : " << mi->getName() << endl;
+    }
+#endif
+}
+
+
+
+
+
 bool Controller::neutralAttack(string assailant, string defender) {
 
     auto as = setupRole(assailant,defender)[0];
@@ -536,7 +562,7 @@ void Controller::useItem(string charName, string itemName) {       // will affec
         character->setHealth(character->getMaxHp());
     else if (itemName == "Potion of Poison I" || itemName == "Potion of Poison II" || itemName == "Potion of Poison III")
         character->setHealth(min(character->getMaxHp(), character->getHealth() - character->getInventory().at(idx)->getEffect()));
-    character->getInventory().erase(character->getInventory().begin() + idx);
+    deleteItemToCharacterInventory(charName, itemName);
 }
 
 

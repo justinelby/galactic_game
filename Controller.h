@@ -43,6 +43,8 @@ public:
     bool deleteSpaceship(const string& name);
     bool deletePlanet(const string& name);
     bool deleteQuest(const string& name);
+    bool deleteItemToCharacterInventory(string, string);
+
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
 //    void cleanUniquePtr(map<string, unique_ptr<Item>>&);
 
