@@ -453,7 +453,29 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-
+        //GetCharacters Function
+        if (methodName == "GetCharacters") {
+            const rapidjson::Value &getCharacters = document["GetCharacters"];
+                writer.StartObject();
+                writer.Key("GetCharacters");
+                writer.StartArray();
+                for (auto it: controller->getCharacter()) {
+                    writer.String("Name");
+                    writer.String(it.second->getName().c_str());
+                    writer.String("Health");
+                    writer.Int(it.second->getHealth());
+                    writer.String("AP");
+                    writer.Int(it.second->getAttackPower());
+                    writer.String("DP");
+                    writer.Int(it.second->getArmorPower());
+                    writer.String("Placetype");
+                    writer.String(it.second->getPlaceType().c_str());
+                    writer.String("Place");
+                    writer.String(it.second->getPlace().c_str());
+                }
+            writer.EndArray();
+            writer.EndObject();
+        }
 
         // You can add more conditions for other methods here...
         // writer.EndObject();
