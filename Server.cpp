@@ -325,7 +325,9 @@ void *Server::connection_handler(void *data)
         responseHeader += "Content-Length: " + std::to_string(jsonResponse.length()) + "\r\n";
         responseHeader += "\r\n";
 
-        std::string fullResponse = responseHeader + jsonResponse;
+        //std::string fullResponse = responseHeader + jsonResponse;
+
+        std::string fullResponse = jsonResponse;
 
         if (send(conn_id, fullResponse.c_str(), fullResponse.length(), 0) > 0)
         {
