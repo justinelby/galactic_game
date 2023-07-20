@@ -181,7 +181,7 @@ int main() {
         if(controller.getCharacter()["Alex Starborn"]->getInventory().size() < 4)
             controller.addToCharacterInventory("Alex Starborn", it->second->getName());
     }
-    cout << "ALEX INVENTORY before looting Max Healing" << endl;
+    cout << "ALEX INVENTORY before looting Potion of Max Healing" << endl;
     for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
         if(it == nullptr)
             cout << "null print" << endl;
@@ -191,7 +191,17 @@ int main() {
 
     controller.looting("Alex Starborn","Potion of Max Healing");
 
-    cout << "ALEX INVENTORY after looting Max Healing" << endl;
+    cout << "ALEX INVENTORY after looting Potion of Max Healing" << endl;
+    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
+        if(it == nullptr)
+            cout << "null print" << endl;
+        else
+            cout << it->getName() << endl;
+    }
+
+    controller.dropItem("Alex Starborn","Potion of Invisibility");
+
+    cout << "ALEX INVENTORY after dropping Potion of Invisibility" << endl;
     for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
         if(it == nullptr)
             cout << "null print" << endl;
@@ -220,16 +230,16 @@ int main() {
 //    cout << "-----------------" << endl;
 //    displayControllerItems(controller);
 
-    cout << "ALEX LOOT POISON III ?" << endl;
-    controller.looting("Alex Starborn","Potion of Poison III");
-
-    cout << "ALEX INVENTORY " << endl;
-    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-        if(it == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it->getName() << endl;
-    }
+//    cout << "ALEX LOOT POISON III ?" << endl;
+//    controller.looting("Alex Starborn","Potion of Poison III");
+//
+//    cout << "ALEX INVENTORY " << endl;
+//    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
+//        if(it == nullptr)
+//            cout << "null print" << endl;
+//        else
+//            cout << it->getName() << endl;
+//    }
 
 //    cout << "------------------" << endl;
 //    cout << "GAME INVENTORY " << endl;

@@ -543,6 +543,23 @@ void Controller::looting(string charName, string itemName) {
     }
 }
 
+void Controller::dropItem(string charName, string itemName) {
+    // moves an item from a character's inventory back to game's inventory
+    shared_ptr<Character>& character = characterMap[charName];
+
+    for (int i = 0; i < character->getInventory().size(); i++) {
+        if(character->getInventory().at(i)->getName() == itemName) {
+
+            inventory[itemName] = move(character->getInventory().at(i));
+            character->getInventory().erase(character->getInventory().begin() + i);     // delete nullptr placeholder
+            break;
+        }
+    }
+}
+
+
+
+
 void Controller::useItem(string charName, string itemName) {       // will affect character's attributes
 
     shared_ptr<Character>& character = characterMap[charName];
