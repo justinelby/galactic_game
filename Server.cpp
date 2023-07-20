@@ -268,6 +268,10 @@ void *Server::connection_handler(void *data)
         rapidjson::StringBuffer sb;
         rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
 
+        /*------------------------------------
+                    GETs section
+        ------------------------------------*/
+
         // GetCharacterInfo Function
         if (methodName == "GetCharacterInfo")
         {
@@ -454,7 +458,6 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-
         //GetCharacters Function
         if (methodName == "GetCharacters") {
             writer.StartObject();
@@ -483,7 +486,6 @@ void *Server::connection_handler(void *data)
             writer.EndArray();
             writer.EndObject();
         }
-
 
         //GetSpaceships Function 
         if (methodName == "GetSpaceships") {
@@ -582,6 +584,10 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
+        /*------------------------------------
+                        ATTACK
+        ------------------------------------*/
+
         //Attack function    
         if (methodName == "Attack") {
             const rapidjson::Value &attack = document["Attack"];
@@ -609,6 +615,10 @@ void *Server::connection_handler(void *data)
                 writer.EndObject();
             }
         }
+
+        /*------------------------------------
+                    ADD section
+        ------------------------------------*/
 
         //Add character function 
         if (methodName == "addCharacter") {
@@ -652,11 +662,8 @@ void *Server::connection_handler(void *data)
             {
                 std::string name = addPlanet["name"].GetString();
                 std::string description = addPlanet["description"].GetString();
-
-                // Créer et ajouter la planète à la map planetMap
                 auto newPlanet = std::make_shared<Planet>(name, description);
                 controller->addPlanet(newPlanet);
-
                 writer.StartObject();
                 writer.Key("addPlanet");
                 writer.StartObject();
@@ -670,13 +677,93 @@ void *Server::connection_handler(void *data)
                 writer.String("Certains champs sont manquants dans la clé 'addPlanet'.");
                 writer.EndObject();
             }
-    }
+        }
 
+        /*------------------------------------
+                    DELETE section
+        ------------------------------------*/
 
-        // You can add more conditions for other methods here...
-        // writer.EndObject();
-        // writer.EndObject();
+        //Delete planet function 
+        if (methodName == "DeletePlanet") {
+            const rapidjson::Value& deletePlanet = document["DeletePlanet"];
+            if (deletePlanet.HasMember("PlanetName")) {
+                std::string planetName = deletePlanet["PlanetName"].GetString();
+                bool result = controller->deletePlanet(planetName);
+                if (result) {
+                    writer.StartObject();
+                    writer.String("Success");
+                    writer.String(("La planète " + planetName + " a été supprimée.").c_str());
+                    writer.EndObject();
+                } else {
+                    writer.StartObject();
+                    writer.String("Erreur");
+                    writer.String(("La planète " + planetName + " n'a pas été trouvée.").c_str());
+                    writer.EndObject();
+                }
+            }
+        }
+        
+        //Delete Character function 
+        if (methodName == "DeleteCharacter") {
+            const rapidjson::Value& deleteCharacter = document["DeleteCharacter"];
+            if (deleteCharacter.HasMember("CharacterName")) {
+                std::string characterName = deleteCharacter["CharacterName"].GetString();
+                bool result = controller->deleteCharacter(characterName);
+                if (result) {
+                    writer.StartObject();
+                    writer.String("Success");
+                    writer.String(("Le personnage " + characterName + " a été supprimé.").c_str());
+                    writer.EndObject();
+                } else {
+                    writer.StartObject();
+                    writer.String("Erreur");
+                    writer.String(("Le personnage " + characterName + " n'a pas été trouvé.").c_str());
+                    writer.EndObject();
+                }
+            }
+        }
 
+        //DeleteSpaceship function 
+        if (methodName == "DeleteSpaceship") {
+            const rapidjson::Value& deleteSpaceship = document["DeleteSpaceship"];
+            if (deleteSpaceship.HasMember("SpaceshipName")) {
+                std::string spaceshipName = deleteSpaceship["SpaceshipName"].GetString();
+                bool result = controller->deleteSpaceship(spaceshipName);
+                if (result) {
+                    writer.StartObject();
+                    writer.String("Success");
+                    writer.String(("Le vaisseau " + spaceshipName + " a été supprimé.").c_str());
+                    writer.EndObject();
+                } else {
+                    writer.StartObject();
+                    writer.String("Erreur");
+                    writer.String(("Le vaisseau " + spaceshipName + " n'a pas été trouvé.").c_str());
+                    writer.EndObject();
+                }
+            }
+        }
+
+        //DeleteQuest function 
+        if (methodName == "DeleteQuest") {
+            const rapidjson::Value& deleteQuest = document["DeleteQuest"];
+            if (deleteQuest.HasMember("QuestName")) {
+                std::string questName = deleteQuest["QuestName"].GetString();
+                bool result = controller->deleteQuest(questName);
+                if (result) {
+                    writer.StartObject();
+                    writer.String("Success");
+                    writer.String(("La quête " + questName + " a été supprimée.").c_str());
+                    writer.EndObject();
+                } else {
+                    writer.StartObject();
+                    writer.String("Erreur");
+                    writer.String(("La quête " + questName + " n'a pas été trouvée.").c_str());
+                    writer.EndObject();
+                }
+            }
+        }
+
+        
         // clear buffer data
         memset(buffer, 0, BUFFER_SIZE);
 
