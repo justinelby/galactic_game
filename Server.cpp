@@ -425,6 +425,36 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
+        //GetItem Function
+        if(methodName == "GetItemInfo"){
+
+            const rapidjson::Value &getQuestInfo = document["GetItemInfo"];
+            writer.StartObject();
+            writer.Key("GetItemInfo");
+            writer.StartObject();
+
+            if (getQuestInfo.HasMember("ItemName")) {
+                string itemName = getQuestInfo["ItemName"].GetString();
+                auto itemIt = controller->getInventory().find(itemName);
+
+                if(itemIt != controller->getInventory().end()){
+                    writer.String("ItemName");
+                    writer.String(controller->getInventory().find(itemName)->second->getName().c_str());
+                    writer.String("Description");
+                    writer.String(controller->getInventory().find(itemName)->second->getDescription().c_str());
+                    writer.String("Effect");
+                    writer.Int(controller->getInventory().find(itemName)->second->getEffect());
+                } else {
+                    writer.String("Error");
+                    writer.String(("Item " + itemName + " hasn't been found.").c_str());
+                }
+            }
+            writer.EndObject();
+            writer.EndObject();
+        }
+
+
+
         // You can add more conditions for other methods here...
         // writer.EndObject();
         // writer.EndObject();
