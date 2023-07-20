@@ -560,6 +560,35 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
+        //Attack function    
+        if (methodName == "Attack") {
+            const rapidjson::Value &attack = document["Attack"];
+            if (attack.HasMember("Assailant") && attack.HasMember("Defender")) {
+                std::string assailant = attack["Assailant"].GetString();
+                std::string defender = attack["Defender"].GetString();
+
+                bool result = controller->neutralAttack(assailant, defender);
+
+                writer.StartObject();
+                writer.Key("Attack");
+                writer.StartObject();
+                writer.String("Assailant");
+                writer.String(assailant.c_str());
+                writer.String("Defender");
+                writer.String(defender.c_str());
+                writer.String("Result");
+                writer.Bool(result);
+                writer.EndObject();
+                writer.EndObject();
+            } else {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Les clés 'Assaillant' et 'Défenseur' sont manquantes dans la clé 'Attack'.");
+                writer.EndObject();
+            }
+        }
+
+
         // You can add more conditions for other methods here...
         // writer.EndObject();
         // writer.EndObject();
