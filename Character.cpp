@@ -31,7 +31,7 @@ void Character::setArmorPower(int dp) { this->dp = dp; }
 
 vector<int> Character::getStatus() { return {hp, ap, dp}; }
 
-int Character::getmaxHp() const { return maxHp; }
+int Character::getMaxHp() const { return maxHp; }
 
 string Character::getPlaceType() const { return placeType; }
 void Character::setPlaceType(const string &pt) { this->place = pt; }    // add verification if input is valid
@@ -39,7 +39,8 @@ void Character::setPlaceType(const string &pt) { this->place = pt; }    // add v
 string Character::getPlace() const { return place; }
 void Character::setPlace(const string &pl) { this->place = pl; }    // add verification if input is valid
 
-map<string, unique_ptr<Item>>& Character::getInventory() { return inventory; }
+//map<string, unique_ptr<Item>>& Character::getInventory() { return inventory; }
+vector<unique_ptr<Item>>& Character::getInventory() { return inventory; }
 
 Character::~Character()
 {

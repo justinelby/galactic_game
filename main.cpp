@@ -64,9 +64,9 @@ void displayCharacterInventory(shared_ptr<Character>& character) {
         cout << "Empty inventory !" << endl;
     } else {
         for (auto &it: character->getInventory()) {
-            cout << it.second->getName() << " ";
-            cout << it.second->getDescription() << " ";
-            cout << it.second->getEffect() << endl;
+            cout << it->getName() << " ";
+            cout << it->getDescription() << " ";
+            cout << it->getEffect() << endl;
         }
     }
 }
@@ -176,12 +176,10 @@ int main() {
 
     displayControllerItems(controller);
 
-    auto alex = controller.getCharacter()["Alex Starborn"];
-
 
     for(auto it = controller.getInventory().begin(); it != controller.getInventory().end(); it++) {
-        if(alex->getInventory().size() < 5)
-            controller.addToCharacterInventory(alex, it->second);
+        if(controller.getCharacter()["Alex Starborn"]->getInventory().size() < 5)
+            controller.addToCharacterInventory(controller.getCharacter()["Alex Starborn"], it->second);
     }
 
     cout << "GAME INVENTORY 1 " << endl;
@@ -201,36 +199,52 @@ int main() {
             cout << it.second->getName() << endl;
     }
 
-    cout << "-----------------" << endl;
-    displayCharacterInventory(alex);
-    cout << "-----------------" << endl;
-    displayControllerItems(controller);
-    cout << "-----------------" << endl;
+//    cout << "-----------------" << endl;
+//    displayCharacterInventory(alex);
+//    cout << "-----------------" << endl;
+//    displayControllerItems(controller);
+//    cout << "-----------------" << endl;
 
 
-    cout << "MOVE POTION POISON 3" << endl;
-    auto poison = std::move(controller.getInventory()["Potion of Poison III"]);
-    cout << "-----------------" << endl;
-    displayControllerItems(controller);
+//    cout << "MOVE POTION POISON 3" << endl;
+//    auto poison = std::move(controller.getInventory()["Potion of Poison III"]);
+//    cout << "-----------------" << endl;
+//    displayControllerItems(controller);
 
     cout << "ALEX LOOT POISON III ?" << endl;
-    controller.looting(alex, poison);
-    for (auto& it : alex->getInventory()) {
-        cout << it.second->getName() << endl;
+    controller.looting(controller.getCharacter()["Alex Starborn"], controller.getInventory()["Potion of Poison III"]);
+
+    cout << "ALEX INVENTORY " << endl;
+    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
+        if(it == nullptr)
+            cout << "null print" << endl;
+        else
+            cout << it->getName() << endl;
     }
 
     cout << "------------------" << endl;
-    cout << "GAME INVENTORY 2 " << endl;
+    cout << "GAME INVENTORY " << endl;
     for (auto& it : controller.getInventory()) {
         if(it.second == nullptr)
             cout << "null print" << endl;
         else
             cout << it.second->getName() << endl;
     }
+    cout << "------------------" << endl;
 
 
 
+//    auto p1 = make_pair(1, controller.getCharacter()["Alex Starborn"]->getInventory());
+    cout << "PRINT : "<< controller.getInventory()["Potion of Healing II"]->getName() << endl;
+    cout << "PRINT : "<< controller.getCharacter()["Alex Starborn"]->getInventory().at(1)->getName() << endl;
 
+    cout << "Alex's hp before : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
+    controller.useItem("Alex Starborn", "Potion of Poison III");
+    cout << "Alex's hp after Poison III : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
+    controller.useItem("Alex Starborn", "Potion of Healing I");
+    cout << "Alex's hp after Healing I: " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
+    controller.useItem("Alex Starborn", "Potion of Max Healing");
+    cout << "Alex's hp after Healing I: " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
 
 
 

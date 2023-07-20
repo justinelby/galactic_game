@@ -268,7 +268,8 @@ void Controller::cleanWeakPtr(
 
 void Controller::addToCharacterInventory(shared_ptr<Character>& character, unique_ptr<Item>& newItem) {
     if (character->getInventory().size() < 5) {             // each Character has a 5-item inventory
-        character->getInventory()[newItem->getName()] = move(newItem);
+//        character->getInventory()[newItem->getName()] = move(newItem);
+        character->getInventory().push_back(move(newItem));
 #ifdef DEBUG
         cout << " added to " << character->getName() << "'s inventory." << endl;
 #endif
@@ -484,21 +485,21 @@ bool Controller::isReplacing() {
 }
 
 
-//unique_ptr<Item>&
-void Controller::looting(shared_ptr<Character> character, unique_ptr<Item>& lootedItem) {
+
+void Controller::looting(shared_ptr<Character>& character, unique_ptr<Item>& lootedItem) {
     if(isReplacing()) {
         char itemNameToReplace[100];
-        for (auto &it: character->getInventory()) {
-            cout << "Name : " << it.second->getName() << endl;
+        for (auto& it: character->getInventory()) {
+            cout << "Name : " << it->getName() << endl;
         }
         cout << "Saisir l'Item à remplacer : ";
         cin.ignore();
         cin.getline(itemNameToReplace,sizeof(itemNameToReplace));
         for (auto &it: character->getInventory()) {
-            if(it.first == itemNameToReplace) {
-                auto temp = move(it.second);
+            if(it->getName() == itemNameToReplace) {
+                auto temp = move(it);
                 swap(temp, lootedItem);
-                it.second = move(temp);
+                it = move(temp);
             }
         }
         auto droppedItem = move(lootedItem);
@@ -506,14 +507,25 @@ void Controller::looting(shared_ptr<Character> character, unique_ptr<Item>& loot
     }
 }
 
-void Controller::useItem(shared_ptr<Character>& character, unique_ptr<Item>& item) {
-    string itemKey = item->getName();   // va affecter des changements
-    if(itemKey == "Potion of Healing I" || itemKey == "Potion of Healing II" || itemKey == "Potion of Healing III")
-        character->setHealth(min(character->getmaxHp(), character->getHealth() + character->getInventory()[itemKey]->getEffect()));
-    else if(itemKey == "Potion of Max Healing")
-        character->setHealth(character->getmaxHp());
-    else if (itemKey == "Potion of Poison I" || itemKey == "Potion of Poison II" || itemKey == "Potion of Poison III")
-        character->setHealth(min(character->getmaxHp(), character->getHealth() - character->getInventory()[itemKey]->getEffect()));
+void Controller::useItem(string charName, string itemName) {       // will affect character's attributes
+
+    shared_ptr<Character>& character = characterMap[charName];
+
+    int idx;
+    // trying to get inventory's index by using item's itemName
+    for (int i = 0; i < character->getInventory().size(); i++) {
+        if(character->getInventory().at(i)->getName() == itemName) {
+            idx = i;
+            break;
+        }
+    }
+
+    if(itemName == "Potion of Healing I" || itemName == "Potion of Healing II" || itemName == "Potion of Healing III")
+        character->setHealth(min(character->getMaxHp(), character->getHealth() + character->getInventory().at(idx)->getEffect()));
+    else if(itemName == "Potion of Max Healing")
+        character->setHealth(character->getMaxHp());
+    else if (itemName == "Potion of Poison I" || itemName == "Potion of Poison II" || itemName == "Potion of Poison III")
+        character->setHealth(min(character->getMaxHp(), character->getHealth() - character->getInventory().at(idx)->getEffect()));
 }
 
 

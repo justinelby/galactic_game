@@ -34,14 +34,14 @@ public:
     virtual void setAttackPower(int);  // different for Enemy
     int getArmorPower() const;
     void setArmorPower(int);
-    int getmaxHp() const;
+    int getMaxHp() const;
     vector<int> getStatus();
     string getPlaceType() const;
     void setPlaceType(const string &place);
     string getPlace() const;
     void setPlace(const string &place);
-    map<string, unique_ptr<Item>>& getInventory();
-
+//    map<string, unique_ptr<Item>>& getInventory();
+    vector<unique_ptr<Item>>& getInventory();
 protected:
     int ap;
 private:
@@ -53,7 +53,8 @@ private:
     int maxHp;
     string placeType;
     string place;
-    map<string, unique_ptr<Item>> inventory;
+//    map<string, unique_ptr<Item>> inventory;
+    vector<unique_ptr<Item>> inventory;
 
 };
 
