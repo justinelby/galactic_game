@@ -455,7 +455,6 @@ void *Server::connection_handler(void *data)
 
         //GetCharacters Function
         if (methodName == "GetCharacters") {
-            const rapidjson::Value &getCharacters = document["GetCharacters"];
                 writer.StartObject();
                 writer.Key("GetCharacters");
                 writer.StartArray();
@@ -476,6 +475,69 @@ void *Server::connection_handler(void *data)
             writer.EndArray();
             writer.EndObject();
         }
+
+        //GetSpaceships Function 
+        if (methodName == "GetSpaceships") {
+            writer.StartObject();
+            writer.Key("GetSpaceships");
+            writer.StartArray();
+                for (auto &it: controller->getSpaceship()) {
+                    writer.String("Name");
+                    writer.String(it.second->getName().c_str());
+                    for (auto crewMember : it.second->getCrew())
+                    {
+                        const auto &character = crewMember.lock();
+                        if (character)
+                        {
+                            writer.StartObject();
+                            writer.String("Name");
+                            writer.String(character->getName().c_str());
+                            writer.String("Health");
+                            writer.Int(character->getHealth());
+                            writer.String("AP");
+                            writer.Int(character->getAttackPower());
+                            writer.String("DP");
+                            writer.Int(character->getArmorPower());
+                            writer.EndObject();
+                        }
+                    }
+                }
+            writer.EndArray();
+            writer.EndObject();
+        }
+        
+        //GetQuests Function 
+        if (methodName == "GetQuests") {
+            writer.StartObject();
+            writer.Key("GetQuests");
+            writer.StartArray();
+                for (auto &it: controller->getQuest()) {
+                    writer.String("Name");
+                    writer.String(it.second->getName().c_str());
+                    writer.String("Description");
+                    writer.String(it.second->getDescription().c_str());
+                }
+            writer.EndArray();
+            writer.EndObject();
+        }
+
+        //GetInventory Function 
+        if (methodName == "GetInventory") {
+            writer.StartObject();
+            writer.Key("GetInventory");
+            writer.StartArray();
+                for (auto &it : controller->getInventory()) {
+                    writer.String("Name");
+                    writer.String(it.second->getName().c_str());
+                    writer.String("Description");
+                    writer.String(it.second->getDescription().c_str());
+                    writer.String("Effect");
+                    writer.Int(it.second->getEffect());
+                }
+            writer.EndArray();
+            writer.EndObject();
+        }
+        
 
         // You can add more conditions for other methods here...
         // writer.EndObject();
