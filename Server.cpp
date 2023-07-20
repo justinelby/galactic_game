@@ -538,6 +538,27 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
         
+        //GetPlanet Function
+        if(methodName == "GetPlanets"){
+            writer.StartObject();
+            writer.Key("GetPlanets");
+            writer.StartArray();
+            for (auto &it: controller->getPlanet()) {
+                writer.String("PlanetName");
+                writer.String(it.second->getName().c_str());
+                for (auto residentList : it.second->getResident()){
+                    const auto &resident = residentList.lock();
+                    if(resident) {
+                        writer.StartObject();
+                        writer.String("Name");
+                        writer.String(resident->getName().c_str());
+                        writer.EndObject();
+                    }
+                }
+            }
+            writer.EndArray();
+            writer.EndObject();
+        }
 
         // You can add more conditions for other methods here...
         // writer.EndObject();
