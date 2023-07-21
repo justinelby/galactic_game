@@ -311,7 +311,6 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-
         // GetCharacterInfo Function
         if (methodName == "getEnemyInfo")
         {
@@ -351,8 +350,7 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-
-        //GetSpaceshipInfo Function
+        // GetSpaceshipInfo Function
         if (methodName == "getSpaceshipInfo")
         {
             const rapidjson::Value &getSpaceshipInfo = document["getSpaceshipInfo"];
@@ -399,16 +397,19 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        //GetPlanet Function
-        if(methodName == "getPlanetInfo") {
+        // GetPlanet Function
+        if (methodName == "getPlanetInfo")
+        {
             const rapidjson::Value &getPlanetInfo = document["getPlanetInfo"];
             writer.StartObject();
             writer.Key("getPlanetInfo");
             writer.StartObject();
-            if(getPlanetInfo.HasMember("name")){
+            if (getPlanetInfo.HasMember("name"))
+            {
                 string planetName = getPlanetInfo["name"].GetString();
                 auto planetIt = controller->getPlanet().find(planetName);
-                if (planetIt != controller->getPlanet().end()){
+                if (planetIt != controller->getPlanet().end())
+                {
                     writer.String("name");
                     writer.String(controller->getPlanet().find(planetName)->second->getName().c_str());
 
@@ -436,9 +437,9 @@ void *Server::connection_handler(void *data)
                         }
                     }
                     writer.EndArray();
-
                 }
-                else {
+                else
+                {
                     writer.String("Error");
                     writer.String(("Planet " + planetName + " hasn't been found.").c_str());
                 }
@@ -447,24 +448,29 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        //GetQuest Function
-        if(methodName == "getQuestInfo"){
+        // GetQuest Function
+        if (methodName == "getQuestInfo")
+        {
 
             const rapidjson::Value &getQuestInfo = document["getQuestInfo"];
             writer.StartObject();
             writer.Key("getQuestInfo");
             writer.StartObject();
 
-            if (getQuestInfo.HasMember("name")) {
+            if (getQuestInfo.HasMember("name"))
+            {
                 string questName = getQuestInfo["name"].GetString();
                 auto questIt = controller->getQuest().find(questName);
 
-                if(questIt != controller->getQuest().end()){
+                if (questIt != controller->getQuest().end())
+                {
                     writer.String("name");
                     writer.String(controller->getQuest().find(questName)->second->getName().c_str());
                     writer.String("description");
                     writer.String(controller->getQuest().find(questName)->second->getDescription().c_str());
-                } else {
+                }
+                else
+                {
                     writer.String("Error");
                     writer.String(("Quest " + questName + " hasn't been found.").c_str());
                 }
@@ -473,26 +479,31 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        //GetItem Function
-        if (methodName == "getItemInfo") {
-            const rapidjson::Value& getItemInfo = document["getItemInfo"];
+        // GetItem Function
+        if (methodName == "getItemInfo")
+        {
+            const rapidjson::Value &getItemInfo = document["getItemInfo"];
             writer.StartObject();
             writer.Key("getItemInfo");
             writer.StartObject();
 
-            if (getItemInfo.HasMember("name")) {
+            if (getItemInfo.HasMember("name"))
+            {
                 std::string itemName = getItemInfo["name"].GetString();
                 auto itemIt = controller->getInventory().find(itemName);
 
-                if (itemIt != controller->getInventory().end()) {
-                    const auto& item = itemIt->second;
+                if (itemIt != controller->getInventory().end())
+                {
+                    const auto &item = itemIt->second;
                     writer.String("name");
                     writer.String(item->getName().c_str());
                     writer.String("Description");
                     writer.String(item->getDescription().c_str());
                     writer.String("Effect");
                     writer.Int(item->getEffect());
-                } else {
+                }
+                else
+                {
                     writer.String("Error");
                     writer.String(("Item " + itemName + " hasn't been found.").c_str());
                 }
@@ -502,14 +513,16 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        //GetCharacters Function
-        if (methodName == "getCharacters") {
+        // GetCharacters Function
+        if (methodName == "getCharacters")
+        {
             writer.StartObject();
             writer.Key("getCharacters");
             writer.StartArray();
 
-            for (const auto& characterPair : controller->getCharacter()) {
-                const auto& character = characterPair.second;
+            for (const auto &characterPair : controller->getCharacter())
+            {
+                const auto &character = characterPair.second;
 
                 writer.StartObject();
                 writer.String("name");
@@ -530,14 +543,16 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        //GetEnemies Function
-        if (methodName == "getEnemies") {
+        // GetEnemies Function
+        if (methodName == "getEnemies")
+        {
             writer.StartObject();
             writer.Key("getEnemies");
             writer.StartArray();
 
-            for (const auto& enemyPair : controller->getEnemy()) {
-                const auto& enemy = enemyPair.second;
+            for (const auto &enemyPair : controller->getEnemy())
+            {
+                const auto &enemy = enemyPair.second;
 
                 writer.StartObject();
                 writer.String("name");
@@ -558,13 +573,15 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        //GetSpaceships Function 
-        if (methodName == "getSpaceships") {
+        // GetSpaceships Function
+        if (methodName == "getSpaceships")
+        {
             writer.StartObject();
             writer.Key("getSpaceships");
             writer.StartArray();
 
-            for (auto &it : controller->getSpaceship()) {
+            for (auto &it : controller->getSpaceship())
+            {
                 writer.StartObject();
                 writer.Key("name");
                 writer.String(it.second->getName().c_str());
@@ -572,9 +589,11 @@ void *Server::connection_handler(void *data)
                 writer.Key("crew");
                 writer.StartArray();
 
-                for (auto crewMemberWeak : it.second->getCrew()) {
+                for (auto crewMemberWeak : it.second->getCrew())
+                {
                     auto crewMember = crewMemberWeak.lock();
-                    if (crewMember) {
+                    if (crewMember)
+                    {
                         writer.StartObject();
                         writer.String("name");
                         writer.String(crewMember->getName().c_str());
@@ -589,59 +608,67 @@ void *Server::connection_handler(void *data)
             writer.EndArray();
             writer.EndObject();
         }
-        
-        //GetQuests Function 
-        if (methodName == "getQuests") {
+
+        // GetQuests Function
+        if (methodName == "getQuests")
+        {
             writer.StartObject();
             writer.Key("getQuests");
             writer.StartArray();
-                for (auto &it: controller->getQuest()) {
-                    writer.StartObject();
-                    writer.String("name");
-                    writer.String(it.second->getName().c_str());
-                    writer.String("description");
-                    writer.String(it.second->getDescription().c_str());
-                    writer.EndObject();
-                }
+            for (auto &it : controller->getQuest())
+            {
+                writer.StartObject();
+                writer.String("name");
+                writer.String(it.second->getName().c_str());
+                writer.String("description");
+                writer.String(it.second->getDescription().c_str());
+                writer.EndObject();
+            }
             writer.EndArray();
             writer.EndObject();
         }
 
-        //GetInventory Function 
-        if (methodName == "getInventory") {
+        // GetInventory Function
+        if (methodName == "getInventory")
+        {
             writer.StartObject();
             writer.Key("getInventory");
             writer.StartArray();
-                for (auto &it: controller->getInventory()) {
-                    writer.StartObject();
-                    writer.String("name");
-                    writer.String(it.second->getName().c_str());
-                    writer.String("description");
-                    writer.String(it.second->getDescription().c_str());
-                    writer.String("effect");
-                    writer.Int(it.second->getEffect());
-                    writer.EndObject();
-                }
+            for (auto &it : controller->getInventory())
+            {
+                writer.StartObject();
+                writer.String("name");
+                writer.String(it.second->getName().c_str());
+                writer.String("description");
+                writer.String(it.second->getDescription().c_str());
+                writer.String("effect");
+                writer.Int(it.second->getEffect());
+                writer.EndObject();
+            }
             writer.EndArray();
             writer.EndObject();
         }
-        
-        //GetPlanets Function
-        if(methodName == "getPlanets"){
+
+        // GetPlanets Function
+        if (methodName == "getPlanets")
+        {
             writer.StartObject();
             writer.Key("getPlanets");
             writer.StartArray();
 
-            for (auto &it: controller->getPlanet()) {
+            for (auto &it : controller->getPlanet())
+            {
                 writer.StartObject();
                 writer.Key("name");
                 writer.String(it.second->getName().c_str());
                 writer.Key("residents");
                 writer.StartArray();
 
-                for (auto residentList : it.second->getResident()){
+                for (auto residentList : it.second->getResident())
+                {
                     const auto &resident = residentList.lock();
-                    if(resident) {
+                    if (resident)
+                    {
                         writer.StartObject();
                         writer.String("name");
                         writer.String(resident->getName().c_str());
@@ -659,10 +686,12 @@ void *Server::connection_handler(void *data)
                         ATTACK
         ------------------------------------*/
 
-        //Attack function    
-        if (methodName == "attack") {
+        // Attack function
+        if (methodName == "attack")
+        {
             const rapidjson::Value &attack = document["attack"];
-            if (attack.HasMember("assailant") && attack.HasMember("defender")) {
+            if (attack.HasMember("assailant") && attack.HasMember("defender"))
+            {
                 std::string assailant = attack["assailant"].GetString();
                 std::string defender = attack["defender"].GetString();
 
@@ -679,7 +708,9 @@ void *Server::connection_handler(void *data)
                 writer.Bool(result);
                 writer.EndObject();
                 writer.EndObject();
-            } else {
+            }
+            else
+            {
                 writer.StartObject();
                 writer.Key("Error");
                 writer.String("Les clés 'Assaillant' et 'Défenseur' sont manquantes dans la clé 'Attack'.");
@@ -691,14 +722,16 @@ void *Server::connection_handler(void *data)
                     ADD section
         ------------------------------------*/
 
-        //Add character function 
-        if (methodName == "addCharacter") {
+        // Add character function
+        if (methodName == "addCharacter")
+        {
             const rapidjson::Value &addCharacter = document["addCharacter"];
             if (addCharacter.HasMember("name") && addCharacter.HasMember("description") &&
                 addCharacter.HasMember("health") && addCharacter.HasMember("AP") &&
                 addCharacter.HasMember("DP") && addCharacter.HasMember("placeType") &&
-                addCharacter.HasMember("place")) {
-                
+                addCharacter.HasMember("place"))
+            {
+
                 std::string name = addCharacter["name"].GetString();
                 std::string description = addCharacter["description"].GetString();
                 int health = addCharacter["health"].GetInt();
@@ -718,7 +751,9 @@ void *Server::connection_handler(void *data)
                 writer.String("success");
                 writer.EndObject();
                 writer.EndObject();
-            } else {
+            }
+            else
+            {
                 writer.StartObject();
                 writer.Key("Error");
                 writer.String("Certains champs sont manquants dans la clé 'addCharacter'.");
@@ -726,14 +761,16 @@ void *Server::connection_handler(void *data)
             }
         }
 
-       //Add ennemy function 
-        if (methodName == "addEnemy") {
+        // Add ennemy function
+        if (methodName == "addEnemy")
+        {
             const rapidjson::Value &addEnemy = document["addEnemy"];
             if (addEnemy.HasMember("name") && addEnemy.HasMember("description") &&
                 addEnemy.HasMember("health") && addEnemy.HasMember("AP") &&
                 addEnemy.HasMember("DP") && addEnemy.HasMember("placeType") &&
-                addEnemy.HasMember("place")) {
-                
+                addEnemy.HasMember("place"))
+            {
+
                 std::string name = addEnemy["name"].GetString();
                 std::string description = addEnemy["description"].GetString();
                 int health = addEnemy["health"].GetInt();
@@ -753,7 +790,9 @@ void *Server::connection_handler(void *data)
                 writer.String("success");
                 writer.EndObject();
                 writer.EndObject();
-            } else {
+            }
+            else
+            {
                 writer.StartObject();
                 writer.Key("Error");
                 writer.String("Certains champs sont manquants dans la clé 'addEnemy'.");
@@ -761,10 +800,12 @@ void *Server::connection_handler(void *data)
             }
         }
 
-        //Add quest function 
-        if (methodName == "addQuest") {
+        // Add quest function
+        if (methodName == "addQuest")
+        {
             const rapidjson::Value &addQuest = document["addQuest"];
-            if (addQuest.HasMember("name") && addQuest.HasMember("description")) {                
+            if (addQuest.HasMember("name") && addQuest.HasMember("description"))
+            {
                 std::string name = addQuest["name"].GetString();
                 std::string description = addQuest["description"].GetString();
 
@@ -778,7 +819,9 @@ void *Server::connection_handler(void *data)
                 writer.String("success");
                 writer.EndObject();
                 writer.EndObject();
-            } else {
+            }
+            else
+            {
                 writer.StartObject();
                 writer.Key("Error");
                 writer.String("Certains champs sont manquants dans la clé 'addQuest'.");
@@ -786,10 +829,11 @@ void *Server::connection_handler(void *data)
             }
         }
 
-        //Add planet function 
-        if (methodName == "addPlanet") {
-            const rapidjson::Value& addPlanet = document["addPlanet"];
-            if (addPlanet.HasMember("name") && addPlanet.HasMember("description")) 
+        // Add planet function
+        if (methodName == "addPlanet")
+        {
+            const rapidjson::Value &addPlanet = document["addPlanet"];
+            if (addPlanet.HasMember("name") && addPlanet.HasMember("description"))
             {
                 std::string name = addPlanet["name"].GetString();
                 std::string description = addPlanet["description"].GetString();
@@ -802,7 +846,9 @@ void *Server::connection_handler(void *data)
                 writer.String("success");
                 writer.EndObject();
                 writer.EndObject();
-            } else {
+            }
+            else
+            {
                 writer.StartObject();
                 writer.Key("Error");
                 writer.String("Certains champs sont manquants dans la clé 'addPlanet'.");
@@ -810,10 +856,11 @@ void *Server::connection_handler(void *data)
             }
         }
 
-        //Add spaceship function 
-        if (methodName == "addSpaceship") {
-            const rapidjson::Value& addSpaceship = document["addSpaceship"];
-            if (addSpaceship.HasMember("name")) 
+        // Add spaceship function
+        if (methodName == "addSpaceship")
+        {
+            const rapidjson::Value &addSpaceship = document["addSpaceship"];
+            if (addSpaceship.HasMember("name"))
             {
                 std::string name = addSpaceship["name"].GetString();
                 auto newSpaceship = std::make_shared<Spaceship>(name);
@@ -825,7 +872,9 @@ void *Server::connection_handler(void *data)
                 writer.String("success");
                 writer.EndObject();
                 writer.EndObject();
-            } else {
+            }
+            else
+            {
                 writer.StartObject();
                 writer.Key("Error");
                 writer.String("Certains champs sont manquants dans la clé 'addSpaceship'.");
@@ -837,20 +886,25 @@ void *Server::connection_handler(void *data)
                     DELETE section
         ------------------------------------*/
 
-        //Delete planet function 
-        if (methodName == "deletePlanet") {
-            const rapidjson::Value& deletePlanet = document["deletePlanet"];
+        // Delete planet function
+        if (methodName == "deletePlanet")
+        {
+            const rapidjson::Value &deletePlanet = document["deletePlanet"];
             writer.StartObject();
             writer.Key("deletePlanet");
-            if (deletePlanet.HasMember("name")) {
+            if (deletePlanet.HasMember("name"))
+            {
                 std::string planetName = deletePlanet["name"].GetString();
                 bool result = controller->deletePlanet(planetName);
-                if (result) {
+                if (result)
+                {
                     writer.StartObject();
                     writer.String("success");
                     writer.String(("La planète " + planetName + " a été supprimée.").c_str());
                     writer.EndObject();
-                } else {
+                }
+                else
+                {
                     writer.StartObject();
                     writer.String("error");
                     writer.String(("La planète " + planetName + " n'a pas été trouvée.").c_str());
@@ -859,21 +913,26 @@ void *Server::connection_handler(void *data)
             }
             writer.EndObject();
         }
-        
-        //Delete Character function 
-        if (methodName == "deleteCharacter") {
-            const rapidjson::Value& deleteCharacter = document["deleteCharacter"];
+
+        // Delete Character function
+        if (methodName == "deleteCharacter")
+        {
+            const rapidjson::Value &deleteCharacter = document["deleteCharacter"];
             writer.StartObject();
             writer.Key("deleteCharacter");
-            if (deleteCharacter.HasMember("name")) {
+            if (deleteCharacter.HasMember("name"))
+            {
                 std::string characterName = deleteCharacter["name"].GetString();
                 bool result = controller->deleteCharacter(characterName);
-                if (result) {
+                if (result)
+                {
                     writer.StartObject();
                     writer.String("success");
                     writer.String(("Le personnage " + characterName + " a été supprimé.").c_str());
                     writer.EndObject();
-                } else {
+                }
+                else
+                {
                     writer.StartObject();
                     writer.String("error");
                     writer.String(("Le personnage " + characterName + " n'a pas été trouvé.").c_str());
@@ -883,20 +942,25 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        //DeleteSpaceship function 
-        if (methodName == "deleteSpaceship") {
-            const rapidjson::Value& deleteSpaceship = document["deleteSpaceship"];
+        // DeleteSpaceship function
+        if (methodName == "deleteSpaceship")
+        {
+            const rapidjson::Value &deleteSpaceship = document["deleteSpaceship"];
             writer.StartObject();
             writer.Key("deleteSpaceship");
-            if (deleteSpaceship.HasMember("name")) {
+            if (deleteSpaceship.HasMember("name"))
+            {
                 std::string spaceshipName = deleteSpaceship["name"].GetString();
                 bool result = controller->deleteSpaceship(spaceshipName);
-                if (result) {
+                if (result)
+                {
                     writer.StartObject();
                     writer.String("success");
                     writer.String(("Le vaisseau " + spaceshipName + " a été supprimé.").c_str());
                     writer.EndObject();
-                } else {
+                }
+                else
+                {
                     writer.StartObject();
                     writer.String("error");
                     writer.String(("Le vaisseau " + spaceshipName + " n'a pas été trouvé.").c_str());
@@ -906,20 +970,25 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        //DeleteQuest function 
-        if (methodName == "deleteQuest") {
-            const rapidjson::Value& deleteQuest = document["deleteQuest"];
+        // DeleteQuest function
+        if (methodName == "deleteQuest")
+        {
+            const rapidjson::Value &deleteQuest = document["deleteQuest"];
             writer.StartObject();
             writer.Key("deleteQuest");
-            if (deleteQuest.HasMember("name")) {
+            if (deleteQuest.HasMember("name"))
+            {
                 std::string questName = deleteQuest["name"].GetString();
                 bool result = controller->deleteQuest(questName);
-                if (result) {
+                if (result)
+                {
                     writer.StartObject();
                     writer.String("success");
                     writer.String(("La mission " + questName + " a été supprimée.").c_str());
                     writer.EndObject();
-                } else {
+                }
+                else
+                {
                     writer.StartObject();
                     writer.String("error");
                     writer.String(("La mission " + questName + " n'a pas été trouvée.").c_str());
@@ -928,7 +997,6 @@ void *Server::connection_handler(void *data)
             }
             writer.EndObject();
         }
-
 
         // clear buffer data
         memset(buffer, 0, BUFFER_SIZE);

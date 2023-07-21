@@ -86,11 +86,6 @@
       "Effect": 25
     },
     {
-      "Nom": "Blue poison potion",
-      "Description": "Deals 10 HP damage",
-      "Effect": 10
-    },
-    {
       "Nom": "Red lightsaber",
       "Description": "Powerfull saber increasing AP",
       "Effect": 50
