@@ -56,44 +56,69 @@
   ],
   "item": [
     {
-      "Nom": "Potion of Healing I",
-      "Description": "Heals a character for 20 HP",
-      "Effect": 20
+      "Nom": "Red healing potion",
+      "Description": "Heals for 50 HP",
+      "Effect": 50
     },
     {
-      "Nom": "Potion of Healing II",
-      "Description": "Heals a character for 40 HP",
-      "Effect": 40
+      "Nom": "Green healing potion",
+      "Description": "Heals a character for 25 HP",
+      "Effect": 25
     },
     {
-      "Nom": "Potion of Healing III",
-      "Description": "Heals a character for 80 HP",
-      "Effect": 80
+      "Nom": "Blue healing potion",
+      "Description": "Heals a character for 10 HP",
+      "Effect": 10
     },
     {
-      "Nom": "Potion of Max Healing",
+      "Nom": "Max healing potion",
       "Description": "Heals a character for his maximum health",
       "Effect": 2
     },
     {
-      "Nom": "Potion of Poison I",
-      "Description": "Deals 1 HP damage per second to a character for 10 seconds",
-      "Effect": 1
+      "Nom": "Red poison potion",
+      "Description": "Deals 50 HP damage",
+      "Effect": 50
     },
     {
-      "Nom": "Potion of Poison II",
-      "Description": "Deals 3 HP damage per second to a character for 10 seconds",
-      "Effect": 3
+      "Nom": "Green poison potion",
+      "Description": "Deals 25 HP damage",
+      "Effect": 25
     },
     {
-      "Nom": "Potion of Poison III",
-      "Description": "Deals 5 HP damage per second to a character for 10 seconds",
-      "Effect": 5
+      "Nom": "Blue poison potion",
+      "Description": "Deals 10 HP damage",
+      "Effect": 10
     },
     {
-      "Nom": "Potion of Invisibility",
-      "Description": "Makes your character untouchable by Enemies for 30 seconds",
-      "Effect": 0
+      "Nom": "Red lightsaber",
+      "Description": "Powerfull saber increasing AP",
+      "Effect": 50
+    },
+    {
+      "Nom": "Green lightsaber",
+      "Description": "Standard saber increasing AP",
+      "Effect": 25
+    },
+    {
+      "Nom": "Blue lightsaber",
+      "Description": "Light saber increasing AP",
+      "Effect": 10
+    },
+    {
+      "Nom": "Red shield",
+      "Description": "Increases the DP",
+      "Effect": 50
+    },
+    {
+      "Nom": "Green shield",
+      "Description": "Increases the DP",
+      "Effect": 25
+    },
+    {
+      "Nom": "Blue shield",
+      "Description": "Increases the DP",
+      "Effect": 10
     }
   ],
   "character": [

@@ -630,13 +630,18 @@ void Controller::useItem(string charName, string itemName) {       // will affec
         }
     }
 
-    if(itemName == "Potion of Healing I" || itemName == "Potion of Healing II" || itemName == "Potion of Healing III")
+    if(itemName == "Red healing potion" || itemName == "Green healing potion" || itemName == "Blue healing potion")
         character->setHealth(min(character->getMaxHp(), character->getHealth() + character->getInventory().at(idx)->getEffect()));
-    else if(itemName == "Potion of Max Healing")
+    else if(itemName == "Max healing potion")
         character->setHealth(character->getMaxHp());
-    else if (itemName == "Potion of Poison I" || itemName == "Potion of Poison II" || itemName == "Potion of Poison III")
+    else if (itemName == "Red poison potion" || itemName == "Green poison potion" || itemName == "Blue poison potion")
         character->setHealth(min(character->getMaxHp(), character->getHealth() - character->getInventory().at(idx)->getEffect()));
+    else if (itemName == "Green lightsaber" || itemName == "Blue lightsaber" || itemName == "Green lightsaber")
+        character->setAttackPower(character->getAttackPower() + character->getInventory().at(idx)->getEffect());
+    else if (itemName == "Red shield" || itemName == "Green shield" || itemName == "Blue shield")
+        character->setAttackPower(character->getAttackPower() + character->getInventory().at(idx)->getEffect());
     deleteItemToCharacterInventory(charName, itemName);
+    
 }
 
 vector<shared_ptr<Character>> Controller::setupRole(string assailant, string defender) {
