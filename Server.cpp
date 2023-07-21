@@ -23,7 +23,7 @@
 // server address
 #define ADDRESS "0.0.0.0"
 // port number
-#define PORT 8044
+#define PORT 8888
 // maximum concurrent connections
 #define CONCURRENT_CONNECTION 10
 // maximum connection requests queued
@@ -612,13 +612,13 @@ void *Server::connection_handler(void *data)
             writer.StartObject();
             writer.Key("getInventory");
             writer.StartArray();
-                for (auto &it : controller->getInventory()) {
+                for (auto &it: controller->getInventory()) {
                     writer.StartObject();
-                    writer.String("Name");
+                    writer.String("name");
                     writer.String(it.second->getName().c_str());
-                    writer.String("Description");
+                    writer.String("description");
                     writer.String(it.second->getDescription().c_str());
-                    writer.String("Effect");
+                    writer.String("effect");
                     writer.Int(it.second->getEffect());
                     writer.EndObject();
                 }
