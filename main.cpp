@@ -1,13 +1,13 @@
-// main.cpp
-
 #include <iostream>
 #include <string>
 #include "Controller.h"
+#include "Server.h"
 
 using namespace std;
 
 
-void displayAllCharacters(Controller &controller) {
+/// TESTING FUNCTIONS
+/*void displayAllCharacters(Controller &controller) {
     cout << "Affichage des Characters : " << endl;
     for( auto it : controller.getCharacter()){
         cout << it.second->getName() << " ";
@@ -30,15 +30,8 @@ void displayAllEnemies(Controller &controller) {
         cout << it.second->getPlace() << endl;
     }
 }
-void displayAllQuest(Controller &controller) {
-    cout << "Affichage des missions : " << endl;
-    for( auto it : controller.getQuest()){
-        cout << it.second->getName() << " ";
-        cout << it.second->getDescription() << " ";
-    }
-}
 
-void displayControllerItems(Controller &controller){
+*/void displayControllerItems(Controller &controller){
     if(controller.getInventory().empty()){
         cout << "Empty Game Inventory !" << endl;
     }
@@ -55,6 +48,44 @@ void displayControllerItems(Controller &controller){
             }
         }
 
+    }
+}/*
+
+void displayAllInfo(Controller &controller){
+    displayAllCharacters(controller);
+    cout << "---------------------" << endl;
+
+    displayAllEnemies(controller);
+    cout << "---------------------" << endl;
+
+    displayAllQuest(controller);
+    cout << "---------------------" << endl;
+
+    displayControllerItems(controller);
+    cout << "---------------------" << endl;
+
+    cout << "Affichage des résidents par Planet : " << endl;
+    for( auto it : controller.getPlanet()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getResident()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower() << " ";
+            cout << i.lock()->getArmorPower() << endl;
+        }
+        cout << "--------" << endl;
+    }
+    cout << "---------------------" << endl;
+    cout << "Affichage des crewmates par Spaceship : " << endl;
+    for( auto it : controller.getSpaceship()){
+        cout << it.second->getName() << endl;
+        for (auto i : it.second->getCrew()) {
+            cout << i.lock()->getName() << " ";
+            cout << i.lock()->getHealth() << " ";
+            cout << i.lock()->getAttackPower();
+            cout << i.lock()->getArmorPower() << endl;
+        }
+        cout << "--------" << endl;
     }
 }
 
@@ -112,6 +143,7 @@ void deleteQuestTest(Controller &controller){
     } while (result4 == false);
 }
 
+
 void debugDisplayWeakPtrNbr(Controller &controller){
     cout << "------Nb weak" <<endl;
     int count = 0;
@@ -123,153 +155,21 @@ void debugDisplayWeakPtrNbr(Controller &controller){
         }
     }
     cout << count << endl;
-}
-
-void displayAllInfo(Controller &controller){
-    displayAllCharacters(controller);
-    cout << "---------------------" << endl;
-
-    displayAllEnemies(controller);
-    cout << "---------------------" << endl;
-
-    displayAllQuest(controller);
-    cout << "---------------------" << endl;
-
-    displayControllerItems(controller);
-    cout << "---------------------" << endl;
-
-    cout << "Affichage des résidents par Planet : " << endl;
-    for( auto it : controller.getPlanet()){
-        cout << it.second->getName() << endl;
-        for (auto i : it.second->getResident()) {
-            cout << i.lock()->getName() << " ";
-            cout << i.lock()->getHealth() << " ";
-            cout << i.lock()->getAttackPower() << " ";
-            cout << i.lock()->getArmorPower() << endl;
-        }
-        cout << "--------" << endl;
-    }
-    cout << "---------------------" << endl;
-    cout << "Affichage des crewmates par Spaceship : " << endl;
-    for( auto it : controller.getSpaceship()){
-        cout << it.second->getName() << endl;
-        for (auto i : it.second->getCrew()) {
-            cout << i.lock()->getName() << " ";
-            cout << i.lock()->getHealth() << " ";
-            cout << i.lock()->getAttackPower();
-            cout << i.lock()->getArmorPower() << endl;
-        }
-        cout << "--------" << endl;
-    }
-}
-
+}*/
 
 
 //Code contenant l'execution du menu et le jeu
 int main() {
+
     string savedFile= "save.txt";
-    string loadedFile= "data.txt";
-    Controller controller(loadedFile, savedFile);
+    string gameFile= "gameData.json";
+    Controller controller(gameFile, savedFile);
+
     controller.loadGame();
+    Server server(&controller);
+    server.run();
+    //controller.saveGame();
+                     
 
-//    displayAllCharacters(controller);
-
-    displayControllerItems(controller);
-
-
-    for(auto it = controller.getInventory().begin(); it != controller.getInventory().end(); it++) {
-        if(controller.getCharacter()["Alex Starborn"]->getInventory().size() < 4)
-            controller.addToCharacterInventory("Alex Starborn", it->second->getName());
-    }
-    cout << "ALEX INVENTORY before looting Potion of Max Healing" << endl;
-    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-        if(it == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it->getName() << endl;
-    }
-
-    controller.looting("Alex Starborn","Potion of Max Healing");
-
-    cout << "ALEX INVENTORY after looting Potion of Max Healing" << endl;
-    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-        if(it == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it->getName() << endl;
-    }
-
-    controller.dropItem("Alex Starborn","Potion of Invisibility");
-
-    cout << "ALEX INVENTORY after dropping Potion of Invisibility" << endl;
-    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-        if(it == nullptr)
-            cout << "null print" << endl;
-        else
-            cout << it->getName() << endl;
-    }
-
-//    cout << "GAME INVENTORY 1 " << endl;
-//    for (auto& it : controller.getInventory()) {
-//        if(it.second == nullptr)
-//            cout << "null print" << endl;
-//        else
-//            cout << it.second->getName() << endl;
-//    }
-
-
-//    cout << "-----------------" << endl;
-//    displayCharacterInventory(alex);
-//    cout << "-----------------" << endl;
-//    displayControllerItems(controller);
-//    cout << "-----------------" << endl;
-
-
-//    cout << "MOVE POTION POISON 3" << endl;
-//    auto poison = std::move(controller.getInventory()["Potion of Poison III"]);
-//    cout << "-----------------" << endl;
-//    displayControllerItems(controller);
-
-//    cout << "ALEX LOOT POISON III ?" << endl;
-//    controller.looting("Alex Starborn","Potion of Poison III");
-//
-//    cout << "ALEX INVENTORY " << endl;
-//    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-//        if(it == nullptr)
-//            cout << "null print" << endl;
-//        else
-//            cout << it->getName() << endl;
-//    }
-
-//    cout << "------------------" << endl;
-//    cout << "GAME INVENTORY " << endl;
-//    for (auto& it : controller.getInventory()) {
-//        if(it.second == nullptr)
-//            cout << "null print" << endl;
-//        else
-//            cout << it.second->getName() << endl;
-//    }
-//    cout << "------------------" << endl;
-//
-//
-//    cout << "Alex's hp before : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-//    controller.useItem("Alex Starborn", "Potion of Poison III");
-//    cout << "Alex's hp after Poison III : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-//    controller.useItem("Alex Starborn", "Potion of Healing I");
-//    cout << "Alex's hp after Healing I: " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-//    controller.useItem("Alex Starborn", "Potion of Max Healing");
-//    cout << "Alex's hp after Max Healing : " << controller.getCharacter()["Alex Starborn"]->getHealth() <<endl;
-//
-//    cout << "ALEX INVENTORY " << endl;
-//    for (auto& it : controller.getCharacter()["Alex Starborn"]->getInventory()) {
-//        if(it == nullptr)
-//            cout << "null print" << endl;
-//        else
-//            cout << it->getName() << endl;
-//    }
-
-
-
-    return 0;
+return 0;
 }
-
