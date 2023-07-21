@@ -163,12 +163,34 @@ void displayAllInfo(Controller &controller){
     }
 }
 
+void lootingTest(Controller &controller, string characterName, string itemName) {
+    cout << "Test : " << characterName << " looting " << itemName << endl;
+    cout << "--------------- Before looting ---------------" << endl;
+    cout << controller.getCharacter()[characterName] << "'s inventory :" << endl;
+    displayCharacterInventory(controller.getCharacter()[characterName]);
+    cout << "Game's inventory :" << endl;
+    displayControllerItems(controller);
 
+
+    controller.looting(characterName, itemName);
+    cout << "--------------- After looting ---------------" << endl;
+    displayCharacterInventory(controller.getCharacter()[characterName]);
+    cout << "Game's inventory :" << endl;
+    displayControllerItems(controller);
+}
+
+void useHealthItem(Controller &controller, string characterName, string itemName) {
+    cout << characterName << "'s hp before using " << itemName << " : "
+         << controller.getCharacter()[characterName]->getHealth() << endl;
+    controller.useItem(characterName, itemName);
+    cout << characterName << "'s hp after using " << itemName << " : "
+         << controller.getCharacter()[characterName]->getHealth() << endl;
+}
 
 //Code contenant l'execution du menu et le jeu
 int main() {
     string savedFile= "save.txt";
-    string loadedFile= "data.txt";
+    string loadedFile= "gameData.json";
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
 
