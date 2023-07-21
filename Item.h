@@ -23,7 +23,8 @@ private:
     string name;
     string description;
     int effect;
-    int quantity;
+
+
 };
 
 

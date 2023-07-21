@@ -18,7 +18,7 @@ class Controller {
 public:
     Controller(string& loadedFile, string& savedFile);
 
-    //Getters et Setters
+    //Getters & Setters
     map<string, shared_ptr<Quest>> getQuest();
     map<string, shared_ptr<Character>> getCharacter();
     map<string, shared_ptr<Enemy>> getEnemy();
@@ -26,7 +26,7 @@ public:
     map<string, shared_ptr<Spaceship>> getSpaceship();
     map<string, unique_ptr<Item>>& getInventory();
 
-    //Méthodes
+    //Methods
     void loadGame();
     void loadActions(string actionsFile);
     void saveGame();
@@ -37,16 +37,21 @@ public:
     void addPlanet(const shared_ptr<Planet>&);
     void addQuest(const shared_ptr<Quest>&);
     void addToGameInventory(unique_ptr<Item>&);
-    void addToCharacterInventory(shared_ptr<Character>&, unique_ptr<Item>&);
+    void addToCharacterInventory(string, string);
     bool deleteCharacter(const string& name);
     bool deleteSpaceship(const string& name);
     bool deletePlanet(const string& name);
     bool deleteQuest(const string& name);
+    bool deleteItemToCharacterInventory(string, string);
+
     void cleanWeakPtr(vector<weak_ptr<Character>>& vec);
-    void cleanUniquePtr(map<string, unique_ptr<Item>>&);
+//    void cleanUniquePtr(map<string, unique_ptr<Item>>&);
+
 
     bool neutralAttack(string, string);  // returns true if enemy dies
-    void looting(shared_ptr<Character>, unique_ptr<Item>&);
+    void looting(string, string);
+    void dropItem(string, string);
+    void useItem(string, string);
     string characterToString();
     string spaceshipToString();
     string planetToString();

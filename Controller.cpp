@@ -332,20 +332,22 @@ void Controller::cleanWeakPtr(
     vec.clear();
 }
 
-void Controller::cleanUniquePtr(map<string, unique_ptr<Item>>& mapToClean) {
-    for (auto it = mapToClean.begin(); it != mapToClean.end();) {
-        if (it->second == nullptr) {
-            mapToClean.erase(it);
-        } else {
-            ++it;
-        }
-    }
-    //mapToClean.clear();    // deleting nullptr pointers
-}
+//void Controller::cleanUniquePtr(map<string, unique_ptr<Item>>& mapToClean) {
+//    for (auto it = mapToClean.begin(); it != mapToClean.end();) {
+//        if (it->second == nullptr) {
+//            mapToClean.erase(it);
+//        } else {
+//            ++it;
+//        }
+//    }
+//}
 
-void Controller::addToCharacterInventory(shared_ptr<Character>& character, unique_ptr<Item>& newItem) {
+void Controller::addToCharacterInventory(string charName, string itemName) {
+    shared_ptr<Character>& character = characterMap[charName];
+    unique_ptr<Item>& newItem = inventory[itemName];
+
     if (character->getInventory().size() < 5) {             // each Character has a 5-item inventory
-        character->getInventory()[newItem->getName()] = move(newItem);
+        character->getInventory().push_back(move(newItem));
 #ifdef DEBUG
         cout << " added to " << character->getName() << "'s inventory." << endl;
 #endif
@@ -508,6 +510,32 @@ bool Controller::deleteQuest(const std::string &name) {
 #endif
 }
 
+bool Controller::deleteItemToCharacterInventory(string charName, string itemName) {
+
+    shared_ptr<Character>& character = characterMap[charName];
+
+    // trying to get inventory's index by using item's itemName
+    for (int i = 0; i < character->getInventory().size(); i++) {
+        if(character->getInventory().at(i)->getName() == itemName) {
+            character->getInventory().erase(character->getInventory().begin() + i);
+            return true;
+        }
+    }
+    return false;   // if item doesn't exist in character's inventory
+
+
+#ifdef DEBUG
+    for (auto &pair: questMap) {
+        auto &mi = pair.second;
+        cout << "Nom : " << mi->getName() << endl;
+    }
+#endif
+}
+
+
+
+
+
 bool Controller::neutralAttack(string assailant, string defender) {
 
     auto as = setupRole(assailant, defender)[0];
@@ -530,43 +558,86 @@ bool Controller::neutralAttack(string assailant, string defender) {
 
 bool Controller::isReplacing() {
     char response;
-    if(inventory.size() >= 5) {
-        cout << "Do you want to replace something in your Inventory (y/N) : " << endl;
-        cin >> response;
-        while(not(response == 'y' or response == 'Y' or response == 'n' or response == 'N')) {
-            cout << "Invalid ! Please enter a valid reply (y/N) : " << endl;
-            cin >> response;
 
-        }
-        if(response == 'y' or response == 'Y')
-            return true;
+    cout << "Do you want to replace something in your Inventory (y/N) : " << endl;
+    cin >> response;
+    while(not(response == 'y' or response == 'Y' or response == 'n' or response == 'N')) {
+        cout << "Invalid ! Please enter a valid reply (y/N) : " << endl;
+        cin >> response;
+
     }
+    if(response == 'y' or response == 'Y')
+        return true;
     return false;
 }
 
 
-//unique_ptr<Item>&
-void Controller::looting(shared_ptr<Character> character, unique_ptr<Item>& lootedItem) {
-    if(isReplacing()) {
-        char itemNameToReplace[100];
-        for (auto &it: character->getInventory()) {
-            cout << "Name : " << it.second->getName() << endl;
-        }
-        cout << "Saisir l'Item à remplacer : ";
-        cin.ignore();
-        cin.getline(itemNameToReplace,sizeof(itemNameToReplace));
-        for (auto &it: character->getInventory()) {
-            if(it.first == itemNameToReplace) {
-                auto temp = move(it.second);
-                swap(temp, lootedItem);
-                it.second = move(temp);
+
+void Controller::looting(string charName, string itemName) {
+
+    shared_ptr<Character>& character = characterMap[charName];
+    unique_ptr<Item>& lootedItem = inventory[itemName];
+
+    if(character->getInventory().size() >= 5) {
+        if(isReplacing()) {
+            char itemNameToReplace[100];
+            for (auto &it: character->getInventory()) {
+                cout << "Name : " << it->getName() << endl;
             }
-        }
-        auto droppedItem = move(lootedItem);
-        addToGameInventory(droppedItem);  // was the Item we had in our inventory before swap
+            cout << "Saisir l'Item à remplacer : ";
+            cin.ignore();
+            cin.getline(itemNameToReplace, sizeof(itemNameToReplace));
+            for (auto &it: character->getInventory()) {
+                if (it->getName() == itemNameToReplace) {
+                    auto temp = move(it);
+                    swap(temp, lootedItem);
+                    it = move(temp);
+                }
+            }
+            auto droppedItem = move(lootedItem);
+            addToGameInventory(droppedItem);  // was the Item we had in our inventory before swap
+            }
+    }
+    else {
+        addToCharacterInventory(charName, itemName);
     }
 }
 
+void Controller::dropItem(string charName, string itemName) {
+    // moves an item from a character's inventory back to game's inventory
+    shared_ptr<Character>& character = characterMap[charName];
+
+    for (int i = 0; i < character->getInventory().size(); i++) {
+        if(character->getInventory().at(i)->getName() == itemName) {
+
+            inventory[itemName] = move(character->getInventory().at(i));
+            character->getInventory().erase(character->getInventory().begin() + i);     // delete nullptr placeholder
+            break;
+        }
+    }
+}
+
+void Controller::useItem(string charName, string itemName) {       // will affect character's attributes
+
+    shared_ptr<Character>& character = characterMap[charName];
+
+    int idx;
+    // trying to get inventory's index by using item's itemName
+    for (int i = 0; i < character->getInventory().size(); i++) {
+        if(character->getInventory().at(i)->getName() == itemName) {
+            idx = i;
+            break;
+        }
+    }
+
+    if(itemName == "Potion of Healing I" || itemName == "Potion of Healing II" || itemName == "Potion of Healing III")
+        character->setHealth(min(character->getMaxHp(), character->getHealth() + character->getInventory().at(idx)->getEffect()));
+    else if(itemName == "Potion of Max Healing")
+        character->setHealth(character->getMaxHp());
+    else if (itemName == "Potion of Poison I" || itemName == "Potion of Poison II" || itemName == "Potion of Poison III")
+        character->setHealth(min(character->getMaxHp(), character->getHealth() - character->getInventory().at(idx)->getEffect()));
+    deleteItemToCharacterInventory(charName, itemName);
+}
 
 vector<shared_ptr<Character>> Controller::setupRole(string assailant, string defender) {
     vector<shared_ptr<Character>> roles;

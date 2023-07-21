@@ -89,6 +89,19 @@ void displayAllInfo(Controller &controller){
     }
 }
 
+void displayCharacterInventory(shared_ptr<Character>& character) {
+    cout << character->getName() << "'s inventory : " << endl;
+    if (character->getInventory().empty()) {
+        cout << "Empty inventory !" << endl;
+    } else {
+        for (auto &it: character->getInventory()) {
+            cout << it->getName() << " ";
+            cout << it->getDescription() << " ";
+            cout << it->getEffect() << endl;
+        }
+    }
+}
+
 void planetDeleteTest(Controller &controller){
     cout << "Liste des planetes : " <<endl;
     for( auto it : controller.getPlanet()){
@@ -156,9 +169,6 @@ int main() {
     Server server(&controller);
     server.run();
     //controller.saveGame();
- //displayControllerItems(controller);
-	//string characterName = "Docteur Liara";
-	//cout << controller.getCharacter().find(characterName)->second->getDescr() << endl;
                      
 
 return 0;
