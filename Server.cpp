@@ -311,6 +311,47 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
+
+        // GetCharacterInfo Function
+        if (methodName == "getEnemyInfo")
+        {
+            const rapidjson::Value &getEnemyInfo = document["getEnemyInfo"];
+
+            writer.StartObject();
+            writer.Key("getEnemyInfo");
+            writer.StartObject();
+            if (getEnemyInfo.HasMember("name"))
+            {
+                string enemyName = getEnemyInfo["name"].GetString();
+                auto enemyIt = controller->getEnemy().find(enemyName);
+                if (enemyIt != controller->getEnemy().end())
+                {
+                    writer.String("name");
+                    writer.String(controller->getEnemy().find(enemyName)->second->getName().c_str());
+                    writer.String("description");
+                    writer.String(controller->getEnemy().find(enemyName)->second->getDescr().c_str());
+                    writer.String("health");
+                    writer.Int(controller->getEnemy().find(enemyName)->second->getHealth());
+                    writer.String("AP");
+                    writer.Int(controller->getEnemy().find(enemyName)->second->getAttackPower());
+                    writer.String("DP");
+                    writer.Int(controller->getEnemy().find(enemyName)->second->getArmorPower());
+                    writer.String("placeType");
+                    writer.String(controller->getEnemy().find(enemyName)->second->getPlaceType().c_str());
+                    writer.String("place");
+                    writer.String(controller->getEnemy().find(enemyName)->second->getPlace().c_str());
+                }
+                else
+                {
+                    writer.String("Error");
+                    writer.String(("Enemy " + enemyName + " hasn't been found.").c_str());
+                }
+            }
+            writer.EndObject();
+            writer.EndObject();
+        }
+
+
         //GetSpaceshipInfo Function
         if (methodName == "getSpaceshipInfo")
         {
@@ -483,6 +524,34 @@ void *Server::connection_handler(void *data)
                 writer.String(character->getPlaceType().c_str());
                 writer.String("place");
                 writer.String(character->getPlace().c_str());
+                writer.EndObject();
+            }
+            writer.EndArray();
+            writer.EndObject();
+        }
+
+        //GetEnemies Function
+        if (methodName == "getEnemies") {
+            writer.StartObject();
+            writer.Key("getEnemies");
+            writer.StartArray();
+
+            for (const auto& enemyPair : controller->getEnemy()) {
+                const auto& enemy = enemyPair.second;
+
+                writer.StartObject();
+                writer.String("name");
+                writer.String(enemy->getName().c_str());
+                writer.String("health");
+                writer.Int(enemy->getHealth());
+                writer.String("AP");
+                writer.Int(enemy->getAttackPower());
+                writer.String("DP");
+                writer.Int(enemy->getArmorPower());
+                writer.String("placetype");
+                writer.String(enemy->getPlaceType().c_str());
+                writer.String("place");
+                writer.String(enemy->getPlace().c_str());
                 writer.EndObject();
             }
             writer.EndArray();
@@ -860,7 +929,7 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-        
+
         // clear buffer data
         memset(buffer, 0, BUFFER_SIZE);
 
