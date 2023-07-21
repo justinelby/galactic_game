@@ -657,6 +657,66 @@ void *Server::connection_handler(void *data)
             }
         }
 
+       //Add ennemy function 
+        if (methodName == "addEnemy") {
+            const rapidjson::Value &addEnemy = document["addEnemy"];
+            if (addEnemy.HasMember("name") && addEnemy.HasMember("description") &&
+                addEnemy.HasMember("health") && addEnemy.HasMember("AP") &&
+                addEnemy.HasMember("DP") && addEnemy.HasMember("placeType") &&
+                addEnemy.HasMember("place")) {
+                
+                std::string name = addEnemy["name"].GetString();
+                std::string description = addEnemy["description"].GetString();
+                int health = addEnemy["health"].GetInt();
+                int attackPower = addEnemy["AP"].GetInt();
+                int armorPower = addEnemy["DP"].GetInt();
+                std::string placeType = addEnemy["placeType"].GetString();
+                std::string place = addEnemy["place"].GetString();
+
+                // Créer et ajouter le personnage à la map characterMap
+                auto newEnemy = std::make_shared<Enemy>(name, description, health, attackPower, armorPower, placeType, place);
+                controller->addEnemy(newEnemy);
+
+                writer.StartObject();
+                writer.Key("addEnemy");
+                writer.StartObject();
+                writer.String("status");
+                writer.String("success");
+                writer.EndObject();
+                writer.EndObject();
+            } else {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'addEnemy'.");
+                writer.EndObject();
+            }
+        }
+
+        //Add quest function 
+        if (methodName == "addQuest") {
+            const rapidjson::Value &addQuest = document["addQuest"];
+            if (addQuest.HasMember("name") && addQuest.HasMember("description")) {                
+                std::string name = addQuest["name"].GetString();
+                std::string description = addQuest["description"].GetString();
+
+                auto newQuest = std::make_shared<Quest>(name, description);
+                controller->addQuest(newQuest);
+
+                writer.StartObject();
+                writer.Key("addQuest");
+                writer.StartObject();
+                writer.String("status");
+                writer.String("success");
+                writer.EndObject();
+                writer.EndObject();
+            } else {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'addQuest'.");
+                writer.EndObject();
+            }
+        }
+
         //Add planet function 
         if (methodName == "addPlanet") {
             const rapidjson::Value& addPlanet = document["addPlanet"];
@@ -677,6 +737,29 @@ void *Server::connection_handler(void *data)
                 writer.StartObject();
                 writer.Key("Error");
                 writer.String("Certains champs sont manquants dans la clé 'addPlanet'.");
+                writer.EndObject();
+            }
+        }
+
+        //Add spaceship function 
+        if (methodName == "addSpaceship") {
+            const rapidjson::Value& addSpaceship = document["addSpaceship"];
+            if (addSpaceship.HasMember("name")) 
+            {
+                std::string name = addSpaceship["name"].GetString();
+                auto newSpaceship = std::make_shared<Spaceship>(name);
+                controller->addSpaceship(newSpaceship);
+                writer.StartObject();
+                writer.Key("addSpaceship");
+                writer.StartObject();
+                writer.String("status");
+                writer.String("success");
+                writer.EndObject();
+                writer.EndObject();
+            } else {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'addSpaceship'.");
                 writer.EndObject();
             }
         }
