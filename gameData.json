@@ -56,11 +56,6 @@
   ],
   "item": [
     {
-      "Nom": "Red healing potion",
-      "Description": "Heals for 50 HP",
-      "Effect": 50
-    },
-    {
       "Nom": "Green healing potion",
       "Description": "Heals a character for 25 HP",
       "Effect": 25
@@ -69,11 +64,6 @@
       "Nom": "Blue healing potion",
       "Description": "Heals a character for 10 HP",
       "Effect": 10
-    },
-    {
-      "Nom": "Max healing potion",
-      "Description": "Heals a character for his maximum health",
-      "Effect": 2
     },
     {
       "Nom": "Red poison potion",
@@ -96,19 +86,9 @@
       "Effect": 25
     },
     {
-      "Nom": "Blue lightsaber",
-      "Description": "Light saber increasing AP",
-      "Effect": 10
-    },
-    {
       "Nom": "Red shield",
       "Description": "Increases the DP",
       "Effect": 50
-    },
-    {
-      "Nom": "Green shield",
-      "Description": "Increases the DP",
-      "Effect": 25
     },
     {
       "Nom": "Blue shield",
