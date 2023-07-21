@@ -273,33 +273,32 @@ void *Server::connection_handler(void *data)
         ------------------------------------*/
 
         // GetCharacterInfo Function
-        if (methodName == "GetCharacterInfo")
+        if (methodName == "getCharacterInfo")
         {
-            const rapidjson::Value &getCharacterInfo = document["GetCharacterInfo"];
+            const rapidjson::Value &getCharacterInfo = document["getCharacterInfo"];
 
             writer.StartObject();
-            writer.Key("GetCharacterInfo");
+            writer.Key("getCharacterInfo");
             writer.StartObject();
-            if (getCharacterInfo.HasMember("CharacterName"))
+            if (getCharacterInfo.HasMember("name"))
             {
-                string characterName = getCharacterInfo["CharacterName"].GetString();
+                string characterName = getCharacterInfo["name"].GetString();
                 auto characterIt = controller->getCharacter().find(characterName);
-                cout << "CharacterIt = " << characterIt->second->getName() << endl;
                 if (characterIt != controller->getCharacter().end())
                 {
-                    writer.String("Name");
+                    writer.String("name");
                     writer.String(controller->getCharacter().find(characterName)->second->getName().c_str());
-                    writer.String("Description");
+                    writer.String("description");
                     writer.String(controller->getCharacter().find(characterName)->second->getDescr().c_str());
-                    writer.String("Health");
+                    writer.String("health");
                     writer.Int(controller->getCharacter().find(characterName)->second->getHealth());
                     writer.String("AP");
                     writer.Int(controller->getCharacter().find(characterName)->second->getAttackPower());
                     writer.String("DP");
                     writer.Int(controller->getCharacter().find(characterName)->second->getArmorPower());
-                    writer.String("Place");
+                    writer.String("placeType");
                     writer.String(controller->getCharacter().find(characterName)->second->getPlaceType().c_str());
-                    writer.String("Localisation");
+                    writer.String("place");
                     writer.String(controller->getCharacter().find(characterName)->second->getPlace().c_str());
                 }
                 else
@@ -313,22 +312,22 @@ void *Server::connection_handler(void *data)
         }
 
         //GetSpaceshipInfo Function
-        if (methodName == "GetSpaceshipInfo")
+        if (methodName == "getSpaceshipInfo")
         {
-            const rapidjson::Value &getSpaceshipInfo = document["GetSpaceshipInfo"];
+            const rapidjson::Value &getSpaceshipInfo = document["getSpaceshipInfo"];
 
             writer.StartObject();
-            writer.Key("GetSpaceshipInfo");
+            writer.Key("getSpaceshipInfo");
             writer.StartObject();
-            if (getSpaceshipInfo.HasMember("SpaceshipName"))
+            if (getSpaceshipInfo.HasMember("name"))
             {
-                string spaceshipName = getSpaceshipInfo["SpaceshipName"].GetString();
+                string spaceshipName = getSpaceshipInfo["name"].GetString();
                 auto spaceshipIt = controller->getSpaceship().find(spaceshipName);
                 if (spaceshipIt != controller->getSpaceship().end())
                 {
-                    writer.String("SpaceshipName");
+                    writer.String("name");
                     writer.String(controller->getSpaceship().find(spaceshipName)->second->getName().c_str());
-                    writer.String("Crew");
+                    writer.String("crew");
                     writer.StartArray();
                     for (const auto &crewMember : controller->getSpaceship().find(spaceshipName)->second->getCrew())
                     {
@@ -336,9 +335,9 @@ void *Server::connection_handler(void *data)
                         if (character)
                         {
                             writer.StartObject();
-                            writer.String("Name");
+                            writer.String("name");
                             writer.String(character->getName().c_str());
-                            writer.String("Health");
+                            writer.String("health");
                             writer.Int(character->getHealth());
                             writer.String("AP");
                             writer.Int(character->getAttackPower());
@@ -360,19 +359,19 @@ void *Server::connection_handler(void *data)
         }
 
         //GetPlanet Function
-        if(methodName == "GetPlanetInfo") {
-            const rapidjson::Value &getPlanetInfo = document["GetPlanetInfo"];
+        if(methodName == "getPlanetInfo") {
+            const rapidjson::Value &getPlanetInfo = document["getPlanetInfo"];
             writer.StartObject();
-            writer.Key("GetPlanetInfo");
+            writer.Key("getPlanetInfo");
             writer.StartObject();
-            if(getPlanetInfo.HasMember("PlanetName")){
-                string planetName = getPlanetInfo["PlanetName"].GetString();
+            if(getPlanetInfo.HasMember("name")){
+                string planetName = getPlanetInfo["name"].GetString();
                 auto planetIt = controller->getPlanet().find(planetName);
                 if (planetIt != controller->getPlanet().end()){
-                    writer.String("PlanetName");
+                    writer.String("name");
                     writer.String(controller->getPlanet().find(planetName)->second->getName().c_str());
 
-                    writer.String("Residents");
+                    writer.String("residents");
                     writer.StartArray();
                     for (const auto &resident : controller->getPlanet().find(planetName)->second->getResident())
                     {
@@ -380,14 +379,18 @@ void *Server::connection_handler(void *data)
                         if (character)
                         {
                             writer.StartObject();
-                            writer.String("Name");
+                            writer.String("name");
                             writer.String(character->getName().c_str());
-                            writer.String("Health");
+                            writer.String("health");
                             writer.Int(character->getHealth());
                             writer.String("AP");
                             writer.Int(character->getAttackPower());
                             writer.String("DP");
                             writer.Int(character->getArmorPower());
+                            writer.String("placeType");
+                            writer.String(character->getPlaceType().c_str());
+                            writer.String("place");
+                            writer.String(character->getPlace().c_str());
                             writer.EndObject();
                         }
                     }
@@ -404,21 +407,21 @@ void *Server::connection_handler(void *data)
         }
 
         //GetQuest Function
-        if(methodName == "GetQuestInfo"){
+        if(methodName == "getQuestInfo"){
 
-            const rapidjson::Value &getQuestInfo = document["GetQuestInfo"];
+            const rapidjson::Value &getQuestInfo = document["getQuestInfo"];
             writer.StartObject();
-            writer.Key("GetQuestInfo");
+            writer.Key("getQuestInfo");
             writer.StartObject();
 
-            if (getQuestInfo.HasMember("QuestName")) {
-                string questName = getQuestInfo["QuestName"].GetString();
+            if (getQuestInfo.HasMember("name")) {
+                string questName = getQuestInfo["name"].GetString();
                 auto questIt = controller->getQuest().find(questName);
 
                 if(questIt != controller->getQuest().end()){
-                    writer.String("QuestName");
+                    writer.String("name");
                     writer.String(controller->getQuest().find(questName)->second->getName().c_str());
-                    writer.String("Description");
+                    writer.String("description");
                     writer.String(controller->getQuest().find(questName)->second->getDescription().c_str());
                 } else {
                     writer.String("Error");
@@ -430,19 +433,19 @@ void *Server::connection_handler(void *data)
         }
 
         //GetItem Function
-        if (methodName == "GetItemInfo") {
-            const rapidjson::Value& getItemInfo = document["GetItemInfo"];
+        if (methodName == "getItemInfo") {
+            const rapidjson::Value& getItemInfo = document["getItemInfo"];
             writer.StartObject();
-            writer.Key("GetItemInfo");
+            writer.Key("getItemInfo");
             writer.StartObject();
 
-            if (getItemInfo.HasMember("ItemName")) {
-                std::string itemName = getItemInfo["ItemName"].GetString();
+            if (getItemInfo.HasMember("name")) {
+                std::string itemName = getItemInfo["name"].GetString();
                 auto itemIt = controller->getInventory().find(itemName);
 
                 if (itemIt != controller->getInventory().end()) {
                     const auto& item = itemIt->second;
-                    writer.String("ItemName");
+                    writer.String("name");
                     writer.String(item->getName().c_str());
                     writer.String("Description");
                     writer.String(item->getDescription().c_str());
@@ -459,53 +462,52 @@ void *Server::connection_handler(void *data)
         }
 
         //GetCharacters Function
-        if (methodName == "GetCharacters") {
+        if (methodName == "getCharacters") {
             writer.StartObject();
-            writer.Key("GetCharacters");
+            writer.Key("getCharacters");
             writer.StartArray();
 
             for (const auto& characterPair : controller->getCharacter()) {
                 const auto& character = characterPair.second;
 
                 writer.StartObject();
-                writer.String("Name");
+                writer.String("name");
                 writer.String(character->getName().c_str());
-                writer.String("Health");
+                writer.String("health");
                 writer.Int(character->getHealth());
                 writer.String("AP");
                 writer.Int(character->getAttackPower());
                 writer.String("DP");
                 writer.Int(character->getArmorPower());
-                writer.String("Placetype");
+                writer.String("placetype");
                 writer.String(character->getPlaceType().c_str());
-                writer.String("Place");
+                writer.String("place");
                 writer.String(character->getPlace().c_str());
                 writer.EndObject();
             }
-
             writer.EndArray();
             writer.EndObject();
         }
 
         //GetSpaceships Function 
-        if (methodName == "GetSpaceships") {
+        if (methodName == "getSpaceships") {
             writer.StartObject();
-            writer.Key("GetSpaceships");
+            writer.Key("getSpaceships");
             writer.StartArray();
 
             for (auto &it : controller->getSpaceship()) {
                 writer.StartObject();
-                writer.Key("Name");
+                writer.Key("name");
                 writer.String(it.second->getName().c_str());
 
-                writer.Key("Crew");
+                writer.Key("crew");
                 writer.StartArray();
 
                 for (auto crewMemberWeak : it.second->getCrew()) {
                     auto crewMember = crewMemberWeak.lock();
                     if (crewMember) {
                         writer.StartObject();
-                        writer.String("Name");
+                        writer.String("name");
                         writer.String(crewMember->getName().c_str());
                         writer.EndObject();
                     }
@@ -520,15 +522,15 @@ void *Server::connection_handler(void *data)
         }
         
         //GetQuests Function 
-        if (methodName == "GetQuests") {
+        if (methodName == "getQuests") {
             writer.StartObject();
-            writer.Key("GetQuests");
+            writer.Key("getQuests");
             writer.StartArray();
                 for (auto &it: controller->getQuest()) {
                     writer.StartObject();
-                    writer.String("Name");
+                    writer.String("name");
                     writer.String(it.second->getName().c_str());
-                    writer.String("Description");
+                    writer.String("description");
                     writer.String(it.second->getDescription().c_str());
                     writer.EndObject();
                 }
@@ -537,9 +539,9 @@ void *Server::connection_handler(void *data)
         }
 
         //GetInventory Function 
-        if (methodName == "GetInventory") {
+        if (methodName == "getInventory") {
             writer.StartObject();
-            writer.Key("GetInventory");
+            writer.Key("getInventory");
             writer.StartArray();
                 for (auto &it : controller->getInventory()) {
                     writer.StartObject();
@@ -556,23 +558,23 @@ void *Server::connection_handler(void *data)
         }
         
         //GetPlanets Function
-        if(methodName == "GetPlanets"){
+        if(methodName == "getPlanets"){
             writer.StartObject();
-            writer.Key("GetPlanets");
+            writer.Key("getPlanets");
             writer.StartArray();
 
             for (auto &it: controller->getPlanet()) {
                 writer.StartObject();
-                writer.Key("PlanetName");
+                writer.Key("name");
                 writer.String(it.second->getName().c_str());
-                writer.Key("Residents");
+                writer.Key("residents");
                 writer.StartArray();
 
                 for (auto residentList : it.second->getResident()){
                     const auto &resident = residentList.lock();
                     if(resident) {
                         writer.StartObject();
-                        writer.String("Name");
+                        writer.String("name");
                         writer.String(resident->getName().c_str());
                         writer.EndObject();
                     }
@@ -589,22 +591,22 @@ void *Server::connection_handler(void *data)
         ------------------------------------*/
 
         //Attack function    
-        if (methodName == "Attack") {
-            const rapidjson::Value &attack = document["Attack"];
-            if (attack.HasMember("Assailant") && attack.HasMember("Defender")) {
-                std::string assailant = attack["Assailant"].GetString();
-                std::string defender = attack["Defender"].GetString();
+        if (methodName == "attack") {
+            const rapidjson::Value &attack = document["attack"];
+            if (attack.HasMember("assailant") && attack.HasMember("defender")) {
+                std::string assailant = attack["assailant"].GetString();
+                std::string defender = attack["defender"].GetString();
 
                 bool result = controller->neutralAttack(assailant, defender);
 
                 writer.StartObject();
-                writer.Key("Attack");
+                writer.Key("attack");
                 writer.StartObject();
-                writer.String("Assailant");
+                writer.String("assailant");
                 writer.String(assailant.c_str());
-                writer.String("Defender");
+                writer.String("defender");
                 writer.String(defender.c_str());
-                writer.String("Result");
+                writer.String("result");
                 writer.Bool(result);
                 writer.EndObject();
                 writer.EndObject();
@@ -624,15 +626,15 @@ void *Server::connection_handler(void *data)
         if (methodName == "addCharacter") {
             const rapidjson::Value &addCharacter = document["addCharacter"];
             if (addCharacter.HasMember("name") && addCharacter.HasMember("description") &&
-                addCharacter.HasMember("health") && addCharacter.HasMember("attackPower") &&
-                addCharacter.HasMember("armorPower") && addCharacter.HasMember("placeType") &&
+                addCharacter.HasMember("health") && addCharacter.HasMember("AP") &&
+                addCharacter.HasMember("DP") && addCharacter.HasMember("placeType") &&
                 addCharacter.HasMember("place")) {
                 
                 std::string name = addCharacter["name"].GetString();
                 std::string description = addCharacter["description"].GetString();
                 int health = addCharacter["health"].GetInt();
-                int attackPower = addCharacter["attackPower"].GetInt();
-                int armorPower = addCharacter["armorPower"].GetInt();
+                int attackPower = addCharacter["AP"].GetInt();
+                int armorPower = addCharacter["DP"].GetInt();
                 std::string placeType = addCharacter["placeType"].GetString();
                 std::string place = addCharacter["place"].GetString();
 
@@ -684,83 +686,95 @@ void *Server::connection_handler(void *data)
         ------------------------------------*/
 
         //Delete planet function 
-        if (methodName == "DeletePlanet") {
-            const rapidjson::Value& deletePlanet = document["DeletePlanet"];
-            if (deletePlanet.HasMember("PlanetName")) {
-                std::string planetName = deletePlanet["PlanetName"].GetString();
+        if (methodName == "deletePlanet") {
+            const rapidjson::Value& deletePlanet = document["deletePlanet"];
+            writer.StartObject();
+            writer.Key("deletePlanet");
+            if (deletePlanet.HasMember("name")) {
+                std::string planetName = deletePlanet["name"].GetString();
                 bool result = controller->deletePlanet(planetName);
                 if (result) {
                     writer.StartObject();
-                    writer.String("Success");
+                    writer.String("success");
                     writer.String(("La planète " + planetName + " a été supprimée.").c_str());
                     writer.EndObject();
                 } else {
                     writer.StartObject();
-                    writer.String("Erreur");
+                    writer.String("error");
                     writer.String(("La planète " + planetName + " n'a pas été trouvée.").c_str());
                     writer.EndObject();
                 }
             }
+            writer.EndObject();
         }
         
         //Delete Character function 
-        if (methodName == "DeleteCharacter") {
-            const rapidjson::Value& deleteCharacter = document["DeleteCharacter"];
-            if (deleteCharacter.HasMember("CharacterName")) {
-                std::string characterName = deleteCharacter["CharacterName"].GetString();
+        if (methodName == "deleteCharacter") {
+            const rapidjson::Value& deleteCharacter = document["deleteCharacter"];
+            writer.StartObject();
+            writer.Key("deleteCharacter");
+            if (deleteCharacter.HasMember("name")) {
+                std::string characterName = deleteCharacter["name"].GetString();
                 bool result = controller->deleteCharacter(characterName);
                 if (result) {
                     writer.StartObject();
-                    writer.String("Success");
+                    writer.String("success");
                     writer.String(("Le personnage " + characterName + " a été supprimé.").c_str());
                     writer.EndObject();
                 } else {
                     writer.StartObject();
-                    writer.String("Erreur");
+                    writer.String("error");
                     writer.String(("Le personnage " + characterName + " n'a pas été trouvé.").c_str());
                     writer.EndObject();
                 }
             }
+            writer.EndObject();
         }
 
         //DeleteSpaceship function 
-        if (methodName == "DeleteSpaceship") {
-            const rapidjson::Value& deleteSpaceship = document["DeleteSpaceship"];
-            if (deleteSpaceship.HasMember("SpaceshipName")) {
-                std::string spaceshipName = deleteSpaceship["SpaceshipName"].GetString();
+        if (methodName == "deleteSpaceship") {
+            const rapidjson::Value& deleteSpaceship = document["deleteSpaceship"];
+            writer.StartObject();
+            writer.Key("deleteSpaceship");
+            if (deleteSpaceship.HasMember("name")) {
+                std::string spaceshipName = deleteSpaceship["name"].GetString();
                 bool result = controller->deleteSpaceship(spaceshipName);
                 if (result) {
                     writer.StartObject();
-                    writer.String("Success");
+                    writer.String("success");
                     writer.String(("Le vaisseau " + spaceshipName + " a été supprimé.").c_str());
                     writer.EndObject();
                 } else {
                     writer.StartObject();
-                    writer.String("Erreur");
+                    writer.String("error");
                     writer.String(("Le vaisseau " + spaceshipName + " n'a pas été trouvé.").c_str());
                     writer.EndObject();
                 }
             }
+            writer.EndObject();
         }
 
         //DeleteQuest function 
-        if (methodName == "DeleteQuest") {
-            const rapidjson::Value& deleteQuest = document["DeleteQuest"];
-            if (deleteQuest.HasMember("QuestName")) {
-                std::string questName = deleteQuest["QuestName"].GetString();
+        if (methodName == "deleteQuest") {
+            const rapidjson::Value& deleteQuest = document["deleteQuest"];
+            writer.StartObject();
+            writer.Key("deleteQuest");
+            if (deleteQuest.HasMember("name")) {
+                std::string questName = deleteQuest["name"].GetString();
                 bool result = controller->deleteQuest(questName);
                 if (result) {
                     writer.StartObject();
-                    writer.String("Success");
-                    writer.String(("La quête " + questName + " a été supprimée.").c_str());
+                    writer.String("success");
+                    writer.String(("La mission " + questName + " a été supprimée.").c_str());
                     writer.EndObject();
                 } else {
                     writer.StartObject();
-                    writer.String("Erreur");
-                    writer.String(("La quête " + questName + " n'a pas été trouvée.").c_str());
+                    writer.String("error");
+                    writer.String(("La mission " + questName + " n'a pas été trouvée.").c_str());
                     writer.EndObject();
                 }
             }
+            writer.EndObject();
         }
 
         
