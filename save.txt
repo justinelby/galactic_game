@@ -1,0 +1,28 @@
+Planet;Earth;La planète bleue
+Planet;Mars;La planète rouge
+Planet;Z-23;Une planete situee dans la galaxy Euclid ou l'or et l'argent se trouvent en grande quantite.
+Spaceship;Faucon Millenium
+Spaceship;USS Enterprise
+Spaceship;WWW
+Item;Blue healing potion;Heals a character for 10 HP;10;
+Item;Blue shield;Increases the DP;10;
+Item;Green lightsaber;Standard saber increasing AP;25;
+Item;Green poison potion;Deals 25 HP damage;25;
+Item;Red healing potion;Heals a character for 25 HP;50;
+Item;Red lightsaber;Powerfull saber increasing AP;50;
+Item;Red poison potion;Deals 50 HP damage;50;
+Item;Red shield;Increases the DP;50;
+Character;Alex Starborn;Personnage principal;100;102;20;Spaceship;USS Enterprise
+Character;Capitaine Anderson;Superieur d'Alex;150;100;50;Spaceship;USS Enterprise
+Character;Docteur Liara;Medecin de bord;100;30;10;Planet;Earth
+Character;Ingenieur Scott;Responsable des reparations et des ameliorations du vaisseau;120;30;20;Spaceship;USS Enterprise
+Character;Jane Smith;Une aventurière intrépide;80;70;10;Spaceship;Station spatiale
+Character;John Doe;Un personnage mystérieux;100;50;20;Planet;Terre
+Character;Toto;PNJ;1000;200;400;Planet;Z-23
+Quest;Des pirates de l'espace !!;Avec votre equipage, defendez votre vaisseau et combattez les pirates de l'espace
+Quest;Explorer l'espace;Découvrir de nouvelles planètes
+Quest;Explorer une planète mysterieuse;A l'aide de votre radar, retrouvez et explorez la planete Z-23
+Quest;Faire la paix;Négocier un traité de paix entre deux factions rivales
+Quest;Ressources rares;Trouver des ressources rares pour améliorer l'Odyssee
+Quest;Sauver la galaxie;Empêcher l'invasion des extraterrestres
+Quest;Une etrange pandemie...;Résoudre une crise médicale sur une colonie lointaine

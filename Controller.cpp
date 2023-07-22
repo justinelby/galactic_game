@@ -633,14 +633,6 @@ bool Controller::deleteItemToCharacterInventory(string charName, string itemName
         }
     }
     return false; // if item doesn't exist in character's inventory
-
-#ifdef DEBUG
-    for (auto &pair : questMap)
-    {
-        auto &mi = pair.second;
-        cout << "Nom : " << mi->getName() << endl;
-    }
-#endif
 }
 
 bool Controller::neutralAttack(string assailant, string defender)

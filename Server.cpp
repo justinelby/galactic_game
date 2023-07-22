@@ -23,7 +23,7 @@
 // server address
 #define ADDRESS "0.0.0.0"
 // port number
-#define PORT 8888
+#define PORT 8044
 // maximum concurrent connections
 #define CONCURRENT_CONNECTION 10
 // maximum connection requests queued
@@ -978,6 +978,13 @@ void *Server::connection_handler(void *data)
                     writer.EndObject();
                 }
             }
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'deletePlanet'.");
+                writer.EndObject();
+            }
             writer.EndObject();
         }
 
@@ -1005,6 +1012,13 @@ void *Server::connection_handler(void *data)
                     writer.String(("Le personnage " + characterName + " n'a pas été trouvé.").c_str());
                     writer.EndObject();
                 }
+            }
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'deleteCharacter'.");
+                writer.EndObject();
             }
             writer.EndObject();
         }
@@ -1034,6 +1048,13 @@ void *Server::connection_handler(void *data)
                     writer.EndObject();
                 }
             }
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'deleteSpaceship'.");
+                writer.EndObject();
+            }
             writer.EndObject();
         }
 
@@ -1061,6 +1082,49 @@ void *Server::connection_handler(void *data)
                     writer.String(("La mission " + questName + " n'a pas été trouvée.").c_str());
                     writer.EndObject();
                 }
+            } 
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'deleteQuest'.");
+                writer.EndObject();
+            }
+            writer.EndObject();
+        }
+
+                // DeleteItem function
+        if (methodName == "deleteItemToCharacterInventory")
+        {
+            const rapidjson::Value &deleteItemToCharacterInventory = document["deleteItemToCharacterInventory"];
+            writer.StartObject();
+            writer.Key("deleteItemToCharacterInventory");
+            if (deleteItemToCharacterInventory.HasMember("name") || deleteItemToCharacterInventory.HasMember("item") )
+            {
+                std::string characterName = deleteItemToCharacterInventory["name"].GetString();
+                std::string itemName = deleteItemToCharacterInventory["item"].GetString();
+                bool result = controller->deleteItemToCharacterInventory(characterName, itemName);
+                if (result)
+                {
+                    writer.StartObject();
+                    writer.String("success");
+                    writer.String(("L'objet " + itemName + " a été supprimée de l'inventaire de "+ characterName).c_str());
+                    writer.EndObject();
+                }
+                else
+                {
+                    writer.StartObject();
+                    writer.String("error");
+                    writer.String(("L'objet' " + itemName + " n'a pas été trouvé.").c_str());
+                    writer.EndObject();
+                }
+            }
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'deleteItemToCharacterInventory'.");
+                writer.EndObject();
             }
             writer.EndObject();
         }

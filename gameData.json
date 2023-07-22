@@ -56,9 +56,9 @@
   ],
   "item": [
     {
-      "Nom": "Green healing potion",
+      "Nom": "Red healing potion",
       "Description": "Heals a character for 25 HP",
-      "Effect": 25
+      "Effect": 50
     },
     {
       "Nom": "Blue healing potion",
