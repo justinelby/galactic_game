@@ -742,15 +742,34 @@ void *Server::connection_handler(void *data)
 
                 // Créer et ajouter le personnage à la map characterMap
                 auto newCharacter = std::make_shared<Character>(name, description, health, attackPower, armorPower, placeType, place);
-                controller->addCharacter(newCharacter);
 
-                writer.StartObject();
-                writer.Key("addCharacter");
-                writer.StartObject();
-                writer.String("status");
-                writer.String("success");
-                writer.EndObject();
-                writer.EndObject();
+                // Vérifier si un personnage avec le même nom existe déjà
+                auto it = controller->getCharacter().find(name);
+                if (it != controller->getCharacter().end())
+                {
+                    writer.StartObject();
+                    writer.Key("addCharacter");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("failure");
+                    writer.String("message");
+                    writer.String("Un personnage avec le nom existe déjà.");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
+                else
+                {
+                    controller->getCharacter()[name] = newCharacter;
+                    writer.StartObject();
+                    writer.Key("addCharacter");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("success");
+                    writer.String("message");
+                    writer.String("Personnage ajouté avec succès.");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
             }
             else
             {
@@ -761,7 +780,8 @@ void *Server::connection_handler(void *data)
             }
         }
 
-        // Add ennemy function
+
+// Add enemy function
         if (methodName == "addEnemy")
         {
             const rapidjson::Value &addEnemy = document["addEnemy"];
@@ -779,17 +799,36 @@ void *Server::connection_handler(void *data)
                 std::string placeType = addEnemy["placeType"].GetString();
                 std::string place = addEnemy["place"].GetString();
 
-                // Créer et ajouter le personnage à la map characterMap
+                // Créer et ajouter l'ennemi à la map enemyMap
                 auto newEnemy = std::make_shared<Enemy>(name, description, health, attackPower, armorPower, placeType, place);
-                controller->addEnemy(newEnemy);
 
-                writer.StartObject();
-                writer.Key("addEnemy");
-                writer.StartObject();
-                writer.String("status");
-                writer.String("success");
-                writer.EndObject();
-                writer.EndObject();
+                // Vérifier si un ennemi avec le même nom existe déjà
+                auto it = controller->getEnemy().find(name);
+                if (it != controller->getEnemy().end())
+                {
+                    writer.StartObject();
+                    writer.Key("addEnemy");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("failure");
+                    writer.String("message");
+                    writer.String("Un ennemi avec le nom existe déjà.");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
+                else
+                {
+                    controller->getEnemy()[name] = newEnemy;
+                    writer.StartObject();
+                    writer.Key("addEnemy");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("success");
+                    writer.String("message");
+                    writer.String("Ennemi ajouté avec succès.");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
             }
             else
             {
@@ -799,6 +838,7 @@ void *Server::connection_handler(void *data)
                 writer.EndObject();
             }
         }
+
 
         // Add quest function
         if (methodName == "addQuest")
@@ -1093,7 +1133,7 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-                // DeleteItem function
+        // DeleteItem function
         if (methodName == "deleteItemToCharacterInventory")
         {
             const rapidjson::Value &deleteItemToCharacterInventory = document["deleteItemToCharacterInventory"];

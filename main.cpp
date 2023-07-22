@@ -188,6 +188,15 @@ void useHealthItem(Controller &controller, string characterName, string itemName
          << controller.getCharacter()[characterName]->getHealth() << endl;
 }
 
+void useShieldItem(Controller &controller, string characterName, string itemName)
+{
+    cout << characterName << "'s hp before using " << itemName << " : "
+         << controller.getCharacter()[characterName]->getArmorPower() << endl;
+    controller.useItem(characterName, itemName);
+    cout << characterName << "'s hp after using " << itemName << " : "
+         << controller.getCharacter()[characterName]->getArmorPower() << endl;
+}
+
 void lootingTest(Controller &controller, string characterName, string itemName)
 {
     cout << "Test : " << characterName << " looting " << itemName << endl;
@@ -211,10 +220,13 @@ int main()
     string loadedFile = "gameData.json";
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
-    displayAllInfo(controller);
     // Server server(&controller);
     // server.run();
     // controller.saveGame();
+
+    shared_ptr<Enemy> newalien = make_shared<Enemy>("Alien 1", "Test", 1, 1, 1,
+                                                           "etst", "test");
+   controller.addEnemy(newalien);
 
     return 0;
 }

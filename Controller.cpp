@@ -310,7 +310,17 @@ void Controller::saveGame()
 
 void Controller::addCharacter(const shared_ptr<Character> &newCharacter)
 {
+    const std::string& characterName = newCharacter->getName();
+
+    // Vérifier si un personnage avec le même nom existe déjà
+    if (characterMap.find(characterName) != characterMap.end())
+    {
+        std::cout << "Un personnage avec le nom \"" << characterName << "\" existe déjà !" << std::endl;
+        return; // Sortir de la fonction sans ajouter le personnage.
+    }
+
     characterMap[newCharacter->getName()] = newCharacter;
+
     // Ajout du personnage à l'équipage du vaisseau auquel il est associé
     for (auto &ship : spaceshipMap)
     {
@@ -335,6 +345,15 @@ void Controller::addCharacter(const shared_ptr<Character> &newCharacter)
 // redundancy
 void Controller::addEnemy(const shared_ptr<Enemy> &newEnemy)
 {
+    const string& enemyName = newEnemy->getName();
+
+    // Vérifier si un ennemie avec le même nom existe déjà
+    if (enemyMap.find(enemyName) != enemyMap.end())
+    {
+        std::cout << "Un personnage avec le nom \"" << enemyName << "\" existe déjà !" << std::endl;
+        return; // Sortir de la fonction sans ajouter le personnage.
+    }
+
     enemyMap[newEnemy->getName()] = newEnemy;
     // Ajout du personnage à l'équipage du vaisseau auquel il est associé
     for (auto &ship : spaceshipMap)
@@ -751,7 +770,7 @@ void Controller::useItem(string charName, string itemName)
     else if (itemName == "Green lightsaber" || itemName == "Blue lightsaber" || itemName == "Green lightsaber")
         character->setAttackPower(character->getAttackPower() + character->getInventory().at(idx)->getEffect());
     else if (itemName == "Red shield" || itemName == "Green shield" || itemName == "Blue shield")
-        character->setAttackPower(character->getAttackPower() + character->getInventory().at(idx)->getEffect());
+        character->setArmorPower(character->getArmorPower() + character->getInventory().at(idx)->getEffect());
     deleteItemToCharacterInventory(charName, itemName);
 }
 
