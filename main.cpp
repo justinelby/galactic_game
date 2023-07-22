@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Controller.h"
+#include "Server.h"
 
 using namespace std;
 
@@ -220,12 +221,11 @@ int main()
     string gameFile = "gameData.json";
     Controller controller(gameFile, resetGameFile);
     controller.loadGame();
+    // controller.addToCharacterInventory("Alex Starborn", "Red healing potion");
     // Server server(&controller);
     // server.run();
 
-
-    displayAllInfo(controller);
-
+    // displayAllInfo(controller);
 
     return 0;
 }
