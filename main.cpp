@@ -188,7 +188,8 @@ void useHealthItem(Controller &controller, string characterName, string itemName
          << controller.getCharacter()[characterName]->getHealth() << endl;
 }
 
-void lootingTest(Controller &controller, string characterName, string itemName) {
+void lootingTest(Controller &controller, string characterName, string itemName)
+{
     cout << "Test : " << characterName << " looting " << itemName << endl;
     cout << "--------------- Before looting ---------------" << endl;
     cout << controller.getCharacter()[characterName] << "'s inventory :" << endl;
@@ -203,15 +204,17 @@ void lootingTest(Controller &controller, string characterName, string itemName) 
     displayControllerItems(controller);
 }
 
-//Code contenant l'execution du menu et le jeu
-int main() {
-    string savedFile= "save.txt";
-    string loadedFile= "gameData.json";
+// Code contenant l'execution du menu et le jeu
+int main()
+{
+    string savedFile = "save.txt";
+    string loadedFile = "gameData.json";
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
-    //Server server(&controller);
-    //server.run();
-    //controller.saveGame();
+    displayAllInfo(controller);
+    // Server server(&controller);
+    // server.run();
+    // controller.saveGame();
 
     return 0;
 }
