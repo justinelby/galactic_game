@@ -216,17 +216,16 @@ void lootingTest(Controller &controller, string characterName, string itemName)
 // Code contenant l'execution du menu et le jeu
 int main()
 {
-    string savedFile = "save.txt";
-    string loadedFile = "gameData.json";
-    Controller controller(loadedFile, savedFile);
+    string resetGameFile = "resetData.json";
+    string gameFile = "gameData.json";
+    Controller controller(gameFile, resetGameFile);
     controller.loadGame();
     // Server server(&controller);
     // server.run();
-    // controller.saveGame();
 
-    shared_ptr<Enemy> newalien = make_shared<Enemy>("Alien 1", "Test", 1, 1, 1,
-                                                           "etst", "test");
-   controller.addEnemy(newalien);
+
+    displayAllInfo(controller);
+
 
     return 0;
 }

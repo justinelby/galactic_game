@@ -16,7 +16,7 @@ using namespace std;
 
 class Controller {
 public:
-    Controller(string& loadedFile, string& savedFile);
+    Controller(string& gameFile, string& resetGameFile);
 
     //Getters & Setters
     map<string, shared_ptr<Quest>> getQuest();
@@ -28,8 +28,8 @@ public:
 
     //Methods
     void loadGame();
-    void loadActions(string actionsFile);
     void saveGame();
+    void resetGame();
 
     void addCharacter(const shared_ptr<Character>&);
     void addEnemy(const shared_ptr<Enemy>&);
@@ -67,9 +67,8 @@ private :
     map<string, shared_ptr<Planet>> planetMap;
     map<string, shared_ptr<Quest>> questMap;
     map<string, unique_ptr<Item>> inventory;
+    string resetGameFile;
     string gameFile;
-    string actionsFile;
-    string savedFile;
     // Methods
     vector<shared_ptr<Character>> setupRole(string, string);
     bool isReplacing();
