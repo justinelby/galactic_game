@@ -57,7 +57,7 @@
   "item": [
     {
       "Nom": "Red healing potion",
-      "Description": "Heals a character for 25 HP",
+      "Description": "Heals a character for 50 HP",
       "Effect": 50
     },
     {
@@ -66,14 +66,14 @@
       "Effect": 10
     },
     {
+      "Nom": "Max healing potion",
+      "Description": "Heals a character for his maximum health",
+      "Effect": 2
+    },
+    {
       "Nom": "Red poison potion",
       "Description": "Deals 50 HP damage",
       "Effect": 50
-    },
-    {
-      "Nom": "Green poison potion",
-      "Description": "Deals 25 HP damage",
-      "Effect": 25
     },
     {
       "Nom": "Red lightsaber",

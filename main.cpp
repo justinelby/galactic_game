@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include "Controller.h"
-#include "Server.h"
 
 using namespace std;
 
@@ -188,18 +187,31 @@ void useHealthItem(Controller &controller, string characterName, string itemName
     cout << characterName << "'s hp after using " << itemName << " : "
          << controller.getCharacter()[characterName]->getHealth() << endl;
 }
-// Code contenant l'execution du menu et le jeu
-int main()
-{
 
-    string savedFile = "save.txt";
-    string gameFile = "gameData.json";
-    Controller controller(gameFile, savedFile);
+void lootingTest(Controller &controller, string characterName, string itemName) {
+    cout << "Test : " << characterName << " looting " << itemName << endl;
+    cout << "--------------- Before looting ---------------" << endl;
+    cout << controller.getCharacter()[characterName] << "'s inventory :" << endl;
+    displayCharacterInventory(controller.getCharacter()[characterName]);
+    cout << "Game's inventory :" << endl;
+    displayControllerItems(controller);
 
+    controller.looting(characterName, itemName);
+    cout << "--------------- After looting ---------------" << endl;
+    displayCharacterInventory(controller.getCharacter()[characterName]);
+    cout << "Game's inventory :" << endl;
+    displayControllerItems(controller);
+}
+
+//Code contenant l'execution du menu et le jeu
+int main() {
+    string savedFile= "save.txt";
+    string loadedFile= "gameData.json";
+    Controller controller(loadedFile, savedFile);
     controller.loadGame();
-    Server server(&controller);
-    server.run();
-    controller.saveGame();
+    //Server server(&controller);
+    //server.run();
+    //controller.saveGame();
 
     return 0;
 }
