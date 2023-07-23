@@ -300,6 +300,20 @@ void *Server::connection_handler(void *data)
                     writer.String(controller->getCharacter().find(characterName)->second->getPlaceType().c_str());
                     writer.String("place");
                     writer.String(controller->getCharacter().find(characterName)->second->getPlace().c_str());
+                    writer.Key("items");
+                    writer.StartArray();
+                    for (const auto &item : characterIt->second->getInventory())
+                    {
+                        writer.StartObject();
+                        writer.String("name");
+                        writer.String(item->getName().c_str());
+                        writer.String("description");
+                        writer.String(item->getDescription().c_str());
+                        writer.String("effect");
+                        writer.Int(item->getEffect());
+                        writer.EndObject();
+                    }
+                    writer.EndArray();
                 }
                 else
                 {
@@ -742,15 +756,34 @@ void *Server::connection_handler(void *data)
 
                 // Créer et ajouter le personnage à la map characterMap
                 auto newCharacter = std::make_shared<Character>(name, description, health, attackPower, armorPower, placeType, place);
-                controller->addCharacter(newCharacter);
 
-                writer.StartObject();
-                writer.Key("addCharacter");
-                writer.StartObject();
-                writer.String("status");
-                writer.String("success");
-                writer.EndObject();
-                writer.EndObject();
+                // Vérifier si un personnage avec le même nom existe déjà
+                auto it = controller->getCharacter().find(name);
+                if (it != controller->getCharacter().end())
+                {
+                    writer.StartObject();
+                    writer.Key("addCharacter");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("failure");
+                    writer.String("message");
+                    writer.String("Personnage déjà existant. Veuillez reessayer avec un autre nom.");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
+                else
+                {
+                    controller->getCharacter()[name] = newCharacter;
+                    writer.StartObject();
+                    writer.Key("addCharacter");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("success");
+                    writer.String("message");
+                    writer.String("Personnage ajouté avec succès.");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
             }
             else
             {
@@ -761,7 +794,7 @@ void *Server::connection_handler(void *data)
             }
         }
 
-        // Add ennemy function
+        // Add enemy function
         if (methodName == "addEnemy")
         {
             const rapidjson::Value &addEnemy = document["addEnemy"];
@@ -779,17 +812,36 @@ void *Server::connection_handler(void *data)
                 std::string placeType = addEnemy["placeType"].GetString();
                 std::string place = addEnemy["place"].GetString();
 
-                // Créer et ajouter le personnage à la map characterMap
+                // Créer et ajouter l'ennemi à la map enemyMap
                 auto newEnemy = std::make_shared<Enemy>(name, description, health, attackPower, armorPower, placeType, place);
-                controller->addEnemy(newEnemy);
 
-                writer.StartObject();
-                writer.Key("addEnemy");
-                writer.StartObject();
-                writer.String("status");
-                writer.String("success");
-                writer.EndObject();
-                writer.EndObject();
+                // Vérifier si un ennemi avec le même nom existe déjà
+                auto it = controller->getEnemy().find(name);
+                if (it != controller->getEnemy().end())
+                {
+                    writer.StartObject();
+                    writer.Key("addEnemy");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("failure");
+                    writer.String("message");
+                    writer.String("Ennemi déjà existant. Veuillez reessayer avec un autre nom.");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
+                else
+                {
+                    controller->getEnemy()[name] = newEnemy;
+                    writer.StartObject();
+                    writer.Key("addEnemy");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("success");
+                    writer.String("message");
+                    writer.String("Ennemi ajouté avec succès.");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
             }
             else
             {
@@ -882,41 +934,41 @@ void *Server::connection_handler(void *data)
             }
         }
 
-        if (methodName == "addToCharacterInventory")
-        {
-            const rapidjson::Value &addToInventory = document["addToCharacterInventory"];
-            if (addToInventory.HasMember("charName") && addToInventory.HasMember("itemName"))
-            {
-                std::string charName = addToInventory["charName"].GetString();
-                std::string itemName = addToInventory["itemName"].GetString();
+        // if (methodName == "addToCharacterInventory")
+        // {
+        //     const rapidjson::Value &addToInventory = document["addToCharacterInventory"];
+        //     if (addToInventory.HasMember("charName") && addToInventory.HasMember("itemName"))
+        //     {
+        //         std::string charName = addToInventory["charName"].GetString();
+        //         std::string itemName = addToInventory["itemName"].GetString();
 
-                // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
-                controller->addToCharacterInventory(charName, itemName);
+        //         // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
+        //         controller->addToCharacterInventory(charName, itemName);
 
-                writer.StartObject();
-                writer.Key("addToCharacterInventory");
-                writer.StartObject();
-                if (controller->getInventory().find(itemName) == controller->getInventory().end())
-                {
-                    writer.String("status");
-                    writer.String("success");
-                }
-                else
-                {
-                    writer.String("status");
-                    writer.String("failed : object not found");
-                }
-                writer.EndObject();
-                writer.EndObject();
-            }
-            else
-            {
-                writer.StartObject();
-                writer.Key("Error");
-                writer.String("Certains champs sont manquants dans la clé 'addToCharacterInventory'.");
-                writer.EndObject();
-            }
-        }
+        //         writer.StartObject();
+        //         writer.Key("addToCharacterInventory");
+        //         writer.StartObject();
+        //         if (controller->getInventory().find(itemName) == controller->getInventory().end())
+        //         {
+        //             writer.String("status");
+        //             writer.String("success");
+        //         }
+        //         else
+        //         {
+        //             writer.String("status");
+        //             writer.String("failed : object not found");
+        //         }
+        //         writer.EndObject();
+        //         writer.EndObject();
+        //     }
+        //     else
+        //     {
+        //         writer.StartObject();
+        //         writer.Key("Error");
+        //         writer.String("Certains champs sont manquants dans la clé 'addToCharacterInventory'.");
+        //         writer.EndObject();
+        //     }
+        // }
 
         // Add addToGameInventory function
         if (methodName == "addToGameInventory")
@@ -934,7 +986,7 @@ void *Server::connection_handler(void *data)
                 auto newItem = make_unique<Item>(name, description, effect);
                 controller->addToGameInventory(newItem);
                 writer.StartObject();
-                writer.Key("newItem");
+                writer.Key("addToGameInventory");
                 writer.StartObject();
                 writer.String("status");
                 writer.String("success");
@@ -1082,7 +1134,7 @@ void *Server::connection_handler(void *data)
                     writer.String(("La mission " + questName + " n'a pas été trouvée.").c_str());
                     writer.EndObject();
                 }
-            } 
+            }
             else
             {
                 writer.StartObject();
@@ -1093,13 +1145,13 @@ void *Server::connection_handler(void *data)
             writer.EndObject();
         }
 
-                // DeleteItem function
+        // DeleteItem function
         if (methodName == "deleteItemToCharacterInventory")
         {
             const rapidjson::Value &deleteItemToCharacterInventory = document["deleteItemToCharacterInventory"];
             writer.StartObject();
             writer.Key("deleteItemToCharacterInventory");
-            if (deleteItemToCharacterInventory.HasMember("name") || deleteItemToCharacterInventory.HasMember("item") )
+            if (deleteItemToCharacterInventory.HasMember("name") || deleteItemToCharacterInventory.HasMember("item"))
             {
                 std::string characterName = deleteItemToCharacterInventory["name"].GetString();
                 std::string itemName = deleteItemToCharacterInventory["item"].GetString();
@@ -1108,7 +1160,7 @@ void *Server::connection_handler(void *data)
                 {
                     writer.StartObject();
                     writer.String("success");
-                    writer.String(("L'objet " + itemName + " a été supprimée de l'inventaire de "+ characterName).c_str());
+                    writer.String(("L'objet " + itemName + " a été supprimée de l'inventaire de " + characterName).c_str());
                     writer.EndObject();
                 }
                 else
@@ -1126,6 +1178,27 @@ void *Server::connection_handler(void *data)
                 writer.String("Certains champs sont manquants dans la clé 'deleteItemToCharacterInventory'.");
                 writer.EndObject();
             }
+            writer.EndObject();
+        }
+
+        /*------------------------------------
+                    GAMEPLAY section
+        ------------------------------------*/
+        if (methodName == "saveGame")
+        {
+            controller->saveGame();
+            writer.StartObject();
+            writer.Key("Success");
+            writer.String("Les données du jeu ont bien été enregistrées.");
+            writer.EndObject();
+        }
+
+        if (methodName == "resetGame")
+        {
+            controller->resetGame();
+            writer.StartObject();
+            writer.Key("Success");
+            writer.String("Les données du jeu ont bien été restaurées.");
             writer.EndObject();
         }
 

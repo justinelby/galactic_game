@@ -5,17 +5,18 @@
 
 #include "Controller.h"
 #include <fstream>
-#include <sstream>
 #include <iostream>
 #include <string>
 #include "Character.h"
 #include "Spaceship.h"
 #include "Planet.h"
 #include "./include/rapidjson/document.h"
+#include "./include/rapidjson/writer.h"
+#include "./include/rapidjson/stringbuffer.h"
 
 using namespace std;
 
-Controller::Controller(string &loadedFile, string &savedFile) : gameFile(loadedFile), savedFile(savedFile)
+Controller::Controller(string &gameFile, string &resetGameFile) : gameFile(gameFile), resetGameFile(resetGameFile)
 {
 }
 
@@ -47,64 +48,6 @@ map<string, shared_ptr<Spaceship>> Controller::getSpaceship()
 map<string, unique_ptr<Item>> &Controller::getInventory()
 {
     return inventory;
-}
-
-string Controller::characterToString()
-{
-    ostringstream oss;
-    for (const auto &pair : characterMap)
-    {
-        auto c = pair.second;
-        oss << "Character;" << c->getName() << ";" << c->getDescr() << ";" << c->getHealth() << ";"
-            << c->getAttackPower() << ";" << c->getArmorPower() << ";" << c->getPlaceType() << ";" << c->getPlace()
-            << "\n";
-    }
-    return oss.str();
-}
-
-string Controller::planetToString()
-{
-    ostringstream oss;
-    for (const auto &pair : planetMap)
-    {
-        auto p = pair.second;
-        oss << "Planet;" << p->getName() << ";" << p->getDescription() << "\n";
-    }
-    return oss.str();
-}
-
-string Controller::spaceshipToString()
-{
-    ostringstream oss;
-    for (const auto &pair : spaceshipMap)
-    {
-        auto p = pair.second;
-        oss << "Spaceship;" << p->getName() << endl;
-    }
-    return oss.str();
-}
-
-string Controller::questToString()
-{
-    ostringstream oss;
-    for (const auto &pair : questMap)
-    {
-        auto m = pair.second;
-        oss << "Quest;" << m->getName() << ";" << m->getDescription() << "\n";
-    }
-    return oss.str();
-}
-
-string Controller::itemToString()
-{
-    ostringstream oss;
-    for (const auto &pair : inventory)
-    {
-        auto &m = pair.second;
-        oss << "Item;" << m->getName() << ";" << m->getDescription() << ";" << m->getEffect() << ";"
-            << "\n";
-    }
-    return oss.str();
 }
 
 void Controller::loadGame()
@@ -220,8 +163,24 @@ void Controller::loadGame()
                 string placeType = character["Type de lieu"].GetString();
                 string place = character["Lieu"].GetString();
                 // Créer et ajouter le personnage à la map characterMap
-                auto newCharacter = make_shared<Character>(name, description, health, attackPower, armorPower,
-                                                           placeType, place);
+                auto newCharacter = make_shared<Character>(name, description, health, attackPower, armorPower, placeType, place);
+
+                if (character.HasMember("item") && character["item"].IsArray())
+                {
+                    const rapidjson::Value &items = character["item"];
+                    for (rapidjson::SizeType j = 0; j < items.Size(); j++)
+                    {
+                        const rapidjson::Value &item = items[j];
+                        // Extraire les valeurs des propriétés de l'objet "item"
+                        string itemName = item["name"].GetString();
+                        string itemDescription = item["description"].GetString();
+                        int itemEffect = item["effect"].GetInt();
+                        // Créer et ajouter l'objet "item" au personnage
+                        auto newItem = make_shared<Item>(itemName, itemDescription, itemEffect);
+                        addToCharacterInventory(name, itemName);
+                    }
+                }
+
                 addCharacter(newCharacter);
             }
         }
@@ -253,64 +212,198 @@ void Controller::loadGame()
     }
 }
 
-void Controller::loadActions(string actionsFile)
+void Controller::resetGame()
 {
-    ifstream file(actionsFile);
-
-    if (!file.is_open())
+    std::ifstream sourceStream(resetGameFile);
+    if (!sourceStream)
     {
-        cout << "Le fichier du chargement des fonctions ne s'est pas ouvert" << endl;
+        std::cerr << "Erreur lors de l'ouverture du fichier source." << std::endl;
+        return;
     }
-    // Lecture du contenu du fichier JSON
-    std::string jsonContent((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    file.close();
 
-    // Création du document JSON
-    rapidjson::Document document;
-    document.Parse(jsonContent.c_str());
-
-    // Chargement des données à partir du document JSON
-
-    // Vérifier si le document JSON contient la clé "attack"
-    if (document.HasMember("Attack"))
+    std::ofstream destinationStream(gameFile);
+    if (!destinationStream)
     {
-        // Extraction de l'action "Attack" du document JSON
-        const rapidjson::Value &attack = document["Attack"];
-
-        // Vérifier si les clés "Assaillant" et "Défenseur" sont présentes
-        if (attack.HasMember("Assailant") && attack.HasMember("Defenseur"))
-        {
-            string assailant = attack["Assailant"].GetString();
-            string defender = attack["Defenseur"].GetString();
-
-            // Appeler la fonction neutralAttack avec les noms des personnages assailant et defender
-            bool result = neutralAttack(assailant, defender);
-            if (result)
-            {
-                cout << "Le personnage " << defender << " a été éliminé.\n";
-            }
-            else
-            {
-                cout << "Le personnage " << defender << " a subi des dégâts.\n";
-            }
-        }
-        else
-        {
-            std::cout << "Les clés 'Assaillant' et 'Défenseur' sont manquantes dans la clé 'attack'.\n";
-        }
+        std::cerr << "Erreur lors de l'ouverture du fichier de destination." << std::endl;
+        return;
     }
+
+    std::string line;
+    while (std::getline(sourceStream, line))
+    {
+        destinationStream << line << '\n';
+    }
+
+    sourceStream.close();
+    destinationStream.close();
 }
 
 void Controller::saveGame()
 {
     // Ecriture du fichier de sauvegarde
-    ofstream file(savedFile);
-    file << planetToString() << spaceshipToString() << itemToString() << characterToString() << questToString();
+    std::ofstream file(gameFile);
+
+    if (!file)
+    {
+        std::cerr << "Erreur lors de l'ouverture du fichier de sauvegarde." << std::endl;
+        return;
+    }
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+
+    writer.StartObject();
+
+    // Écriture des objets "planet"
+    writer.Key("planet");
+    writer.StartArray();
+    for (const auto &planet : planetMap)
+    {
+        writer.StartObject();
+        writer.Key("Nom");
+        writer.String(planet.second->getName().c_str());
+        writer.Key("Description");
+        writer.String(planet.second->getDescription().c_str());
+        writer.EndObject();
+    }
+    writer.EndArray();
+
+    // Écriture des objets "spaceship"
+    writer.Key("spaceship");
+    writer.StartArray();
+    for (const auto &spaceship : spaceshipMap)
+    {
+        writer.StartObject();
+        writer.Key("Nom");
+        writer.String(spaceship.second->getName().c_str());
+        writer.EndObject();
+    }
+    writer.EndArray();
+
+    // Écriture des objets "quest"
+    writer.Key("quest");
+    writer.StartArray();
+    for (const auto &quest : questMap)
+    {
+        writer.StartObject();
+        writer.Key("Nom");
+        writer.String(quest.second->getName().c_str());
+        writer.Key("Description");
+        writer.String(quest.second->getDescription().c_str());
+        writer.EndObject();
+    }
+    writer.EndArray();
+
+    // Écriture des objets "item"
+    writer.Key("item");
+    writer.StartArray();
+    for (const auto &item : inventory)
+    {
+        if (item.second != nullptr)
+        {
+            writer.StartObject();
+            writer.Key("Nom");
+            writer.String(item.second->getName().c_str());
+            writer.Key("Description");
+            writer.String(item.second->getDescription().c_str());
+            writer.Key("Effect");
+            writer.Int(item.second->getEffect());
+            writer.EndObject();
+        }
+    }
+    writer.EndArray();
+
+    // Écriture des objets "character"
+    writer.Key("character");
+    writer.StartArray();
+    for (const auto &character : characterMap)
+    {
+        writer.StartObject();
+        writer.Key("Nom");
+        writer.String(character.second->getName().c_str());
+        writer.Key("Description");
+        writer.String(character.second->getDescr().c_str());
+        writer.Key("Santé");
+        writer.Int(character.second->getHealth());
+        writer.Key("Puissance d'attaque");
+        writer.Int(character.second->getAttackPower());
+        writer.Key("Puissance d'armure");
+        writer.Int(character.second->getArmorPower());
+        writer.Key("Type de lieu");
+        writer.String(character.second->getPlaceType().c_str());
+        writer.Key("Lieu");
+        writer.String(character.second->getPlace().c_str());
+
+        if (!character.second->getInventory().empty())
+        {
+            writer.Key("Inventory");
+            writer.StartArray();
+            for (const auto &item : character.second->getInventory())
+            {
+                writer.StartObject();
+                writer.String("name");
+                writer.String(item->getName().c_str());
+                writer.String("description");
+                writer.String(item->getDescription().c_str());
+                writer.String("effect");
+                writer.Int(item->getEffect());
+                writer.EndObject();
+            }
+            writer.EndArray();
+        }
+        else
+        {
+            writer.Key("Inventory");
+            writer.StartArray();
+            writer.EndArray();
+        }
+
+        writer.EndObject();
+    }
+    writer.EndArray();
+
+    // Écriture des objets "enemy"
+    writer.Key("enemy");
+    writer.StartArray();
+    for (const auto &enemy : enemyMap)
+    {
+        writer.StartObject();
+        writer.Key("Nom");
+        writer.String(enemy.second->getName().c_str());
+        writer.Key("Description");
+        writer.String(enemy.second->getDescr().c_str());
+        writer.Key("Santé");
+        writer.Int(enemy.second->getHealth());
+        writer.Key("Puissance d'attaque");
+        writer.Int(enemy.second->getAttackPower());
+        writer.Key("Puissance d'armure");
+        writer.Int(enemy.second->getArmorPower());
+        writer.Key("Type de lieu");
+        writer.String(enemy.second->getPlaceType().c_str());
+        writer.Key("Lieu");
+        writer.String(enemy.second->getPlace().c_str());
+        writer.EndObject();
+    }
+    writer.EndArray();
+
+    writer.EndObject();
+
+    file << buffer.GetString();
 }
 
 void Controller::addCharacter(const shared_ptr<Character> &newCharacter)
 {
+    const std::string &characterName = newCharacter->getName();
+
+    // Vérifier si un personnage avec le même nom existe déjà
+    if (characterMap.find(characterName) != characterMap.end())
+    {
+        std::cout << "Un personnage avec le nom \"" << characterName << "\" existe déjà !" << std::endl;
+        return; // Sortir de la fonction sans ajouter le personnage.
+    }
+
     characterMap[newCharacter->getName()] = newCharacter;
+
     // Ajout du personnage à l'équipage du vaisseau auquel il est associé
     for (auto &ship : spaceshipMap)
     {
@@ -335,6 +428,15 @@ void Controller::addCharacter(const shared_ptr<Character> &newCharacter)
 // redundancy
 void Controller::addEnemy(const shared_ptr<Enemy> &newEnemy)
 {
+    const string &enemyName = newEnemy->getName();
+
+    // Vérifier si un ennemie avec le même nom existe déjà
+    if (enemyMap.find(enemyName) != enemyMap.end())
+    {
+        std::cout << "Un personnage avec le nom \"" << enemyName << "\" existe déjà !" << std::endl;
+        return; // Sortir de la fonction sans ajouter le personnage.
+    }
+
     enemyMap[newEnemy->getName()] = newEnemy;
     // Ajout du personnage à l'équipage du vaisseau auquel il est associé
     for (auto &ship : spaceshipMap)
@@ -415,7 +517,7 @@ void Controller::addToCharacterInventory(string charName, string itemName)
     { // each Character has a 5-item inventory
         character->getInventory().push_back(move(newItem));
 #ifdef DEBUG
-        cout << " added to " << character->getName() << "'s inventory." << endl;
+        cout << itemName << " added to " << character->getName() << "'s inventory." << endl;
 #endif
         //        auto it = inventory.find(newItem->getName());
         //        cout << "trouvé" << endl;
@@ -750,7 +852,7 @@ void Controller::useItem(string charName, string itemName)
     else if (itemName == "Green lightsaber" || itemName == "Blue lightsaber" || itemName == "Green lightsaber")
         character->setAttackPower(character->getAttackPower() + character->getInventory().at(idx)->getEffect());
     else if (itemName == "Red shield" || itemName == "Green shield" || itemName == "Blue shield")
-        character->setAttackPower(character->getAttackPower() + character->getInventory().at(idx)->getEffect());
+        character->setArmorPower(character->getArmorPower() + character->getInventory().at(idx)->getEffect());
     deleteItemToCharacterInventory(charName, itemName);
 }
 

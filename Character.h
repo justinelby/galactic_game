@@ -14,6 +14,7 @@
 #include <fstream>
 #include <sstream>
 #include "Item.h"
+#include "Character.h"
 
 using namespace std;
 
