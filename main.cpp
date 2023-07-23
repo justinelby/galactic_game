@@ -221,14 +221,9 @@ int main()
     string gameFile = "gameData.json";
     Controller controller(gameFile, resetGameFile);
     controller.loadGame();
-    controller.addToCharacterInventory("Alex Starborn", "Red healing potion");
-    //displayControllerItems(controller);
-    //displayCharacterInventory(controller.getCharacter()["Alex Starborn"]);    
-    controller.saveGame();
+
     // Server server(&controller);
     // server.run();
-
-    // displayAllInfo(controller);
 
     return 0;
 }

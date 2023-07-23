@@ -163,8 +163,24 @@ void Controller::loadGame()
                 string placeType = character["Type de lieu"].GetString();
                 string place = character["Lieu"].GetString();
                 // Créer et ajouter le personnage à la map characterMap
-                auto newCharacter = make_shared<Character>(name, description, health, attackPower, armorPower,
-                                                           placeType, place);
+                auto newCharacter = make_shared<Character>(name, description, health, attackPower, armorPower, placeType, place);
+
+                if (character.HasMember("item") && character["item"].IsArray())
+                {
+                    const rapidjson::Value &items = character["item"];
+                    for (rapidjson::SizeType j = 0; j < items.Size(); j++)
+                    {
+                        const rapidjson::Value &item = items[j];
+                        // Extraire les valeurs des propriétés de l'objet "item"
+                        string itemName = item["name"].GetString();
+                        string itemDescription = item["description"].GetString();
+                        int itemEffect = item["effect"].GetInt();
+                        // Créer et ajouter l'objet "item" au personnage
+                        auto newItem = make_shared<Item>(itemName, itemDescription, itemEffect);
+                        addToCharacterInventory(name, itemName);
+                    }
+                }
+
                 addCharacter(newCharacter);
             }
         }
