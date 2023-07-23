@@ -317,8 +317,10 @@ void Controller::saveGame()
         writer.String(character.second->getPlaceType().c_str());
         writer.Key("Lieu");
         writer.String(character.second->getPlace().c_str());
-        if (character.second->getInventory().empty())
+
+        if (!character.second->getInventory().empty())
         {
+            writer.Key("Inventory");
             writer.StartArray();
             for (const auto &item : character.second->getInventory())
             {
@@ -333,6 +335,13 @@ void Controller::saveGame()
             }
             writer.EndArray();
         }
+        else
+        {
+            writer.Key("Inventory");
+            writer.StartArray();
+            writer.EndArray();
+        }
+
         writer.EndObject();
     }
     writer.EndArray();
