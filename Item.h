@@ -10,11 +10,11 @@
 using namespace std;
 class Item {
 public:
-    Item(const string name, const string description, const int effect);
+    Item(const string name, const string description, const int effect, string owner);
     string getName() const;
     string getDescription() const;
     int getEffect() const;
-
+    string getOwner() const;
 
     virtual ~Item();
 
@@ -22,6 +22,7 @@ public:
 private:
     string name;
     string description;
+    string owner;
     int effect;
 
 

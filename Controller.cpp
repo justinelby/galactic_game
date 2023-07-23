@@ -138,8 +138,9 @@ void Controller::loadGame()
                 string name = item["Nom"].GetString();
                 string description = item["Description"].GetString();
                 int effect = item["Effect"].GetInt();
+                string owner = item["owner"].GetString();
                 // Créer et ajouter la quête à la map questMap
-                auto newItem = make_unique<Item>(name, description, effect);
+                auto newItem = make_unique<Item>(name, description, effect, owner);
                 addToGameInventory(newItem);
             }
         }
