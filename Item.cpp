@@ -4,8 +4,8 @@
 
 #include "Item.h"
 using namespace std;
-Item::Item(const string name, const string description, const int effect, const string owner)
-        : name(name), description(description), effect(effect), owner(owner){}
+Item::Item(const string name, const string description, const int effect)
+        : name(name), description(description), effect(effect){}
 
 string Item::getName() const {
     return name;
@@ -19,9 +19,14 @@ int Item::getEffect() const {
     return effect;
 }
 
-string Item::getOwner() const {
+weak_ptr<Character>& Item::getOwner() {
     return owner;
 }
+
+void Item::setOwner(shared_ptr<Character>& owner) {
+    this->owner = owner;
+}
+
 
 Item::~Item() {
 

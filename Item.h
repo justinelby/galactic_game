@@ -5,16 +5,21 @@
 #ifndef JEU_PERSONNAGES_ITEM_H
 #define JEU_PERSONNAGES_ITEM_H
 #include <string>
+#include <memory>
 
 
 using namespace std;
+
+class Character;
+
 class Item {
 public:
-    Item(const string name, const string description, const int effect, string owner);
+    Item(const string name, const string description, const int effect);
     string getName() const;
     string getDescription() const;
     int getEffect() const;
-    string getOwner() const;
+    weak_ptr<Character>& getOwner();
+    void setOwner(shared_ptr<Character>&);
 
     virtual ~Item();
 
@@ -22,10 +27,8 @@ public:
 private:
     string name;
     string description;
-    string owner;
     int effect;
-
-
+    weak_ptr<Character> owner;
 };
 
 

@@ -138,9 +138,8 @@ void Controller::loadGame()
                 string name = item["Nom"].GetString();
                 string description = item["Description"].GetString();
                 int effect = item["Effect"].GetInt();
-                string owner = item["owner"].GetString();
                 // Créer et ajouter la quête à la map questMap
-                auto newItem = make_unique<Item>(name, description, effect, owner);
+                auto newItem = make_unique<Item>(name, description, effect);
                 addToGameInventory(newItem);
             }
         }
@@ -223,7 +222,8 @@ void Controller::resetGame()
     destinationStream.close();
 }
 
-void Controller::saveGame() {
+void Controller::saveGame()
+{
     // Ecriture du fichier de sauvegarde
     std::ofstream file(gameFile);
 
@@ -241,7 +241,8 @@ void Controller::saveGame() {
     // Écriture des objets "planet"
     writer.Key("planet");
     writer.StartArray();
-    for (const auto &planet: planetMap) {
+    for (const auto &planet : planetMap)
+    {
         writer.StartObject();
         writer.Key("Nom");
         writer.String(planet.second->getName().c_str());
@@ -254,7 +255,8 @@ void Controller::saveGame() {
     // Écriture des objets "spaceship"
     writer.Key("spaceship");
     writer.StartArray();
-    for (const auto &spaceship: spaceshipMap) {
+    for (const auto &spaceship : spaceshipMap)
+    {
         writer.StartObject();
         writer.Key("Nom");
         writer.String(spaceship.second->getName().c_str());
@@ -265,7 +267,8 @@ void Controller::saveGame() {
     // Écriture des objets "quest"
     writer.Key("quest");
     writer.StartArray();
-    for (const auto &quest: questMap) {
+    for (const auto &quest : questMap)
+    {
         writer.StartObject();
         writer.Key("Nom");
         writer.String(quest.second->getName().c_str());
@@ -278,22 +281,27 @@ void Controller::saveGame() {
     // Écriture des objets "item"
     writer.Key("item");
     writer.StartArray();
-    for (const auto &item: inventory) {
-        writer.StartObject();
-        writer.Key("Nom");
-        writer.String(item.second->getName().c_str());
-        writer.Key("Description");
-        writer.String(item.second->getDescription().c_str());
-        writer.Key("Effect");
-        writer.Int(item.second->getEffect());
-        writer.EndObject();
+    for (const auto &item : inventory)
+    {
+        if (item.second != nullptr)
+        {
+            writer.StartObject();
+            writer.Key("Nom");
+            writer.String(item.second->getName().c_str());
+            writer.Key("Description");
+            writer.String(item.second->getDescription().c_str());
+            writer.Key("Effect");
+            writer.Int(item.second->getEffect());
+            writer.EndObject();
+        }
     }
     writer.EndArray();
 
     // Écriture des objets "character"
     writer.Key("character");
     writer.StartArray();
-    for (const auto &character: characterMap) {
+    for (const auto &character : characterMap)
+    {
         writer.StartObject();
         writer.Key("Nom");
         writer.String(character.second->getName().c_str());
@@ -309,6 +317,22 @@ void Controller::saveGame() {
         writer.String(character.second->getPlaceType().c_str());
         writer.Key("Lieu");
         writer.String(character.second->getPlace().c_str());
+        if (character.second->getInventory().empty())
+        {
+            writer.StartArray();
+            for (const auto &item : character.second->getInventory())
+            {
+                writer.StartObject();
+                writer.String("name");
+                writer.String(item->getName().c_str());
+                writer.String("description");
+                writer.String(item->getDescription().c_str());
+                writer.String("effect");
+                writer.Int(item->getEffect());
+                writer.EndObject();
+            }
+            writer.EndArray();
+        }
         writer.EndObject();
     }
     writer.EndArray();
@@ -316,7 +340,8 @@ void Controller::saveGame() {
     // Écriture des objets "enemy"
     writer.Key("enemy");
     writer.StartArray();
-    for (const auto &enemy: enemyMap) {
+    for (const auto &enemy : enemyMap)
+    {
         writer.StartObject();
         writer.Key("Nom");
         writer.String(enemy.second->getName().c_str());
@@ -339,12 +364,11 @@ void Controller::saveGame() {
     writer.EndObject();
 
     file << buffer.GetString();
-
 }
 
 void Controller::addCharacter(const shared_ptr<Character> &newCharacter)
 {
-    const std::string& characterName = newCharacter->getName();
+    const std::string &characterName = newCharacter->getName();
 
     // Vérifier si un personnage avec le même nom existe déjà
     if (characterMap.find(characterName) != characterMap.end())
@@ -379,7 +403,7 @@ void Controller::addCharacter(const shared_ptr<Character> &newCharacter)
 // redundancy
 void Controller::addEnemy(const shared_ptr<Enemy> &newEnemy)
 {
-    const string& enemyName = newEnemy->getName();
+    const string &enemyName = newEnemy->getName();
 
     // Vérifier si un ennemie avec le même nom existe déjà
     if (enemyMap.find(enemyName) != enemyMap.end())
@@ -469,7 +493,7 @@ void Controller::addToCharacterInventory(string charName, string itemName)
     { // each Character has a 5-item inventory
         character->getInventory().push_back(move(newItem));
 #ifdef DEBUG
-        cout << " added to " << character->getName() << "'s inventory." << endl;
+        cout << itemName << " added to " << character->getName() << "'s inventory." << endl;
 #endif
         //        auto it = inventory.find(newItem->getName());
         //        cout << "trouvé" << endl;

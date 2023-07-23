@@ -99,7 +99,7 @@ void displayAllInfo(Controller &controller)
 void displayCharacterInventory(shared_ptr<Character> &character)
 {
     cout << character->getName() << "'s inventory : " << endl;
-    if (character->getInventory().empty())
+    if (!character->getInventory().empty())
     {
         cout << "Empty inventory !" << endl;
     }
@@ -221,7 +221,10 @@ int main()
     string gameFile = "gameData.json";
     Controller controller(gameFile, resetGameFile);
     controller.loadGame();
-    // controller.addToCharacterInventory("Alex Starborn", "Red healing potion");
+    controller.addToCharacterInventory("Alex Starborn", "Red healing potion");
+    //displayControllerItems(controller);
+    //displayCharacterInventory(controller.getCharacter()["Alex Starborn"]);    
+    controller.saveGame();
     // Server server(&controller);
     // server.run();
 
