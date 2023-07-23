@@ -53,6 +53,7 @@ Makefile
 
 #Build
 galactic_game
+save.txt
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml

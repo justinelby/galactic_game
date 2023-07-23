@@ -479,8 +479,7 @@ void Controller::addToGameInventory(unique_ptr<Item> &newItem)
     inventory[newItem->getName()] = move(newItem);
 }
 
-void Controller::cleanWeakPtr(
-    vector<weak_ptr<Character>> &vec)
+void Controller::cleanWeakPtr(vector<weak_ptr<Character>> &vec)
 { // Nettoyer les weak ptr qui n'ont plus de share ptr vers lesquels pointer
     // on parcourt les weak ptr du vecteur
     for (auto it = vec.begin(); it != vec.end();)
