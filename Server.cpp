@@ -1219,7 +1219,7 @@ void *Server::connection_handler(void *data)
                 writer.String(("L'objet " + itemName + " a bien été utilisé par " + characterName).c_str());
                 writer.EndObject();
             }
-            writer.StartObject();
+            writer.EndObject();
         }
 
         // clear buffer data
