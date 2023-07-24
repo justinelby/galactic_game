@@ -74,6 +74,11 @@ private :
     // Methods
     vector<shared_ptr<Character>> setupRole(string, string);
     bool isReplacing();
+    bool isItemExists(string);
+    bool isItemInCharacterBag(string, string);
+    bool isCharacterExists(string);
+    bool isSpaceshipExists(string);
+    bool isPlanetExists(string);
 };
 
 

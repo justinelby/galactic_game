@@ -407,43 +407,99 @@ void Controller::cleanWeakPtr(
 //     }
 // }
 
-void Controller::addToCharacterInventory(string charName, string itemName) {
-    bool isItemExist = false, is;
-    shared_ptr<Character> &character = characterMap[charName];
-    cout << "call fct" << endl;
+bool Controller::isCharacterExists(string charName) {
+    for (auto &it: characterMap) {
+        if (it.second != nullptr && it.second->getName() == charName) {
+            return true;
+        }
+    }
+#ifdef DEBUG
+    cout << "Le personnage " << charName << " n'existe pas dans le jeu !" << endl;
+#endif
+    return false;
+}
+
+
+bool Controller::isItemExists(string itemName) {
     for (auto &it: inventory) {
         if (it.second != nullptr && it.second->getName() == itemName) {
-            isItemExist = true;
-            break;
+            return true;
         }
     }
-
-    if (isItemExist) {
-        unique_ptr<Item> &newItem = inventory[itemName];
-
-        if(character->getInventory().size() < 5) {  // each Character has a 5-item inventory
-            character->getInventory().push_back(move(newItem));
-    #ifdef DEBUG
-            cout << " added to " << character->getName() << "'s inventory." << endl;
-    #endif
-            return;
+#ifdef DEBUG
+    cout << "L'item " << itemName << " n'existe pas dans l'inventaire du jeu !" << endl;
+#endif
+    return false;
+}
+bool Controller::isItemInCharacterBag(string charName, string itemName) {
+    for (auto& it : characterMap[charName]->getInventory()) {
+        if (it != nullptr && it->getName() == itemName) {
+            return true;
         }
-        else
-#ifdef DEBUG
-            cout << "not added to " << character->getName() << "'s inventory cause it's full" << endl;
-#endif
     }
-    else {
-        cout << "checkpoint" << endl;
 #ifdef DEBUG
-        cout << "L'item " << itemName << " n'existe pas dans l'inventaire du jeu !" << endl;
+    cout << "L'item " << itemName << " n'existe pas dans l'inventaire de " << charName << " !" << endl;
 #endif
+    return false;
+}
+
+bool Controller::isSpaceshipExists(string shipName) {
+    for (auto &it: spaceshipMap) {
+        if (it.second != nullptr && it.second->getName() == shipName) {
+            return true;
+        }
     }
+#ifdef DEBUG
+    cout << "Le vaisseau " << shipName << " n'existe pas dans l'inventaire du jeu !" << endl;
+#endif
+    return false;
+}
+
+
+bool Controller::isPlanetExists(string planetName) {
+    for (auto &it: planetMap) {
+        if (it.second != nullptr && it.second->getName() == planetName) {
+            return true;
+        }
+    }
+#ifdef DEBUG
+    cout << "La planète " << planetName << " n'existe pas dans l'inventaire du jeu !" << endl;
+#endif
+    return false;
+}
+
+
+
+
+void Controller::addToCharacterInventory(string charName, string itemName) {
+    bool itemCheck = isItemExists(itemName), characterCheck = isCharacterExists(charName);
+
+    if(characterCheck) {
+        shared_ptr<Character> &character = characterMap[charName];
+        if (itemCheck) {
+            unique_ptr<Item> &newItem = inventory[itemName];
+
+            if (character->getInventory().size() < 5) {  // each Character has a 5-item inventory
+                character->getInventory().push_back(move(newItem));
+#ifdef DEBUG
+                cout << " added to " << character->getName() << "'s inventory." << endl;
+#endif
+                return;
+            }
+            else
+#ifdef DEBUG
+                cout << "not added to " << character->getName() << "'s inventory cause it's full" << endl;
+#endif
+        }
+
+    }
+
 }
 
 
 bool Controller::deleteCharacter(const string &name)
 {
+
     // Rechercher le personnage dans la map characterMap
     auto it = characterMap.find(name);
     auto it2 = enemyMap.find(name);
@@ -722,6 +778,7 @@ bool Controller::isReplacing()
 
 bool Controller::swapItems(string charName, string itemName, string itemName2) {
 
+//    bool charChek = isCharacterExists(charName), itemCheck1 = ;
     shared_ptr<Character>& character = characterMap[charName];
     unique_ptr<Item>& lootedItem = inventory[itemName];
 
