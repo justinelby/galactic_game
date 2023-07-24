@@ -733,6 +733,58 @@ void *Server::connection_handler(void *data)
         }
 
         /*------------------------------------
+                    ITEM MANAGER section
+         -----------------------------------*/
+
+        // Swapping items function
+        if (methodName == "swapItems")
+        {
+            const rapidjson::Value &swapItems = document["swapItems"];
+            if (swapItems.HasMember("characterName") && swapItems.HasMember("itemOnGround") && swapItems.HasMember("itemToReplace"))
+            {
+                std::string character = swapItems["characterName"].GetString();
+                std::string itemOnGround = swapItems["itemOnGround"].GetString();
+                std::string itemToReplace = swapItems["itemToReplace"].GetString();
+
+                bool result = controller->swapItems(character, itemOnGround, itemToReplace);
+
+                writer.StartObject();
+                writer.Key("swapItems");
+                writer.StartObject();
+                writer.String("characterName");
+                writer.String(character.c_str());
+                writer.String("itemOnGround");
+                writer.String(itemOnGround.c_str());
+                writer.String("itemToReplace");
+                writer.String(itemToReplace.c_str());
+                writer.Bool(result);
+                writer.EndObject();
+                writer.EndObject();
+
+                if (result) {
+                    writer.StartObject();
+                    writer.String("Success");
+                    writer.String((itemToReplace + " a bien été échangé avec " + itemOnGround + ". ").c_str());
+                    writer.EndObject();
+                }
+                else {
+                    writer.StartObject();
+                    writer.String("Failure");
+                    writer.String(("You can still grab an item without having to swap one of yours. Please call addToCharacterInventory(" + character +", " + itemOnGround + ")").c_str());
+                    writer.EndObject();
+                }
+            }
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Les clés 'characterName', 'itemOnGround' et 'itemToReplace' sont manquantes dans la clé 'swapItems'.");
+                writer.EndObject();
+            }
+        }
+
+
+        /*------------------------------------
                     ADD section
         ------------------------------------*/
 
