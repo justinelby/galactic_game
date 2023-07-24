@@ -722,8 +722,6 @@ void *Server::connection_handler(void *data)
                 writer.String(defender.c_str());
                 writer.String("result");
                 writer.Bool(result);
-                writer.String("remainingHealth");
-                writer.String((to_string(remainingHealth)).c_str());
                 writer.EndObject();
                 writer.EndObject();
                 } else {
@@ -788,7 +786,7 @@ void *Server::connection_handler(void *data)
             {
                 writer.StartObject();
                 writer.Key("Error");
-                writer.String("Un ou plusieurs clés 'characterName', 'itemOnGround' et 'itemToReplace' sont manquantes dans la clé 'swapItems'.");
+                writer.String("Une ou plusieurs clés 'characterName', 'itemOnGround' et 'itemToReplace' sont manquantes dans la clé 'swapItems'.");
                 writer.EndObject();
             }
             writer.EndObject();
@@ -1302,6 +1300,13 @@ if (methodName == "addToCharacterInventory")
                 writer.StartObject();
                 writer.Key("Success");
                 writer.String(("L'objet " + itemName + " a bien été utilisé par " + characterName).c_str());
+                writer.EndObject();
+            }
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquantes dans la clé 'useItem'.");
                 writer.EndObject();
             }
             writer.EndObject();
