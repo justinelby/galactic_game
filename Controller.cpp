@@ -709,7 +709,7 @@ bool Controller::isReplacing()
 //    }
 //}
 
-void Controller::swapItems(string charName, string itemName, string itemName2) {
+bool Controller::swapItems(string charName, string itemName, string itemName2) {
 
     shared_ptr<Character>& character = characterMap[charName];
     unique_ptr<Item>& lootedItem = inventory[itemName];
@@ -724,10 +724,13 @@ void Controller::swapItems(string charName, string itemName, string itemName2) {
         }
         auto droppedItem = move(lootedItem);
         addToGameInventory(droppedItem);  // was the Item we had in our inventory before swap
+        return true;
     }
-    else
+    else {
         cout << "You can still grab an item without having to swap one of yours. Please call addToCharacterInventory("
              << charName << ", " << itemName << ")\n";
+        return false;
+    }
 }
 
 
