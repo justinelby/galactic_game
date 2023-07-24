@@ -204,6 +204,18 @@ void lootingTest(Controller &controller, string characterName, string itemName, 
     displayControllerItems(controller);
 }
 
+void addSameItemTwiceTest(Controller &controller, string characterName, string itemName) {
+    controller.addToCharacterInventory(characterName, itemName);
+    for(auto& it : controller.getCharacter()[characterName]->getInventory())
+        cout << it->getName() << endl;
+    controller.addToCharacterInventory(characterName, itemName);
+
+    for(auto& it : controller.getCharacter()[characterName]->getInventory())
+        cout << it->getName() << endl;
+}
+
+
+
 // Code contenant l'execution du menu et le jeu
 int main()
 {
@@ -211,7 +223,14 @@ int main()
     string loadedFile = "gameData.json";
     Controller controller(loadedFile, savedFile);
     controller.loadGame();
-    displayAllInfo(controller);
+
+    controller.addToCharacterInventory("Alex Starborn", "Red healing potion");
+    controller.addToCharacterInventory("Alex Starborn", "Red healing potion");
+    controller.addToCharacterInventory("Alex Starborn", "Refdfsdb");
+    displayCharacterInventory(controller.getCharacter()["Alex Starborn"]);
+
+    controller.deleteCharacter("Alex Starborn");
+    controller.getCharacter()["Alex Starborn"]->getStatus()[0];
     // Server server(&controller);
     // server.run();
     // controller.saveGame();

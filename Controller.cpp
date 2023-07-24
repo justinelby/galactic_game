@@ -407,29 +407,40 @@ void Controller::cleanWeakPtr(
 //     }
 // }
 
-void Controller::addToCharacterInventory(string charName, string itemName)
-{
+void Controller::addToCharacterInventory(string charName, string itemName) {
+    bool isItemExist = false, is;
     shared_ptr<Character> &character = characterMap[charName];
-    unique_ptr<Item> &newItem = inventory[itemName];
-
-    if (character->getInventory().size() < 5)
-    { // each Character has a 5-item inventory
-        character->getInventory().push_back(move(newItem));
-#ifdef DEBUG
-        cout << " added to " << character->getName() << "'s inventory." << endl;
-#endif
-        //        auto it = inventory.find(newItem->getName());
-        //        cout << "trouvé" << endl;
-        //        if(it != inventory.end())
-        //            inventory.erase(it);
+    cout << "call fct" << endl;
+    for (auto &it: inventory) {
+        if (it.second != nullptr && it.second->getName() == itemName) {
+            isItemExist = true;
+            break;
+        }
     }
-    else
-    {
+
+    if (isItemExist) {
+        unique_ptr<Item> &newItem = inventory[itemName];
+
+        if(character->getInventory().size() < 5) {  // each Character has a 5-item inventory
+            character->getInventory().push_back(move(newItem));
+    #ifdef DEBUG
+            cout << " added to " << character->getName() << "'s inventory." << endl;
+    #endif
+            return;
+        }
+        else
 #ifdef DEBUG
-        cout << "Item not added to inventory." << endl;
+            cout << "not added to " << character->getName() << "'s inventory cause it's full" << endl;
+#endif
+    }
+    else {
+        cout << "checkpoint" << endl;
+#ifdef DEBUG
+        cout << "L'item " << itemName << " n'existe pas dans l'inventaire du jeu !" << endl;
 #endif
     }
 }
+
 
 bool Controller::deleteCharacter(const string &name)
 {
