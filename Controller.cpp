@@ -512,20 +512,19 @@ void Controller::addToCharacterInventory(string charName, string itemName)
 {
     shared_ptr<Character> &character = characterMap[charName];
     unique_ptr<Item> &newItem = inventory[itemName];
+    bool itemAdded = false; 
 
     if (character->getInventory().size() < 5)
     { // each Character has a 5-item inventory
         character->getInventory().push_back(move(newItem));
+         itemAdded = true;
 #ifdef DEBUG
         cout << itemName << " added to " << character->getName() << "'s inventory." << endl;
 #endif
-        //        auto it = inventory.find(newItem->getName());
-        //        cout << "trouvé" << endl;
-        //        if(it != inventory.end())
-        //            inventory.erase(it);
     }
     else
     {
+        itemAdded = false;
 #ifdef DEBUG
         cout << "Item not added to inventory." << endl;
 #endif

@@ -934,42 +934,48 @@ void *Server::connection_handler(void *data)
             }
         }
 
-        if (methodName == "addToCharacterInventory")
+if (methodName == "addToCharacterInventory")
+{
+    bool itemAdded = false;
+    const rapidjson::Value &addToInventory = document["addToCharacterInventory"];
+    if (addToInventory.HasMember("charName") && addToInventory.HasMember("itemName"))
+    {
+        std::string charName = addToInventory["charName"].GetString();
+        std::string itemName = addToInventory["itemName"].GetString();
+
+        // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
+        controller->addToCharacterInventory(charName, itemName);
+
+        writer.StartObject();
+        writer.Key("addToCharacterInventory");
+        writer.StartObject();
+
+        auto characterIt = controller->getCharacter().find(charName);
+
+        // Vérifier la valeur de itemAdded et ajouter le message approprié dans la réponse JSON
+        if (characterIt->second->getInventory().size() <5)
         {
-            const rapidjson::Value &addToInventory = document["addToCharacterInventory"];
-            if (addToInventory.HasMember("charName") && addToInventory.HasMember("itemName"))
-            {
-                std::string charName = addToInventory["charName"].GetString();
-                std::string itemName = addToInventory["itemName"].GetString();
-
-                // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
-                controller->addToCharacterInventory(charName, itemName);
-
-                writer.StartObject();
-                writer.Key("addToCharacterInventory");
-                writer.StartObject();
-                auto inventoryIt = controller->getInventory().find(itemName);
-                if (inventoryIt != controller->getInventory().end())
-                {
-                    writer.String("status");
-                    writer.String("success");
-                }
-                else
-                {
-                    writer.String("status");
-                    writer.String("failed : object not found");
-                }
-                writer.EndObject();
-                writer.EndObject();
-            }
-            else
-            {
-                writer.StartObject();
-                writer.Key("Error");
-                writer.String("Certains champs sont manquants dans la clé 'addToCharacterInventory'.");
-                writer.EndObject();
-            }
+            writer.String("status");
+            writer.String("success");
         }
+        else if (characterIt->second->getInventory().size() >5)
+        {
+            writer.String("status");
+            writer.String("failed : inventory is full, please use swapItem method");
+        }
+
+        writer.EndObject();
+        writer.EndObject();
+    }
+    else
+    {
+        writer.StartObject();
+        writer.Key("Error");
+        writer.String("Certains champs sont manquants dans la clé 'addToCharacterInventory'.");
+        writer.EndObject();
+    }
+}
+
 
         // Add addToGameInventory function
         if (methodName == "addToGameInventory")
