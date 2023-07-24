@@ -750,16 +750,6 @@ void *Server::connection_handler(void *data)
 
                 writer.StartObject();
                 writer.Key("swapItems");
-                writer.StartObject();
-                writer.String("characterName");
-                writer.String(character.c_str());
-                writer.String("itemOnGround");
-                writer.String(itemOnGround.c_str());
-                writer.String("itemToReplace");
-                writer.String(itemToReplace.c_str());
-                writer.Bool(result);
-                writer.EndObject();
-                writer.EndObject();
 
                 if (result) {
                     writer.StartObject();
@@ -770,7 +760,7 @@ void *Server::connection_handler(void *data)
                 else {
                     writer.StartObject();
                     writer.String("Failure");
-                    writer.String(("You can still grab an item without having to swap one of yours. Please call addToCharacterInventory(" + character +", " + itemOnGround + ")").c_str());
+                    writer.String(("Inventory not full, you can still grab an item without having to swap one of yours. Please call addToCharacterInventory(" + character +", " + itemOnGround + ")").c_str());
                     writer.EndObject();
                 }
             }
@@ -778,9 +768,10 @@ void *Server::connection_handler(void *data)
             {
                 writer.StartObject();
                 writer.Key("Error");
-                writer.String("Les clés 'characterName', 'itemOnGround' et 'itemToReplace' sont manquantes dans la clé 'swapItems'.");
+                writer.String("Un ou plusieurs clés 'characterName', 'itemOnGround' et 'itemToReplace' sont manquantes dans la clé 'swapItems'.");
                 writer.EndObject();
             }
+            writer.EndObject();
         }
 
 
