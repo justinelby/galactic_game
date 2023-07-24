@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Controller.h"
+#include "Server.h"
 
 using namespace std;
 
@@ -98,7 +99,7 @@ void displayAllInfo(Controller &controller)
 void displayCharacterInventory(shared_ptr<Character> &character)
 {
     cout << character->getName() << "'s inventory : " << endl;
-    if (character->getInventory().empty())
+    if (!character->getInventory().empty())
     {
         cout << "Empty inventory !" << endl;
     }
@@ -188,6 +189,15 @@ void useHealthItem(Controller &controller, string characterName, string itemName
          << controller.getCharacter()[characterName]->getHealth() << endl;
 }
 
+void useShieldItem(Controller &controller, string characterName, string itemName)
+{
+    cout << characterName << "'s hp before using " << itemName << " : "
+         << controller.getCharacter()[characterName]->getArmorPower() << endl;
+    controller.useItem(characterName, itemName);
+    cout << characterName << "'s hp after using " << itemName << " : "
+         << controller.getCharacter()[characterName]->getArmorPower() << endl;
+}
+
 void lootingTest(Controller &controller, string characterName, string itemName, string itemName2)
 {
     cout << "Test : " << characterName << " looting " << itemName << endl;
@@ -207,14 +217,13 @@ void lootingTest(Controller &controller, string characterName, string itemName, 
 // Code contenant l'execution du menu et le jeu
 int main()
 {
-    string savedFile = "save.txt";
-    string loadedFile = "gameData.json";
-    Controller controller(loadedFile, savedFile);
+    string resetGameFile = "resetData.json";
+    string gameFile = "gameData.json";
+    Controller controller(gameFile, resetGameFile);
     controller.loadGame();
-    displayAllInfo(controller);
-    // Server server(&controller);
-    // server.run();
-    // controller.saveGame();
+
+    Server server(&controller);
+    server.run();
 
     return 0;
 }

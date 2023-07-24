@@ -19,6 +19,15 @@ int Item::getEffect() const {
     return effect;
 }
 
+weak_ptr<Character>& Item::getOwner() {
+    return owner;
+}
+
+void Item::setOwner(shared_ptr<Character>& owner) {
+    this->owner = owner;
+}
+
+
 Item::~Item() {
 
 }

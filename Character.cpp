@@ -13,7 +13,8 @@ Character::Character(string name, string desc, int hp, int ap, int dp, string pl
     this->place = place;
 }
 
-Character::Character(istringstream& iss) {
+Character::Character(istringstream &iss)
+{
     iss >> name >> descr >> hp >> ap >> dp >> placeType >> place;
 }
 
@@ -34,15 +35,15 @@ vector<int> Character::getStatus() { return {hp, ap, dp}; }
 int Character::getMaxHp() const { return maxHp; }
 
 string Character::getPlaceType() const { return placeType; }
-void Character::setPlaceType(const string &pt) { this->place = pt; }    // add verification if input is valid
+void Character::setPlaceType(const string &pt) { this->place = pt; } // add verification if input is valid
 
 string Character::getPlace() const { return place; }
-void Character::setPlace(const string &pl) { this->place = pl; }    // add verification if input is valid
+void Character::setPlace(const string &pl) { this->place = pl; } // add verification if input is valid
 
-//map<string, unique_ptr<Item>>& Character::getInventory() { return inventory; }
-vector<unique_ptr<Item>>& Character::getInventory() { return inventory; }
+// map<string, unique_ptr<Item>>& Character::getInventory() { return inventory; }
+vector<unique_ptr<Item>> &Character::getInventory() { return inventory; }
 
 Character::~Character()
 {
-    //dtor
+    // dtor
 }
