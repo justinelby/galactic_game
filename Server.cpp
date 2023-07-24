@@ -716,38 +716,32 @@ void *Server::connection_handler(void *data)
 
                 bool result = controller->neutralAttack(assailant, defender);
                 int remainingHealth = controller->getCharacter().find(defender)->second->getHealth();
-
-                if (result)
-                {
-                    writer.StartObject();
-                    writer.Key("attack");
-                    writer.StartObject();
-                    writer.String("assailant");
-                    writer.String(assailant.c_str());
-                    writer.String("defender");
-                    writer.String(defender.c_str());
-                    writer.String("result");
-                    writer.Bool(result);
-                    writer.String("remainingHealth");
-                    writer.String((to_string(0)).c_str());
-                    writer.EndObject();
-                    writer.EndObject();
-                }
-                else
-                {
-                    writer.StartObject();
-                    writer.Key("attack");
-                    writer.StartObject();
-                    writer.String("assailant");
-                    writer.String(assailant.c_str());
-                    writer.String("defender");
-                    writer.String(defender.c_str());
-                    writer.String("result");
-                    writer.Bool(result);
-                    writer.String("remainingHealth");
-                    writer.String((to_string(remainingHealth)).c_str());
-                    writer.EndObject();
-                    writer.EndObject();
+              
+                if(result){
+                writer.StartObject();
+                writer.Key("attack");
+                writer.StartObject();
+                writer.String("assailant");
+                writer.String(assailant.c_str());
+                writer.String("defender");
+                writer.String(defender.c_str());
+                writer.String("result");
+                writer.Bool(result);
+                writer.EndObject();
+                writer.EndObject();
+                } else {
+                writer.StartObject();
+                writer.Key("attack");
+                writer.StartObject();
+                writer.String("assailant");
+                writer.String(assailant.c_str());
+                writer.String("defender");
+                writer.String(defender.c_str());
+                writer.String("result");
+                writer.Bool(result);
+                writer.String((to_string(remainingHealth)).c_str());
+                writer.EndObject();
+                writer.EndObject();
                 }
             }
             else
@@ -797,7 +791,7 @@ void *Server::connection_handler(void *data)
             {
                 writer.StartObject();
                 writer.Key("Error");
-                writer.String("Un ou plusieurs clés 'characterName', 'itemOnGround' et 'itemToReplace' sont manquantes dans la clé 'swapItems'.");
+                writer.String("Une ou plusieurs clés 'characterName', 'itemOnGround' et 'itemToReplace' sont manquantes dans la clé 'swapItems'.");
                 writer.EndObject();
             }
             writer.EndObject();
@@ -1014,30 +1008,38 @@ void *Server::connection_handler(void *data)
             {
                 std::string charName = addToInventory["charName"].GetString();
                 std::string itemName = addToInventory["itemName"].GetString();
-
+        
                 // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
-                controller->addToCharacterInventory(charName, itemName);
-
-                writer.StartObject();
-                writer.Key("addToCharacterInventory");
-                writer.StartObject();
-
-                auto characterIt = controller->getCharacter().find(charName);
-
-                // Vérifier la valeur de itemAdded et ajouter le message approprié dans la réponse JSON
-                if (characterIt->second->getInventory().size() < 5)
-                {
-                    writer.String("status");
-                    writer.String("success");
+                bool check1 = controller->isCharacterExists(charName),
+                check2 = controller->isItemExists(itemName);
+                if(check1 && check2) {
+                    controller->addToCharacterInventory(charName, itemName);
+        
+                    writer.StartObject();
+                    writer.Key("addToCharacterInventory");
+                    writer.StartObject();
+        
+                    auto characterIt = controller->getCharacter().find(charName);
+        
+                    // Vérifier la valeur de itemAdded et ajouter le message approprié dans la réponse JSON
+                    if (characterIt->second->getInventory().size() < 5) {
+                        writer.String("status");
+                        writer.String("success");
+                    } else if (characterIt->second->getInventory().size() >= 5) {
+                        writer.String("status");
+                        writer.String("failed : inventory is full, please use swapItem method");
+                    }
+        
+                    writer.EndObject();
+                    writer.EndObject();
                 }
-                else if (characterIt->second->getInventory().size() >= 5)
-                {
-                    writer.String("status");
-                    writer.String("failed : inventory is full, please use swapItem method");
+                else {
+                    writer.StartObject();
+                    writer.Key("Error");
+                    writer.String("Invalid entries, please write an existing character and/or item.");
+                    writer.EndObject();
+        
                 }
-
-                writer.EndObject();
-                writer.EndObject();
             }
             else
             {
@@ -1048,6 +1050,7 @@ void *Server::connection_handler(void *data)
             }
         }
 
+
         // Add addToGameInventory function
         if (methodName == "addToGameInventory")
         {
@@ -1055,21 +1058,29 @@ void *Server::connection_handler(void *data)
             if (addToGameInventory.HasMember("name") && addToGameInventory.HasMember("description") &&
                 addToGameInventory.HasMember("effect"))
             {
-
                 std::string name = addToGameInventory["name"].GetString();
                 std::string description = addToGameInventory["description"].GetString();
                 int effect = addToGameInventory["effect"].GetInt();
 
-                // Créer et ajouter le personnage à la map characterMap
-                auto newItem = make_unique<Item>(name, description, effect);
-                controller->addToGameInventory(newItem);
-                writer.StartObject();
-                writer.Key("addToGameInventory");
-                writer.StartObject();
-                writer.String("status");
-                writer.String("success");
-                writer.EndObject();
-                writer.EndObject();
+                bool check = controller->isItemExists(name);
+                if(!check) {    // if an item with the same name doesn't already exist
+                    // Créer et ajouter le personnage à la map characterMap
+                    auto newItem = make_unique<Item>(name, description, effect);
+                    controller->addToGameInventory(newItem);
+                    writer.StartObject();
+                    writer.Key("addToGameInventory");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("success");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
+                else {
+                    writer.StartObject();
+                    writer.Key("Error");
+                    writer.String("An item already exists with this name. Please change your new item's name");
+                    writer.EndObject();
+                }
             }
             else
             {
@@ -1294,6 +1305,13 @@ void *Server::connection_handler(void *data)
                 writer.StartObject();
                 writer.Key("Success");
                 writer.String(("L'objet " + itemName + " a bien été utilisé par " + characterName).c_str());
+                writer.EndObject();
+            }
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquantes dans la clé 'useItem'.");
                 writer.EndObject();
             }
             writer.EndObject();

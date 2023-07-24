@@ -59,8 +59,16 @@ public:
     string planetToString();
     string questToString();
     string itemToString();
-    virtual ~Controller();
 
+
+    bool isReplacing();
+    bool isItemExists(string);
+    bool isItemInCharacterBag(string, string);
+    bool isCharacterExists(string);
+    bool isSpaceshipExists(string);
+    bool isPlanetExists(string);
+
+    virtual ~Controller();
 private :
     //Attributs
     map<string, shared_ptr<Character>> characterMap;
@@ -73,7 +81,6 @@ private :
     string gameFile;
     // Methods
     vector<shared_ptr<Character>> setupRole(string, string);
-    bool isReplacing();
 };
 
 
