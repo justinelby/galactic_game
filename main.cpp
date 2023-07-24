@@ -214,6 +214,18 @@ void lootingTest(Controller &controller, string characterName, string itemName, 
     displayControllerItems(controller);
 }
 
+void addSameItemTwiceTest(Controller &controller, string characterName, string itemName) {
+    controller.addToCharacterInventory(characterName, itemName);
+    for(auto& it : controller.getCharacter()[characterName]->getInventory())
+        cout << it->getName() << endl;
+    controller.addToCharacterInventory(characterName, itemName);
+
+    for(auto& it : controller.getCharacter()[characterName]->getInventory())
+        cout << it->getName() << endl;
+}
+
+
+
 // Code contenant l'execution du menu et le jeu
 int main()
 {
@@ -222,8 +234,10 @@ int main()
     Controller controller(gameFile, resetGameFile);
     controller.loadGame();
 
+
     Server server(&controller);
     server.run();
+
 
     return 0;
 }

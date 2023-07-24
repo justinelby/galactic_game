@@ -1007,28 +1007,36 @@ if (methodName == "addToCharacterInventory")
         std::string itemName = addToInventory["itemName"].GetString();
 
         // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
-        controller->addToCharacterInventory(charName, itemName);
+        bool check1 = controller->isCharacterExists(charName),
+        check2 = controller->isItemExists(itemName);
+        if(check1 && check2) {
+            controller->addToCharacterInventory(charName, itemName);
 
-        writer.StartObject();
-        writer.Key("addToCharacterInventory");
-        writer.StartObject();
+            writer.StartObject();
+            writer.Key("addToCharacterInventory");
+            writer.StartObject();
 
-        auto characterIt = controller->getCharacter().find(charName);
+            auto characterIt = controller->getCharacter().find(charName);
 
-        // Vérifier la valeur de itemAdded et ajouter le message approprié dans la réponse JSON
-        if (characterIt->second->getInventory().size() <5)
-        {
-            writer.String("status");
-            writer.String("success");
+            // Vérifier la valeur de itemAdded et ajouter le message approprié dans la réponse JSON
+            if (characterIt->second->getInventory().size() < 5) {
+                writer.String("status");
+                writer.String("success");
+            } else if (characterIt->second->getInventory().size() >= 5) {
+                writer.String("status");
+                writer.String("failed : inventory is full, please use swapItem method");
+            }
+
+            writer.EndObject();
+            writer.EndObject();
         }
-        else if (characterIt->second->getInventory().size() >= 5)
-        {
-            writer.String("status");
-            writer.String("failed : inventory is full, please use swapItem method");
-        }
+        else {
+            writer.StartObject();
+            writer.Key("Error");
+            writer.String("Invalid entries, please write an existing character and/or item.");
+            writer.EndObject();
 
-        writer.EndObject();
-        writer.EndObject();
+        }
     }
     else
     {
@@ -1047,21 +1055,29 @@ if (methodName == "addToCharacterInventory")
             if (addToGameInventory.HasMember("name") && addToGameInventory.HasMember("description") &&
                 addToGameInventory.HasMember("effect"))
             {
-
                 std::string name = addToGameInventory["name"].GetString();
                 std::string description = addToGameInventory["description"].GetString();
                 int effect = addToGameInventory["effect"].GetInt();
 
-                // Créer et ajouter le personnage à la map characterMap
-                auto newItem = make_unique<Item>(name, description, effect);
-                controller->addToGameInventory(newItem);
-                writer.StartObject();
-                writer.Key("addToGameInventory");
-                writer.StartObject();
-                writer.String("status");
-                writer.String("success");
-                writer.EndObject();
-                writer.EndObject();
+                bool check = controller->isItemExists(name);
+                if(!check) {    // if an item with the same name doesn't already exist
+                    // Créer et ajouter le personnage à la map characterMap
+                    auto newItem = make_unique<Item>(name, description, effect);
+                    controller->addToGameInventory(newItem);
+                    writer.StartObject();
+                    writer.Key("addToGameInventory");
+                    writer.StartObject();
+                    writer.String("status");
+                    writer.String("success");
+                    writer.EndObject();
+                    writer.EndObject();
+                }
+                else {
+                    writer.StartObject();
+                    writer.Key("Error");
+                    writer.String("An item already exists with this name. Please change your new item's name");
+                    writer.EndObject();
+                }
             }
             else
             {
