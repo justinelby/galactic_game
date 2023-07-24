@@ -958,7 +958,7 @@ if (methodName == "addToCharacterInventory")
             writer.String("status");
             writer.String("success");
         }
-        else if (characterIt->second->getInventory().size() >5)
+        else if (characterIt->second->getInventory().size() >= 5)
         {
             writer.String("status");
             writer.String("failed : inventory is full, please use swapItem method");
