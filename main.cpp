@@ -188,7 +188,7 @@ void useHealthItem(Controller &controller, string characterName, string itemName
          << controller.getCharacter()[characterName]->getHealth() << endl;
 }
 
-void lootingTest(Controller &controller, string characterName, string itemName)
+void lootingTest(Controller &controller, string characterName, string itemName, string itemName2)
 {
     cout << "Test : " << characterName << " looting " << itemName << endl;
     cout << "--------------- Before looting ---------------" << endl;
@@ -197,7 +197,7 @@ void lootingTest(Controller &controller, string characterName, string itemName)
     cout << "Game's inventory :" << endl;
     displayControllerItems(controller);
 
-    controller.looting(characterName, itemName);
+    controller.swapItems(characterName, itemName, itemName2);
     cout << "--------------- After looting ---------------" << endl;
     displayCharacterInventory(controller.getCharacter()[characterName]);
     cout << "Game's inventory :" << endl;

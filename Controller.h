@@ -49,8 +49,9 @@ public:
 
 
     bool neutralAttack(string, string);  // returns true if enemy dies
-    void looting(string, string);
-    void dropItem(string, string);
+//    void looting(string, string);
+    void swapItems(string, string, string);
+//    void dropItem(string, string);
     void useItem(string, string);
     string characterToString();
     string spaceshipToString();
