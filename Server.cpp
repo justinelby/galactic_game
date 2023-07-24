@@ -710,7 +710,9 @@ void *Server::connection_handler(void *data)
                 std::string defender = attack["defender"].GetString();
 
                 bool result = controller->neutralAttack(assailant, defender);
+                int remainingHealth = controller->getCharacter().find(defender)->second->getHealth();
 
+                if(result){
                 writer.StartObject();
                 writer.Key("attack");
                 writer.StartObject();
@@ -720,8 +722,26 @@ void *Server::connection_handler(void *data)
                 writer.String(defender.c_str());
                 writer.String("result");
                 writer.Bool(result);
+                writer.String("remainingHealth");
+                writer.String((to_string(remainingHealth)).c_str());
                 writer.EndObject();
                 writer.EndObject();
+                } else {
+                writer.StartObject();
+                writer.Key("attack");
+                writer.StartObject();
+                writer.String("assailant");
+                writer.String(assailant.c_str());
+                writer.String("defender");
+                writer.String(defender.c_str());
+                writer.String("result");
+                writer.Bool(result);
+                writer.String((to_string(remainingHealth)).c_str());
+                writer.EndObject();
+                writer.EndObject();
+                }
+
+
             }
             else
             {
