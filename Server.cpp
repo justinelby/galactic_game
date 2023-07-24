@@ -721,7 +721,9 @@ void *Server::connection_handler(void *data)
                 writer.String("defender");
                 writer.String(defender.c_str());
                 writer.String("result");
-                writer.String((defender + " a été tué par " + assailant).c_str());
+                writer.Bool(result);
+                writer.String("remainingHealth");
+                writer.String((to_string(remainingHealth)).c_str());
                 writer.EndObject();
                 writer.EndObject();
                 } else {
@@ -733,8 +735,8 @@ void *Server::connection_handler(void *data)
                 writer.String("defender");
                 writer.String(defender.c_str());
                 writer.String("result");
-                writer.String((defender + " is still alive. HP : " + to_string(remainingHealth)).c_str());
-
+                writer.Bool(result);
+                writer.String((to_string(remainingHealth)).c_str());
                 writer.EndObject();
                 writer.EndObject();
                 }
