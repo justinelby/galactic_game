@@ -26,32 +26,59 @@
   ],
   "quest": [
     {
-      "Nom": "Sauver la galaxie",
-      "Description": "Empêcher l'invasion des extraterrestres"
+      "Nom": "Terre",
+      "Description": "Rejoindre la terre",
+      "isCompleted" : true
     },
     {
-      "Nom": "Explorer l'espace",
-      "Description": "Découvrir de nouvelles planètes"
+      "Nom": "Gaia",
+      "Description": "Combattez le Syndicat pour sauver le Dr liara",
+      "isCompleted" : false
     },
     {
-      "Nom": "Explorer une planète mysterieuse",
-      "Description": "A l'aide de votre radar, retrouvez et explorez la planete Z-23"
+      "Nom": "Sisma",
+      "Description": "Recruter Ethan Show et Trelak",
+      "isCompleted" : false
     },
     {
-      "Nom": "Des pirates de l'espace !!",
-      "Description": "Avec votre equipage, defendez votre vaisseau et combattez les pirates de l'espace"
+      "Nom": "Alpha",
+      "Description": "Rapportez les documents secret de Alpha",
+      "isCompleted" : false
     },
     {
-      "Nom": "Faire la paix",
-      "Description": "Négocier un traité de paix entre deux factions rivales"
+      "Nom": "P3X-774.2",
+      "Description": "Liberez Earnest",
+      "isCompleted" : false
     },
     {
-      "Nom": "Une etrange pandemie...",
-      "Description": "Résoudre une crise médicale sur une colonie lointaine"
+      "Nom": "Ferenginar",
+      "Description": "Commercez ou affrontez les marchands pour obtenir la clé de sécurité VI",
+      "isCompleted" : false
     },
     {
-      "Nom": "Ressources rares",
-      "Description": "Trouver des ressources rares pour améliorer l'Odyssee"
+      "Nom": "Tatoinne",
+      "Description": "Recrutez Olivia Riviera",
+      "isCompleted" : false
+    },
+    {
+      "Nom": "Cardasia Prime",
+      "Description": "Recuperez un Metaphaseur Quantique",
+      "isCompleted" : false
+    },
+    {
+      "Nom": "Galifrey",
+      "Description": "Recoltez les objets sur Galifrey pour reparer votre vaisseau",
+      "isCompleted" : false
+    },
+    {
+      "Nom": "P3X-888",
+      "Description": "Liberez les habitants pour obtenir du Naquadah",
+      "isCompleted" : false
+    },
+    {
+      "Nom": "Lantea",
+      "Description": "Recoltez les equipements des anciens",
+      "isCompleted" : false
     }
   ],
   "item": [

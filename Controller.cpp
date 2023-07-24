@@ -118,8 +118,9 @@ void Controller::loadGame()
                 // Extraire les valeurs des propriétés de la quête
                 std::string name = quest["Nom"].GetString();
                 std::string description = quest["Description"].GetString();
+                bool isCompleted = quest["isCompleted"].GetBool(); // Charge la propriété "isCompleted" comme booléen
                 // Créer et ajouter la quête à la map questMap
-                auto newQuest = std::make_shared<Quest>(name, description);
+                auto newQuest = std::make_shared<Quest>(name, description, isCompleted);
                 addQuest(newQuest);
             }
         }
@@ -290,6 +291,9 @@ void Controller::saveGame()
         writer.String(quest.second->getName().c_str());
         writer.Key("Description");
         writer.String(quest.second->getDescription().c_str());
+        bool isCompleted = quest.second->getIsCompleted();
+        writer.String("isCompleted");
+        writer.Bool(isCompleted);
         writer.EndObject();
     }
     writer.EndArray();
