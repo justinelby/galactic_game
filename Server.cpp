@@ -655,6 +655,7 @@ void *Server::connection_handler(void *data)
             writer.StartArray();
             for (auto &it : controller->getInventory())
             {
+                if (it.second != nullptr) {
                 writer.StartObject();
                 writer.String("name");
                 writer.String(it.second->getName().c_str());
@@ -663,6 +664,7 @@ void *Server::connection_handler(void *data)
                 writer.String("effect");
                 writer.Int(it.second->getEffect());
                 writer.EndObject();
+                }
             }
             writer.EndArray();
             writer.EndObject();
