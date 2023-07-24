@@ -934,41 +934,42 @@ void *Server::connection_handler(void *data)
             }
         }
 
-        // if (methodName == "addToCharacterInventory")
-        // {
-        //     const rapidjson::Value &addToInventory = document["addToCharacterInventory"];
-        //     if (addToInventory.HasMember("charName") && addToInventory.HasMember("itemName"))
-        //     {
-        //         std::string charName = addToInventory["charName"].GetString();
-        //         std::string itemName = addToInventory["itemName"].GetString();
+        if (methodName == "addToCharacterInventory")
+        {
+            const rapidjson::Value &addToInventory = document["addToCharacterInventory"];
+            if (addToInventory.HasMember("charName") && addToInventory.HasMember("itemName"))
+            {
+                std::string charName = addToInventory["charName"].GetString();
+                std::string itemName = addToInventory["itemName"].GetString();
 
-        //         // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
-        //         controller->addToCharacterInventory(charName, itemName);
+                // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
+                controller->addToCharacterInventory(charName, itemName);
 
-        //         writer.StartObject();
-        //         writer.Key("addToCharacterInventory");
-        //         writer.StartObject();
-        //         if (controller->getInventory().find(itemName) == controller->getInventory().end())
-        //         {
-        //             writer.String("status");
-        //             writer.String("success");
-        //         }
-        //         else
-        //         {
-        //             writer.String("status");
-        //             writer.String("failed : object not found");
-        //         }
-        //         writer.EndObject();
-        //         writer.EndObject();
-        //     }
-        //     else
-        //     {
-        //         writer.StartObject();
-        //         writer.Key("Error");
-        //         writer.String("Certains champs sont manquants dans la clé 'addToCharacterInventory'.");
-        //         writer.EndObject();
-        //     }
-        // }
+                writer.StartObject();
+                writer.Key("addToCharacterInventory");
+                writer.StartObject();
+                auto inventoryIt = controller->getInventory().find(itemName);
+                if (inventoryIt != controller->getInventory().end())
+                {
+                    writer.String("status");
+                    writer.String("success");
+                }
+                else
+                {
+                    writer.String("status");
+                    writer.String("failed : object not found");
+                }
+                writer.EndObject();
+                writer.EndObject();
+            }
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'addToCharacterInventory'.");
+                writer.EndObject();
+            }
+        }
 
         // Add addToGameInventory function
         if (methodName == "addToGameInventory")
@@ -1200,6 +1201,25 @@ void *Server::connection_handler(void *data)
             writer.Key("Success");
             writer.String("Les données du jeu ont bien été restaurées.");
             writer.EndObject();
+        }
+
+        if (methodName == "useItem")
+        {
+            const rapidjson::Value &useItem = document["useItem"];
+            writer.StartObject();
+            writer.Key("useItem");
+
+            if (useItem.HasMember("characterName") || useItem.HasMember("itemName"))
+            {
+                std::string characterName = useItem["characterName"].GetString();
+                std::string itemName = useItem["itemName"].GetString();
+                controller->useItem(characterName, itemName);
+                writer.StartObject();
+                writer.Key("Success");
+                writer.String(("L'objet " + itemName + " a bien été utilisé par " + characterName).c_str());
+                writer.EndObject();
+            }
+            writer.StartObject();
         }
 
         // clear buffer data

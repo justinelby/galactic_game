@@ -222,8 +222,8 @@ int main()
     Controller controller(gameFile, resetGameFile);
     controller.loadGame();
 
-    // Server server(&controller);
-    // server.run();
+    Server server(&controller);
+    server.run();
 
     return 0;
 }
