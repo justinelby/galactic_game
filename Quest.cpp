@@ -4,11 +4,7 @@
 
 #include "Quest.h"
 
-Quest::Quest(string nom, string description) : name(nom), description(description), isCompleted(false){}
-
-Quest::Quest(istringstream& iss){
-    iss >> name >> description;
-}
+Quest::Quest(string nom, string description, bool isCompleted) : name(nom), description(description), isCompleted(isCompleted){}
 
 string Quest::getName() const {
     return name;
@@ -18,8 +14,10 @@ string Quest::getDescription() const {
     return description;
 }
 
-void Quest::setIsCompleted(bool completed) {
-    this->isCompleted = completed;
+void Quest::setIsCompleted(const std::string& questName, bool completed) {
+    if (name == questName) {
+        isCompleted = completed;
+    }
 }
 
 bool Quest::getIsCompleted() const {

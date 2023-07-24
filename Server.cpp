@@ -482,6 +482,9 @@ void *Server::connection_handler(void *data)
                     writer.String(controller->getQuest().find(questName)->second->getName().c_str());
                     writer.String("description");
                     writer.String(controller->getQuest().find(questName)->second->getDescription().c_str());
+                    bool isCompleted = controller->getQuest().find(questName)->second->getIsCompleted();
+                    writer.String("isCompleted");
+                    writer.Bool(isCompleted);
                 }
                 else
                 {
@@ -629,13 +632,15 @@ void *Server::connection_handler(void *data)
             writer.StartObject();
             writer.Key("getQuests");
             writer.StartArray();
-            for (auto &it : controller->getQuest())
+            for (auto it : controller->getQuest())
             {
                 writer.StartObject();
                 writer.String("name");
                 writer.String(it.second->getName().c_str());
                 writer.String("description");
                 writer.String(it.second->getDescription().c_str());
+                /* writer.String("isCompleted");
+                writer.Bool(it.second->getIsCompleted()); */
                 writer.EndObject();
             }
             writer.EndArray();
@@ -711,7 +716,7 @@ void *Server::connection_handler(void *data)
 
                 bool result = controller->neutralAttack(assailant, defender);
                 int remainingHealth = controller->getCharacter().find(defender)->second->getHealth();
-
+              
                 if(result){
                 writer.StartObject();
                 writer.Key("attack");
@@ -738,8 +743,6 @@ void *Server::connection_handler(void *data)
                 writer.EndObject();
                 writer.EndObject();
                 }
-
-
             }
             else
             {
@@ -769,16 +772,18 @@ void *Server::connection_handler(void *data)
                 writer.StartObject();
                 writer.Key("swapItems");
 
-                if (result) {
+                if (result)
+                {
                     writer.StartObject();
                     writer.String("Success");
                     writer.String((itemToReplace + " a bien été échangé avec " + itemOnGround + ". ").c_str());
                     writer.EndObject();
                 }
-                else {
+                else
+                {
                     writer.StartObject();
                     writer.String("Failure");
-                    writer.String(("Inventory not full, you can still grab an item without having to swap one of yours. Please call addToCharacterInventory(" + character +", " + itemOnGround + ")").c_str());
+                    writer.String(("Inventory not full, you can still grab an item without having to swap one of yours. Please call addToCharacterInventory(" + character + ", " + itemOnGround + ")").c_str());
                     writer.EndObject();
                 }
             }
@@ -791,7 +796,6 @@ void *Server::connection_handler(void *data)
             }
             writer.EndObject();
         }
-
 
         /*------------------------------------
                     ADD section
@@ -921,8 +925,9 @@ void *Server::connection_handler(void *data)
             {
                 std::string name = addQuest["name"].GetString();
                 std::string description = addQuest["description"].GetString();
+                bool isCompleted = addQuest["isCompleted"].GetBool(); // Charge la propriété "isCompleted" comme booléen
 
-                auto newQuest = std::make_shared<Quest>(name, description);
+                auto newQuest = std::make_shared<Quest>(name, description, isCompleted);
                 controller->addQuest(newQuest);
 
                 writer.StartObject();
@@ -995,55 +1000,55 @@ void *Server::connection_handler(void *data)
             }
         }
 
-if (methodName == "addToCharacterInventory")
-{
-    bool itemAdded = false;
-    const rapidjson::Value &addToInventory = document["addToCharacterInventory"];
-    if (addToInventory.HasMember("charName") && addToInventory.HasMember("itemName"))
-    {
-        std::string charName = addToInventory["charName"].GetString();
-        std::string itemName = addToInventory["itemName"].GetString();
-
-        // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
-        bool check1 = controller->isCharacterExists(charName),
-        check2 = controller->isItemExists(itemName);
-        if(check1 && check2) {
-            controller->addToCharacterInventory(charName, itemName);
-
-            writer.StartObject();
-            writer.Key("addToCharacterInventory");
-            writer.StartObject();
-
-            auto characterIt = controller->getCharacter().find(charName);
-
-            // Vérifier la valeur de itemAdded et ajouter le message approprié dans la réponse JSON
-            if (characterIt->second->getInventory().size() < 5) {
-                writer.String("status");
-                writer.String("success");
-            } else if (characterIt->second->getInventory().size() >= 5) {
-                writer.String("status");
-                writer.String("failed : inventory is full, please use swapItem method");
+        if (methodName == "addToCharacterInventory")
+        {
+            bool itemAdded = false;
+            const rapidjson::Value &addToInventory = document["addToCharacterInventory"];
+            if (addToInventory.HasMember("charName") && addToInventory.HasMember("itemName"))
+            {
+                std::string charName = addToInventory["charName"].GetString();
+                std::string itemName = addToInventory["itemName"].GetString();
+        
+                // Appeler la fonction pour ajouter l'objet à l'inventaire du personnage
+                bool check1 = controller->isCharacterExists(charName),
+                check2 = controller->isItemExists(itemName);
+                if(check1 && check2) {
+                    controller->addToCharacterInventory(charName, itemName);
+        
+                    writer.StartObject();
+                    writer.Key("addToCharacterInventory");
+                    writer.StartObject();
+        
+                    auto characterIt = controller->getCharacter().find(charName);
+        
+                    // Vérifier la valeur de itemAdded et ajouter le message approprié dans la réponse JSON
+                    if (characterIt->second->getInventory().size() < 5) {
+                        writer.String("status");
+                        writer.String("success");
+                    } else if (characterIt->second->getInventory().size() >= 5) {
+                        writer.String("status");
+                        writer.String("failed : inventory is full, please use swapItem method");
+                    }
+        
+                    writer.EndObject();
+                    writer.EndObject();
+                }
+                else {
+                    writer.StartObject();
+                    writer.Key("Error");
+                    writer.String("Invalid entries, please write an existing character and/or item.");
+                    writer.EndObject();
+        
+                }
             }
-
-            writer.EndObject();
-            writer.EndObject();
+            else
+            {
+                writer.StartObject();
+                writer.Key("Error");
+                writer.String("Certains champs sont manquants dans la clé 'addToCharacterInventory'.");
+                writer.EndObject();
+            }
         }
-        else {
-            writer.StartObject();
-            writer.Key("Error");
-            writer.String("Invalid entries, please write an existing character and/or item.");
-            writer.EndObject();
-
-        }
-    }
-    else
-    {
-        writer.StartObject();
-        writer.Key("Error");
-        writer.String("Certains champs sont manquants dans la clé 'addToCharacterInventory'.");
-        writer.EndObject();
-    }
-}
 
 
         // Add addToGameInventory function
@@ -1311,6 +1316,23 @@ if (methodName == "addToCharacterInventory")
             }
             writer.EndObject();
         }
+
+        if(methodName == "setIsCompleted"){
+            const rapidjson::Value &setIsCompleted = document["setIsCompleted"];
+            writer.StartObject();
+            writer.Key("setIsCompleted");
+
+            if(setIsCompleted.HasMember("name") || setIsCompleted.HasMember("isCompleted")){
+                std::string name = setIsCompleted["name"].GetString();
+                bool isCompleted = setIsCompleted["isCompleted"].GetBool();
+                controller->getQuest().find(name)->second->setIsCompleted(name, isCompleted);
+                writer.StartObject();
+                writer.Key("Success");
+                writer.String(("La mission " + name + " a bien été mise à jour.").c_str());
+                writer.EndObject();
+            }
+            writer.EndObject();
+        } 
 
         // clear buffer data
         memset(buffer, 0, BUFFER_SIZE);

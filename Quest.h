@@ -12,30 +12,28 @@
 
 using namespace std;
 
-//Affichage du menu principal
-class Quest {
+// Affichage du menu principal
+class Quest
+{
 
 public:
-    //Constructeur
-    Quest(string nom, string description);
-    Quest(istringstream&);
+    // Constructeur
+    Quest(string nom, string description, bool isCompleted);
     virtual ~Quest();
 
-    //Accesseurs et mutateurs
+    // Accesseurs et mutateurs
     string getName() const;
     string getDescription() const;
     bool getIsCompleted() const;
 
-    //Methodes
-    void setIsCompleted(bool completed);
+    // Methodes
+    void setIsCompleted(const std::string &questName, bool completed);
 
 private:
-    //Attributs
+    // Attributs
     string name;
     string description;
     bool isCompleted;
 };
 
-
-
-#endif //JEU_PERSONNAGES_MISSION_H
+#endif // JEU_PERSONNAGES_MISSION_H
