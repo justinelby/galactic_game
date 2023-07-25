@@ -237,6 +237,8 @@ void Controller::resetGame()
 
     sourceStream.close();
     destinationStream.close();
+
+    loadGame();
 }
 
 void Controller::saveGame()

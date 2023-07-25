@@ -217,9 +217,5 @@
       "Type de lieu": "Planet",
       "Lieu": "Earth"
     }
-  ],
-  "attack": {
-    "Assaillant": "John Doe",
-    "Défenseur": "Jane Smith"
-  }
+  ]
 }
