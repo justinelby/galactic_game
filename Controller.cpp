@@ -547,6 +547,18 @@ bool Controller::isCharacterExists(string charName) {
     return false;
 }
 
+bool Controller::isEnemyExists(string enName) {
+    for (auto &it: enemyMap) {
+        if (it.second != nullptr && it.second->getName() == enName) {
+            return true;
+        }
+    }
+#ifdef DEBUG
+    cout << "L'ennemi " << enName << " n'existe pas dans le jeu !" << endl;
+#endif
+    return false;
+}
+
 
 bool Controller::isItemExists(string itemName) {
     for (auto &it: inventory) {

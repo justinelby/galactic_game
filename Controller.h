@@ -66,6 +66,7 @@ public:
     bool isItemInCharacterBag(string, string);
     bool isCharacterExists(string);
     bool isSpaceshipExists(string);
+    bool isEnemyExists(string);
     bool isPlanetExists(string);
 
     virtual ~Controller();

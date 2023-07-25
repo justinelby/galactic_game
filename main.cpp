@@ -240,8 +240,8 @@ int main()
 //    controller.neutralAttack("Alien 3", "Alex Starborn");
 //    controller.neutralAttack("Alien 3", "Alex Starborn");
 
-    Server server(&controller);
-    server.run();
-
+     Server server(&controller);
+    server.run(); 
+ 
     return 0;
 }

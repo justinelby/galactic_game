@@ -284,42 +284,52 @@ void *Server::connection_handler(void *data)
             {
                 string characterName = getCharacterInfo["name"].GetString();
                 auto characterIt = controller->getCharacter().find(characterName);
-                if (characterIt != controller->getCharacter().end())
-                {
-                    writer.String("name");
-                    writer.String(controller->getCharacter().find(characterName)->second->getName().c_str());
-                    writer.String("description");
-                    writer.String(controller->getCharacter().find(characterName)->second->getDescr().c_str());
-                    writer.String("health");
-                    writer.Int(controller->getCharacter().find(characterName)->second->getHealth());
-                    writer.String("AP");
-                    writer.Int(controller->getCharacter().find(characterName)->second->getAttackPower());
-                    writer.String("DP");
-                    writer.Int(controller->getCharacter().find(characterName)->second->getArmorPower());
-                    writer.String("placeType");
-                    writer.String(controller->getCharacter().find(characterName)->second->getPlaceType().c_str());
-                    writer.String("place");
-                    writer.String(controller->getCharacter().find(characterName)->second->getPlace().c_str());
-                    writer.Key("items");
-                    writer.StartArray();
-                    for (const auto &item : characterIt->second->getInventory())
+                bool check1 = controller->isCharacterExists(characterName);
+                if (check1) {
+                    if (characterIt != controller->getCharacter().end())
                     {
-                        writer.StartObject();
                         writer.String("name");
-                        writer.String(item->getName().c_str());
+                        writer.String(controller->getCharacter().find(characterName)->second->getName().c_str());
                         writer.String("description");
-                        writer.String(item->getDescription().c_str());
-                        writer.String("effect");
-                        writer.Int(item->getEffect());
-                        writer.EndObject();
+                        writer.String(controller->getCharacter().find(characterName)->second->getDescr().c_str());
+                        writer.String("health");
+                        writer.Int(controller->getCharacter().find(characterName)->second->getHealth());
+                        writer.String("AP");
+                        writer.Int(controller->getCharacter().find(characterName)->second->getAttackPower());
+                        writer.String("DP");
+                        writer.Int(controller->getCharacter().find(characterName)->second->getArmorPower());
+                        writer.String("placeType");
+                        writer.String(controller->getCharacter().find(characterName)->second->getPlaceType().c_str());
+                        writer.String("place");
+                        writer.String(controller->getCharacter().find(characterName)->second->getPlace().c_str());
+                        writer.Key("items");
+                        writer.StartArray();
+                        for (const auto &item : characterIt->second->getInventory())
+                        {
+                            writer.StartObject();
+                            writer.String("name");
+                            writer.String(item->getName().c_str());
+                            writer.String("description");
+                            writer.String(item->getDescription().c_str());
+                            writer.String("effect");
+                            writer.Int(item->getEffect());
+                            writer.EndObject();
+                        }
+                        writer.EndArray();
                     }
-                    writer.EndArray();
+                    else
+                    {
+                        writer.String("Error");
+                        writer.String(("Character " + characterName + " hasn't been found.").c_str());
+                    }
+
+                } else {
+                    writer.StartObject();
+                    writer.Key("Error");
+                    writer.String(("Character " + characterName + " doesn't exist in this game").c_str());
+                    writer.EndObject();        
                 }
-                else
-                {
-                    writer.String("Error");
-                    writer.String(("Character " + characterName + " hasn't been found.").c_str());
-                }
+
             }
             writer.EndObject();
             writer.EndObject();
@@ -336,28 +346,36 @@ void *Server::connection_handler(void *data)
             if (getEnemyInfo.HasMember("name"))
             {
                 string enemyName = getEnemyInfo["name"].GetString();
-                auto enemyIt = controller->getEnemy().find(enemyName);
-                if (enemyIt != controller->getEnemy().end())
-                {
-                    writer.String("name");
-                    writer.String(controller->getEnemy().find(enemyName)->second->getName().c_str());
-                    writer.String("description");
-                    writer.String(controller->getEnemy().find(enemyName)->second->getDescr().c_str());
-                    writer.String("health");
-                    writer.Int(controller->getEnemy().find(enemyName)->second->getHealth());
-                    writer.String("AP");
-                    writer.Int(controller->getEnemy().find(enemyName)->second->getAttackPower());
-                    writer.String("DP");
-                    writer.Int(controller->getEnemy().find(enemyName)->second->getArmorPower());
-                    writer.String("placeType");
-                    writer.String(controller->getEnemy().find(enemyName)->second->getPlaceType().c_str());
-                    writer.String("place");
-                    writer.String(controller->getEnemy().find(enemyName)->second->getPlace().c_str());
-                }
-                else
-                {
-                    writer.String("Error");
-                    writer.String(("Enemy " + enemyName + " hasn't been found.").c_str());
+                bool check1 = controller->isEnemyExists(enemyName);
+                if (check1) {
+                    auto enemyIt = controller->getEnemy().find(enemyName);
+                    if (enemyIt != controller->getEnemy().end())
+                    {
+                        writer.String("name");
+                        writer.String(controller->getEnemy().find(enemyName)->second->getName().c_str());
+                        writer.String("description");
+                        writer.String(controller->getEnemy().find(enemyName)->second->getDescr().c_str());
+                        writer.String("health");
+                        writer.Int(controller->getEnemy().find(enemyName)->second->getHealth());
+                        writer.String("AP");
+                        writer.Int(controller->getEnemy().find(enemyName)->second->getAttackPower());
+                        writer.String("DP");
+                        writer.Int(controller->getEnemy().find(enemyName)->second->getArmorPower());
+                        writer.String("placeType");
+                        writer.String(controller->getEnemy().find(enemyName)->second->getPlaceType().c_str());
+                        writer.String("place");
+                        writer.String(controller->getEnemy().find(enemyName)->second->getPlace().c_str());
+                    }
+                    else
+                    {
+                        writer.String("Error");
+                        writer.String(("Enemy " + enemyName + " hasn't been found.").c_str());
+                    }
+                } else {
+                    writer.StartObject();
+                    writer.Key("Error");
+                    writer.String(("Enemy " + enemyName + " doesn't exist in this game").c_str());
+                    writer.EndObject();        
                 }
             }
             writer.EndObject();
@@ -773,24 +791,36 @@ void *Server::connection_handler(void *data)
                 std::string itemToReplace = swapItems["itemToReplace"].GetString();
 
                 bool result = controller->swapItems(character, itemOnGround, itemToReplace);
+                bool check1 = controller->isCharacterExists(character),
+                check2 = controller->isItemExists(itemOnGround), check3 = controller->isItemInCharacterBag(character, itemToReplace);
 
                 writer.StartObject();
                 writer.Key("swapItems");
 
-                if (result)
+                if(check1 && check2 && check3){
+                    if (result)
+                    {
+                        writer.StartObject();
+                        writer.String("Success");
+                        writer.String((itemToReplace + " a bien été échangé avec " + itemOnGround + ". ").c_str());
+                        writer.EndObject();
+                    }
+                    else
+                    {
+                        writer.StartObject();
+                        writer.String("Failure");
+                        writer.String(("Inventory not full, you can still grab an item without having to swap one of yours. Please call addToCharacterInventory(" + character + ", " + itemOnGround + ")").c_str());
+                        writer.EndObject();
+                    }
+                } 
+                else 
                 {
                     writer.StartObject();
-                    writer.String("Success");
-                    writer.String((itemToReplace + " a bien été échangé avec " + itemOnGround + ". ").c_str());
-                    writer.EndObject();
+                    writer.Key("Error");
+                    writer.String("Invalid entries, please write an existing character and/or item.");
+                    writer.EndObject();        
                 }
-                else
-                {
-                    writer.StartObject();
-                    writer.String("Failure");
-                    writer.String(("Inventory not full, you can still grab an item without having to swap one of yours. Please call addToCharacterInventory(" + character + ", " + itemOnGround + ")").c_str());
-                    writer.EndObject();
-                }
+
             }
             else
             {
@@ -1042,8 +1072,7 @@ void *Server::connection_handler(void *data)
                     writer.StartObject();
                     writer.Key("Error");
                     writer.String("Invalid entries, please write an existing character and/or item.");
-                    writer.EndObject();
-        
+                    writer.EndObject();        
                 }
             }
             else
@@ -1261,7 +1290,7 @@ void *Server::connection_handler(void *data)
                 {
                     writer.StartObject();
                     writer.String("error");
-                    writer.String(("L'objet' " + itemName + " n'a pas été trouvé.").c_str());
+                    writer.String(("L'objet' " + itemName + " n'a pas été trouvé dans l'inventaire du joueur.").c_str());
                     writer.EndObject();
                 }
             }
@@ -1306,11 +1335,22 @@ void *Server::connection_handler(void *data)
             {
                 std::string characterName = useItem["characterName"].GetString();
                 std::string itemName = useItem["itemName"].GetString();
+
+                bool check1 = controller->isCharacterExists(characterName),
+                check2 = controller->isItemInCharacterBag(characterName, itemName);
+
+                if(check1 && check2){                    
                 controller->useItem(characterName, itemName);
                 writer.StartObject();
                 writer.Key("Success");
                 writer.String(("L'objet " + itemName + " a bien été utilisé par " + characterName).c_str());
                 writer.EndObject();
+                } else {
+                    writer.StartObject();
+                    writer.Key("Error");
+                    writer.String("Invalid entries, please write an existing character and/or item.");
+                    writer.EndObject();        
+                }
             }
             else
             {
