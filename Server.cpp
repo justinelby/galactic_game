@@ -717,7 +717,6 @@ void *Server::connection_handler(void *data)
                 std::string defender = attack["defender"].GetString();
 
                 bool result = controller->neutralAttack(assailant, defender);
-                int remainingHealth = controller->getCharacter().find(defender)->second->getHealth();
               
                 if(result){
                 writer.StartObject();
@@ -729,9 +728,12 @@ void *Server::connection_handler(void *data)
                 writer.String(defender.c_str());
                 writer.String("result");
                 writer.Bool(result);
+                writer.String("Message");
+                writer.String((defender + " s'est fait tuer.").c_str());
                 writer.EndObject();
                 writer.EndObject();
-                } else {
+                } 
+                else {
                 writer.StartObject();
                 writer.Key("attack");
                 writer.StartObject();
@@ -741,7 +743,8 @@ void *Server::connection_handler(void *data)
                 writer.String(defender.c_str());
                 writer.String("result");
                 writer.Bool(result);
-                writer.String((to_string(remainingHealth)).c_str());
+                writer.String("Message");
+                writer.String((defender + " est toujours en vie").c_str());
                 writer.EndObject();
                 writer.EndObject();
                 }

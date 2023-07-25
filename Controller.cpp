@@ -841,6 +841,7 @@ bool Controller::neutralAttack(string assailant, string defender)
 
     if (def->getHealth() <= 0)
     {
+        cout << "MORT" << endl;
         deleteCharacter(defender);
         return true;
     }

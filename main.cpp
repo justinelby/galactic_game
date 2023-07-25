@@ -234,10 +234,14 @@ int main()
     Controller controller(gameFile, resetGameFile);
     controller.loadGame();
 
+    // displayAllCharacters(controller);
+    //controller.deleteCharacter("Alex Starborn");
+
+//    controller.neutralAttack("Alien 3", "Alex Starborn");
+//    controller.neutralAttack("Alien 3", "Alex Starborn");
 
     Server server(&controller);
     server.run();
-
 
     return 0;
 }
